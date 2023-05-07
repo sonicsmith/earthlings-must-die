@@ -1,28 +1,28 @@
-import React, { useRef } from 'react';
-import { Sphere, useGLTF } from '@react-three/drei';
-import AlienParticles from '../AlienParticles';
+import React from 'react';
+import { useGLTF } from '@react-three/drei';
 
-export default function Earth() {
+export default function Earth({ onClick }: any) {
   const { nodes, materials } = useGLTF('/models/earth.gltf') as any;
 
-  const ref = useRef();
-
   return (
-    <>
+    <group onClick={onClick}>
       <group dispose={null}>
         <group rotation={[-Math.PI / 2, 0, 0]}>
+          {/* ICE */}
           <mesh
             castShadow
             receiveShadow
             geometry={nodes.Object_2.geometry}
             material={materials.material}
           />
+          {/* LAND */}
           <mesh
             castShadow
             receiveShadow
             geometry={nodes.Object_3.geometry}
             material={materials.Material}
           />
+          {/* OCEAN */}
           <mesh
             castShadow
             receiveShadow
@@ -31,11 +31,8 @@ export default function Earth() {
           />
         </group>
       </group>
-      {['red', 'blue', 'green'].map((color) => (
-        <AlienParticles color={color} />
-      ))}
-    </>
+    </group>
   );
 }
 
-useGLTF.preload('/earth.gltf');
+useGLTF.preload('/models/earth.gltf');

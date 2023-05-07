@@ -2,7 +2,9 @@ import * as THREE from 'three';
 import React, { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 
-export default function Swarm({ count = 30, color = 'red' }: any) {
+const UFO_SIZE = 0.02;
+
+export default function SatelliteGroup({ count = 30, color }: any) {
   const mesh = useRef();
 
   const dummy = useMemo(() => new THREE.Object3D(), []);
@@ -13,7 +15,15 @@ export default function Swarm({ count = 30, color = 'red' }: any) {
       const t = Math.random() * 100;
       const factor = 3 + Math.random() * 1;
       const speed = 0.01 + Math.random() / 200;
-      temp.push({ t, factor, speed, mx: 0, my: 0, mz: 0 });
+      temp.push({
+        t,
+        factor,
+        speed,
+        mx: 0,
+        my: 0,
+        mz: 0,
+        angle: Math.random() * Math.PI * 2,
+      });
     }
     return temp;
   }, [count]);
@@ -21,7 +31,7 @@ export default function Swarm({ count = 30, color = 'red' }: any) {
   useFrame((state) => {
     // Run through the randomized data to calculate some movement
     particles.forEach((particle, i) => {
-      let { t, factor, speed } = particle;
+      let { t, factor, speed, angle } = particle;
       // There is no sense or reason to any of this, just messing around with trigonometric functions
       t = particle.t += speed / 2;
       // Update the dummy object
@@ -35,7 +45,7 @@ export default function Swarm({ count = 30, color = 'red' }: any) {
         particle.mz / 10 +
         Math.cos((t / 10) * factor) +
         (Math.sin(t * 3) * factor) / divFactor;
-
+      dummy.rotation.set(angle, angle, angle + 0.01);
       dummy.position.set(dummyX, dummyY, dummyZ);
       dummy.updateMatrix();
       // And apply the matrix to the instanced item
@@ -45,11 +55,11 @@ export default function Swarm({ count = 30, color = 'red' }: any) {
       (mesh.current as any).instanceMatrix.needsUpdate = true;
     }
   });
-  const size = 0.03;
+
   return (
     <>
       <instancedMesh ref={mesh as any} args={[null, null, count] as any}>
-        <dodecahedronGeometry args={[size, 0]} />
+        <dodecahedronGeometry args={[UFO_SIZE, 0]} />
         <meshStandardMaterial color={color} />
       </instancedMesh>
     </>
