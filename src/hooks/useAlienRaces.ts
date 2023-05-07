@@ -11,8 +11,22 @@ const devDefault = [
     image: '/images/aliens/001.jpg',
     description: `This is a description about the aliens and what they like to do and how
   they like.`,
-    color: '#eea',
-    power: 5,
+    color: '#c29519',
+    power: 3,
+  },
+  {
+    image: '/images/aliens/002.jpg',
+    description: `This is a description about the aliens and what they like to do and how
+  they like.`,
+    color: '#b03535',
+    power: 4,
+  },
+  {
+    image: '/images/aliens/003.jpg',
+    description: `This is a description about the aliens and what they like to do and how
+  they like.`,
+    color: '#4287f5',
+    power: 6,
   },
 ];
 
