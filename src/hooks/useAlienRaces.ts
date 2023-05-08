@@ -9,22 +9,37 @@ export interface AlienRace {
 const devDefault = [
   {
     image: '/images/aliens/001.jpg',
-    description: `This is a description about the aliens and what they like to do and how
-  they like.`,
+    description: `Skeletals: Fast and agile, Skeletals will kill in seconds`,
     color: '#c29519',
     power: 3,
   },
   {
     image: '/images/aliens/002.jpg',
-    description: `This is a description about the aliens and what they like to do and how
-  they like.`,
+    description: `Cognizance: This species kills with mind control techniques`,
     color: '#b03535',
     power: 4,
   },
   {
     image: '/images/aliens/003.jpg',
-    description: `This is a description about the aliens and what they like to do and how
-  they like.`,
+    description: `Octopods: This species kills with mind control techniques`,
+    color: '#4287f5',
+    power: 6,
+  },
+  {
+    image: '/images/aliens/004.jpg',
+    description: `Reptals: Pure muscle, Reptals may eat humans alive`,
+    color: '#c29519',
+    power: 3,
+  },
+  {
+    image: '/images/aliens/005.jpg',
+    description: `Apetans: Simple and strong, Apetans hate humans`,
+    color: '#b03535',
+    power: 4,
+  },
+  {
+    image: '/images/aliens/006.jpg',
+    description: `Hexapodron: Agile and Ruthless Hunters`,
     color: '#4287f5',
     power: 6,
   },
