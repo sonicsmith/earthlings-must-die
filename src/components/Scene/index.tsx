@@ -6,7 +6,7 @@ import { useWindowSize } from '~/hooks/useWindowSize';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
-import SatelliteGroup from '../AlienSatellites/SateliteGroup';
+import AlienSatellites from '../AlienSatellites';
 
 const Dolly = ({ position }: any) => {
   const { z } = position;
@@ -33,7 +33,7 @@ export default function Scene() {
           setIsAlienDetailView(!isAlienDetailView);
         }}
       />
-      <SatelliteGroup />
+      <AlienSatellites />
       <Environment preset="sunset" background blur={0.5} />
       <OrbitControls
         enableZoom={false}

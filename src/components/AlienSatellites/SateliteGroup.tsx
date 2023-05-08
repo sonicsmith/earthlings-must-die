@@ -6,7 +6,6 @@ const UFO_SIZE = 0.02;
 
 export default function SatelliteGroup({ count = 30, color }: any) {
   const mesh = useRef();
-
   const dummy = useMemo(() => new THREE.Object3D(), []);
   // Generate some random positions, speed factors and timings
   const particles = useMemo(() => {
