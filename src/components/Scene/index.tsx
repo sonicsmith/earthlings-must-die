@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
+import GUI from '../GUI';
 
 const Dolly = ({ position }: any) => {
   const { z } = position;
@@ -28,6 +29,7 @@ export default function Scene() {
   return (
     <Canvas camera={{ position: cameraPosition, fov: 50 }}>
       {/* <Dolly position={cameraPosition} /> */}
+      <GUI />
       <Earth
         onClick={() => {
           setIsAlienDetailView(!isAlienDetailView);
