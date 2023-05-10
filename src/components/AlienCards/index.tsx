@@ -2,7 +2,7 @@ import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
 import { useAlienRaces } from '~/hooks/useAlienRaces';
 
-const CARD_HAND_POSITIONS = [
+const GROUP_POSITIONS = [
   '',
   'left-[-85px]',
   'left-[-100px]',
@@ -13,16 +13,16 @@ const CARD_HAND_POSITIONS = [
 ];
 const CARD_POSITION = [
   'left-0',
-  'left-8',
-  'left-16',
-  'left-24',
-  'left-32',
+  'left-8 -top-2',
+  'left-16 -top-4',
+  'left-24 -top-6',
+  'left-32 -top-4',
   'left-40',
 ];
 
 export default function AlienCards({ isShowing }: any) {
   const alienRaces = useAlienRaces();
-  const xPos = CARD_HAND_POSITIONS[alienRaces.length];
+  const xPos = GROUP_POSITIONS[alienRaces.length];
 
   return (
     <Html center>

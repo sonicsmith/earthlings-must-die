@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import React, { useRef, useMemo } from 'react';
-import { useFrame } from '@react-three/fiber';
+import { extend, useFrame } from '@react-three/fiber';
 
 const UFO_SIZE = 0.02;
 
@@ -13,7 +13,7 @@ export default function SatelliteGroup({ count = 30, color }: any) {
     for (let i = 0; i < count; i++) {
       const t = Math.random() * 100;
       const factor = 3 + Math.random() * 1;
-      const speed = 0.01 + Math.random() / 200;
+      const speed = Math.random() / 100;
       temp.push({
         t,
         factor,

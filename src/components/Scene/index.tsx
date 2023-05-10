@@ -28,7 +28,6 @@ export default function Scene() {
 
   return (
     <Canvas camera={{ position: cameraPosition, fov: 50 }}>
-      {/* <Dolly position={cameraPosition} /> */}
       <GUI />
       <Earth
         onClick={() => {
@@ -36,7 +35,9 @@ export default function Scene() {
         }}
       />
       <AlienSatellites />
-      <Environment preset="sunset" background blur={0.5} />
+      <ambientLight intensity={0.005} />
+      <pointLight position={[10, 0, 0]} intensity={0.5} />
+      <Environment preset="night" background blur={0.5} />
       <OrbitControls
         enableZoom={false}
         autoRotate={true}
