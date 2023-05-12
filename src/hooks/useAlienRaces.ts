@@ -37,12 +37,12 @@ const devDefault = [
     color: '#b03535',
     power: 4,
   },
-  {
-    image: '/images/aliens/006.jpg',
-    description: `Hexapodron: Agile and Ruthless Hunters`,
-    color: '#4287f5',
-    power: 6,
-  },
+  // {
+  //   image: '/images/aliens/006.jpg',
+  //   description: `Hexapodron: Agile and Ruthless Hunters`,
+  //   color: '#4287f5',
+  //   power: 6,
+  // },
 ];
 
 export const useAlienRaces = () => {

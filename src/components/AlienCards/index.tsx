@@ -4,19 +4,19 @@ import { useAlienRaces } from '~/hooks/useAlienRaces';
 
 const GROUP_POSITIONS = [
   '',
-  'left-[-85px]',
-  'left-[-100px]',
-  'left-[-115px]',
-  'left-[-130px]',
-  'left-[-145px]',
-  'left-[-160px]',
+  '-left-20',
+  '-left-24',
+  '-left-28',
+  '-left-32',
+  '-left-36',
+  '-left-40',
 ];
 const CARD_POSITION = [
-  'left-0',
+  'left-0 top-0',
   'left-8 -top-2',
   'left-16 -top-4',
-  'left-24 -top-6',
-  'left-32 -top-4',
+  'left-24 -top-2',
+  'left-32 top-0',
   'left-40',
 ];
 
