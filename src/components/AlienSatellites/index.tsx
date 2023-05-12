@@ -3,7 +3,6 @@ import SatelliteGroup from './SateliteGroup';
 
 export default function AlienSatellites() {
   const alienRaces = useAlienRaces();
-  console.log('alienRaces', alienRaces);
   return (
     <>
       {alienRaces.map(({ color }, i) => (

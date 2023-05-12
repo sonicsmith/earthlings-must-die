@@ -3,19 +3,20 @@ import { OrbitControls, Environment } from '@react-three/drei';
 import SkyBox from '../Skybox';
 import Earth from '../Earth';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
+import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
-const Dolly = ({ position }: any) => {
-  const { z } = position;
-  useFrame(({ clock, camera }) => {
-    camera.position.lerp(position, 0.025);
-  });
-  return null;
-};
+// const Dolly = ({ position }: any) => {
+//   const { z } = position;
+//   useFrame(({ clock, camera }) => {
+//     camera.position.lerp(position, 0.025);
+//   });
+//   return null;
+// };
 
 export default function Scene() {
   const { width } = useWindowSize();
@@ -25,6 +26,11 @@ export default function Scene() {
     const x = (width || 0) < 640 ? 6 : 5;
     return new Vector3(x, 0, 0);
   }, [width]);
+
+  // TODO: Make this actually accurate to real life
+  const sunPosition = useMemo(() => {
+    return new Vector3(10, 0, 0);
+  }, []);
 
   return (
     <Canvas camera={{ position: cameraPosition, fov: 50 }}>
@@ -36,7 +42,7 @@ export default function Scene() {
       />
       <AlienSatellites />
       <ambientLight intensity={0.005} />
-      <pointLight position={[10, 0, 0]} intensity={0.5} />
+      <pointLight position={sunPosition} intensity={0.5} />
       <Environment preset="night" background blur={0.5} />
       <OrbitControls
         enableZoom={false}

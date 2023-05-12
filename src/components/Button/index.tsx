@@ -1,6 +1,9 @@
-export default function Button({ children }: any) {
+export default function Button({ children, onClick }: any) {
   return (
-    <button className="w-32 rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700">
+    <button
+      onClick={onClick}
+      className="rounded bg-blue-500 px-4 py-1 font-bold text-white hover:bg-blue-700"
+    >
       {children}
     </button>
   );
