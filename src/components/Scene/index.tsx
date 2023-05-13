@@ -21,6 +21,7 @@ import { Web3AuthContext } from '~/providers/Web3AuthContext';
 export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
+  const [showMenu, setShowMenu] = useState(false);
 
   const cameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
@@ -34,7 +35,7 @@ export default function Scene() {
 
   return (
     <Canvas camera={{ position: cameraPosition, fov: 50 }}>
-      <GUI />
+      <GUI showMenu={showMenu} setShowMenu={setShowMenu} />
       <Earth
         onClick={() => {
           setIsAlienDetailView(!isAlienDetailView);
@@ -49,7 +50,16 @@ export default function Scene() {
         autoRotate={true}
         autoRotateSpeed={0.2}
       />
-      <SkyBox />
+      <SkyBox
+        onClick={() => {
+          if (showMenu) {
+            setShowMenu(false);
+          }
+          if (isAlienDetailView) {
+            setIsAlienDetailView(false);
+          }
+        }}
+      />
       <AlienCards isShowing={isAlienDetailView} />
     </Canvas>
   );

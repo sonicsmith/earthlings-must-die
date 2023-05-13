@@ -3,11 +3,14 @@ import { api } from '~/utils/api';
 import '~/styles/globals.css';
 import { Web3Auth } from '@web3auth/modal';
 import { useCallback, useEffect, useState } from 'react';
-import { CHAIN_NAMESPACES } from '@web3auth/base';
+import { CHAIN_NAMESPACES, SafeEventEmitterProvider } from '@web3auth/base';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   const [web3Auth, setWeb3Auth] = useState<Web3Auth | null>(null);
+  const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
+    null
+  );
   const [showApp, setShowApp] = useState(true);
 
   useEffect(() => {
@@ -33,8 +36,15 @@ const MyApp: AppType = ({ Component, pageProps }) => {
     init();
   }, []);
 
+  const connect = useCallback(async () => {
+    const provider = await web3Auth?.connect();
+    if (provider) {
+      setProvider(provider);
+    }
+  }, [web3Auth]);
+
   return (
-    <Web3AuthContext.Provider value={web3Auth}>
+    <Web3AuthContext.Provider value={{ web3Auth, provider, connect }}>
       {showApp && <Component {...pageProps} />}
     </Web3AuthContext.Provider>
   );
