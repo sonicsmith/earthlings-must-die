@@ -60,6 +60,7 @@ const Menu = ({ logout }: { logout: () => void }) => {
         <li className={MENU_ITEM_CLASS}>Buy Fuel</li>
         <li className={MENU_ITEM_CLASS}>Send Aliens</li>
         <li className={MENU_ITEM_CLASS}>Inventory</li>
+        <li className={MENU_ITEM_CLASS}>Sell Humans</li>
         <li className={MENU_ITEM_CLASS} onClick={logout}>
           Logout
         </li>
@@ -87,7 +88,13 @@ export default function TopBar({
         {isConnected ? (
           <>
             <HomeIcon />
-            <ProfileButton user={user} onClick={() => setShowMenu(!showMenu)} />
+            <>
+              <div className="p-1">Humans gathered: {0}</div>
+              <ProfileButton
+                user={user}
+                onClick={() => setShowMenu(!showMenu)}
+              />
+            </>
           </>
         ) : (
           <>

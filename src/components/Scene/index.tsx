@@ -3,7 +3,14 @@ import { OrbitControls, Environment } from '@react-three/drei';
 import SkyBox from '../Skybox';
 import Earth from '../Earth';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import { useContext, useEffect, useMemo, useRef, useState } from 'react';
+import {
+  Suspense,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
@@ -34,33 +41,35 @@ export default function Scene() {
   }, []);
 
   return (
-    <Canvas camera={{ position: cameraPosition, fov: 50 }}>
-      <GUI showMenu={showMenu} setShowMenu={setShowMenu} />
-      <Earth
-        onClick={() => {
-          setIsAlienDetailView(!isAlienDetailView);
-        }}
-      />
-      <AlienSatellites />
-      <ambientLight intensity={0.005} />
-      <pointLight position={sunPosition} intensity={0.5} />
-      <Environment preset="night" background blur={0.5} />
-      <OrbitControls
-        enableZoom={false}
-        autoRotate={true}
-        autoRotateSpeed={0.2}
-      />
-      <SkyBox
-        onClick={() => {
-          if (showMenu) {
-            setShowMenu(false);
-          }
-          if (isAlienDetailView) {
-            setIsAlienDetailView(false);
-          }
-        }}
-      />
-      <AlienCards isShowing={isAlienDetailView} />
-    </Canvas>
+    <Suspense fallback={null}>
+      <Canvas camera={{ position: cameraPosition, fov: 50 }}>
+        <GUI showMenu={showMenu} setShowMenu={setShowMenu} />
+        <Earth
+          onClick={() => {
+            setIsAlienDetailView(!isAlienDetailView);
+          }}
+        />
+        <AlienSatellites />
+        <ambientLight intensity={0.005} />
+        <pointLight position={sunPosition} intensity={0.5} />
+        <Environment preset="night" background blur={0.5} />
+        <OrbitControls
+          enableZoom={false}
+          autoRotate={true}
+          autoRotateSpeed={0.2}
+        />
+        <SkyBox
+          onClick={() => {
+            if (showMenu) {
+              setShowMenu(false);
+            }
+            if (isAlienDetailView) {
+              setIsAlienDetailView(false);
+            }
+          }}
+        />
+        <AlienCards isShowing={isAlienDetailView} />
+      </Canvas>
+    </Suspense>
   );
 }
