@@ -16,6 +16,7 @@ import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
+import Loading from './Loading';
 
 // const Dolly = ({ position }: any) => {
 //   const { z } = position;
@@ -41,7 +42,7 @@ export default function Scene() {
   }, []);
 
   return (
-    <Suspense fallback={null}>
+    <Suspense fallback={<Loading />}>
       <Canvas camera={{ position: cameraPosition, fov: 50 }}>
         <GUI showMenu={showMenu} setShowMenu={setShowMenu} />
         <Earth
