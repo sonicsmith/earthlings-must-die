@@ -1,72 +1,75 @@
 import { ethers } from 'hardhat';
 import { expect } from 'chai';
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers';
-import { Contract } from 'ethers';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 
 describe('Equipment', function () {
-  let token: Contract;
-  let owner: SignerWithAddress;
-  let addr1: SignerWithAddress;
-  let addr2: SignerWithAddress;
-
   async function deployEquipmentFixture() {
-    // Get the ContractFactory and Signers here.
     const Equipment = await ethers.getContractFactory('Equipment');
     const [owner, addr1, addr2] = await ethers.getSigners();
-
     const equipment = await Equipment.deploy();
-
     await equipment.deployed();
-
-    // Fixtures can return anything you consider useful for your tests
-    return { equipment, owner, addr1, addr2 };
+    const mintCost = await equipment.connect(owner).getMintCost();
+    return { equipment, owner, addr1, addr2, mintCost };
   }
 
-  it('should mint a new token', async function () {
-    const { equipment, owner } = await loadFixture(deployEquipmentFixture);
-    await equipment.connect(owner!).mint(addr1.address, 1, 10);
-
-    const balance = await equipment.balanceOf(addr1.address, 1);
-    expect(balance).to.equal(10);
+  describe('Deployment', function () {
+    it('Should have no holders', async function () {
+      const { equipment, owner } = await loadFixture(deployEquipmentFixture);
+      expect(await equipment.balanceOf(owner?.address, 0)).to.equal(0);
+    });
   });
 
-  it('should transfer tokens', async function () {
-    await token.connect(owner).mint(addr1.address, 1, 10);
-    await token
-      .connect(addr1)
-      .safeTransferFrom(
-        addr1.address,
-        addr2.address,
-        1,
-        5,
-        ethers.utils.toUtf8Bytes('')
+  describe('Mint', function () {
+    it('should mint a new token', async function () {
+      const { equipment, owner, addr1, mintCost } = await loadFixture(
+        deployEquipmentFixture
+      );
+      await equipment
+        .connect(owner!)
+        .mint(addr1.address, 1, 10, { value: mintCost.toString() });
+
+      const balance = await equipment.balanceOf(addr1.address, 1);
+      expect(balance).to.equal(10);
+    });
+  });
+
+  describe('Transfer', function () {
+    it('should transfer tokens', async function () {
+      const { equipment, owner, addr1, addr2, mintCost } = await loadFixture(
+        deployEquipmentFixture
+      );
+      await equipment
+        .connect(owner)
+        .mint(addr1.address, 1, 10, { value: mintCost.toString() });
+      await equipment
+        .connect(addr1)
+        .safeTransferFrom(addr1.address, addr2.address, 1, 5, []);
+
+      const balanceAddr1 = await equipment.balanceOf(addr1.address, 1);
+      const balanceAddr2 = await equipment.balanceOf(addr2.address, 1);
+      expect(balanceAddr1).to.equal(5);
+      expect(balanceAddr2).to.equal(5);
+    });
+
+    it('should not allow transfers exceeding balance', async function () {
+      const { equipment, owner, addr1, addr2, mintCost } = await loadFixture(
+        deployEquipmentFixture
       );
 
-    const balanceAddr1 = await token.balanceOf(addr1.address, 1);
-    const balanceAddr2 = await token.balanceOf(addr2.address, 1);
-    expect(balanceAddr1).to.equal(5);
-    expect(balanceAddr2).to.equal(5);
-  });
+      await equipment
+        .connect(owner)
+        .mint(addr1.address, 1, 10, { value: mintCost.toString() });
 
-  it('should not allow transfers exceeding balance', async function () {
-    await token.connect(owner).mint(addr1.address, 1, 10);
+      await expect(
+        equipment
+          .connect(addr1)
+          .safeTransferFrom(addr1.address, addr2.address, 1, 15, [])
+      ).to.be.revertedWith('ERC1155: insufficient balance for transfer');
 
-    await expect(
-      token
-        .connect(addr1)
-        .safeTransferFrom(
-          addr1.address,
-          addr2.address,
-          1,
-          15,
-          ethers.utils.toUtf8Bytes('')
-        )
-    ).to.be.revertedWith('ERC1155: insufficient balance for transfer');
-
-    const balanceAddr1 = await token.balanceOf(addr1.address, 1);
-    const balanceAddr2 = await token.balanceOf(addr2.address, 1);
-    expect(balanceAddr1).to.equal(10);
-    expect(balanceAddr2).to.equal(0);
+      const balanceAddr1 = await equipment.balanceOf(addr1.address, 1);
+      const balanceAddr2 = await equipment.balanceOf(addr2.address, 1);
+      expect(balanceAddr1).to.equal(10);
+      expect(balanceAddr2).to.equal(0);
+    });
   });
 });

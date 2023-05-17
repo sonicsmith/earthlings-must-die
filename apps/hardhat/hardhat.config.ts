@@ -1,11 +1,11 @@
-require('@nomicfoundation/hardhat-toolbox');
-require('@nomicfoundation/hardhat-toolbox');
+import { HardhatUserConfig } from 'hardhat/config';
+import '@nomicfoundation/hardhat-toolbox';
+import * as dotenv from 'dotenv';
 require('@nomiclabs/hardhat-etherscan');
-const dotenv = require('dotenv');
 
 dotenv.config();
 
-module.exports = {
+const config: HardhatUserConfig = {
   solidity: '0.8.9',
   networks: {
     mumbai: {
@@ -16,7 +16,9 @@ module.exports = {
         : [],
     },
   },
-  // etherscan: {
-  //   apiKey: process.env.POLYGONSCAN_API_KEY,
-  // },
+  etherscan: {
+    apiKey: process.env.POLYGONSCAN_API_KEY,
+  },
 };
+
+export default config;

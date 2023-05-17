@@ -5,17 +5,28 @@ import '@openzeppelin/contracts/token/ERC721/ERC721.sol';
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol';
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
+import '@openzeppelin/contracts/utils/Counters.sol';
 
 contract Aliens is ERC721, ERC721URIStorage, ERC721Burnable, Ownable {
+  using Counters for Counters.Counter;
+  Counters.Counter private idCounter;
+
+  uint256 public mintCost = 0.01 ether;
+
   constructor() ERC721('Aliens', 'ALN') {}
 
-  function safeMint(
-    address to,
-    uint256 tokenId,
-    string memory uri
-  ) public onlyOwner {
-    _safeMint(to, tokenId);
-    _setTokenURI(tokenId, uri);
+  function getMintCost() public view returns (uint256) {
+    return mintCost;
+  }
+
+  function setMintCost(uint256 newCost) public onlyOwner {
+    mintCost = newCost;
+  }
+
+  function mint(address to, string memory uri) public payable {
+    require(msg.value == mintCost, 'Aliens: value must be mint cost');
+    _safeMint(to, idCounter.current());
+    _setTokenURI(idCounter.current(), uri);
   }
 
   // The following functions are overrides required by Solidity.

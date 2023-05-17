@@ -6,6 +6,7 @@
       "persistent": true,
       "cache": false
     },
+    "hardhat:test": {},
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**"]
