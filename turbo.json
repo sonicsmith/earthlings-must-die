@@ -7,6 +7,7 @@
       "cache": false
     },
     "hardhat:test": {},
+    "hardhat:compile": {},
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**"],

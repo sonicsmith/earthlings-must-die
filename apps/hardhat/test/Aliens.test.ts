@@ -1,4 +1,4 @@
-import { ethers } from 'hardhat';
+import { ethers, network } from 'hardhat';
 import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 
@@ -26,14 +26,14 @@ describe('Aliens', function () {
       );
       await aliens
         .connect(owner)
-        .mint(addr1.address, 'theUri', { value: mintCost.toString() });
+        .mint(addr1.address, { value: mintCost.toString() });
       expect(await aliens.ownerOf(0)).to.equal(addr1.address);
     });
 
     it('should not allow mint without paying', async function () {
       const { aliens, addr1, addr2 } = await loadFixture(deployAliensFixture);
       await expect(
-        aliens.connect(addr1).mint(addr2.address, 'theUri')
+        aliens.connect(addr1).mint(addr2.address)
       ).to.be.rejectedWith('Aliens: value must be mint cost');
     });
   });
@@ -47,7 +47,7 @@ describe('Aliens', function () {
       const to = addr2.address;
       await aliens
         .connect(owner)
-        .mint(addr1.address, 'theUri', { value: mintCost.toString() });
+        .mint(addr1.address, { value: mintCost.toString() });
       await aliens.connect(addr1).transferFrom(from, to, 0);
       expect(await aliens.ownerOf(0)).to.equal(addr2.address);
     });
@@ -58,13 +58,28 @@ describe('Aliens', function () {
       );
       await aliens
         .connect(owner)
-        .mint(addr1.address, 'theUri', { value: mintCost.toString() });
+        .mint(addr1.address, { value: mintCost.toString() });
       const from = addr1.address;
       const to = addr2.address;
       const transfer = aliens.connect(addr2).transferFrom(from, to, 0);
       await expect(transfer).to.be.rejectedWith(
         'ERC721: caller is not token owner or approved'
       );
+    });
+
+    it('should allow random strength to be set', async function () {
+      const { aliens, owner, addr1, mintCost } = await loadFixture(
+        deployAliensFixture
+      );
+      await aliens
+        .connect(owner)
+        .mint(addr1.address, { value: mintCost.toString() });
+      // Two blocks time
+      await network.provider.send('evm_mine');
+      await network.provider.send('evm_mine');
+      await aliens.connect(addr1).setAlienStrength(0);
+      const strength = await aliens.getAlienStrength(0);
+      expect(strength).to.be.gt(0);
     });
   });
 });
