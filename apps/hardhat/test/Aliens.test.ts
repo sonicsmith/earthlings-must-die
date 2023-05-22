@@ -13,9 +13,9 @@ describe('Aliens', function () {
   }
 
   describe('Deployment', function () {
-    it('Should have no holders', async function () {
+    it('Should premint 4 aliens', async function () {
       const { aliens, owner } = await loadFixture(deployAliensFixture);
-      expect(await aliens.balanceOf(owner?.address)).to.equal(0);
+      expect(await aliens.balanceOf(owner?.address)).to.equal(4);
     });
   });
 
@@ -27,7 +27,7 @@ describe('Aliens', function () {
       await aliens
         .connect(owner)
         .mint(addr1.address, { value: mintCost.toString() });
-      expect(await aliens.ownerOf(0)).to.equal(addr1.address);
+      expect(await aliens.ownerOf(4)).to.equal(addr1.address);
     });
 
     it('should not allow mint without paying', async function () {
@@ -43,22 +43,14 @@ describe('Aliens', function () {
       const { aliens, owner, addr1, addr2, mintCost } = await loadFixture(
         deployAliensFixture
       );
-      const from = addr1.address;
+      const from = owner.address;
       const to = addr2.address;
-      await aliens
-        .connect(owner)
-        .mint(addr1.address, { value: mintCost.toString() });
-      await aliens.connect(addr1).transferFrom(from, to, 0);
+      await aliens.transferFrom(from, to, 0);
       expect(await aliens.ownerOf(0)).to.equal(addr2.address);
     });
 
     it('should not allow non-owners to transfer a token', async function () {
-      const { aliens, owner, addr1, addr2, mintCost } = await loadFixture(
-        deployAliensFixture
-      );
-      await aliens
-        .connect(owner)
-        .mint(addr1.address, { value: mintCost.toString() });
+      const { aliens, addr1, addr2 } = await loadFixture(deployAliensFixture);
       const from = addr1.address;
       const to = addr2.address;
       const transfer = aliens.connect(addr2).transferFrom(from, to, 0);
@@ -77,8 +69,8 @@ describe('Aliens', function () {
       // Two blocks time
       await network.provider.send('evm_mine');
       await network.provider.send('evm_mine');
-      await aliens.connect(addr1).setAlienStrength(0);
-      const strength = await aliens.getAlienStrength(0);
+      await aliens.setAlienStrength(4);
+      const strength = await aliens.getAlienStrength(4);
       expect(strength).to.be.gt(0);
     });
   });

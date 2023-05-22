@@ -20,7 +20,15 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
   }
   mapping(uint256 => AlienRace) public alienRaces;
 
-  constructor() ERC721('Aliens', 'ALN') {}
+  constructor() ERC721('Aliens', 'ALN') {
+    // Premint 4 to aliens to creator
+    uint8[4] memory strengths = [1, 2, 2, 2];
+    for (uint256 i = 0; i < 4; i++) {
+      _safeMint(msg.sender, idCounter.current());
+      alienRaces[idCounter.current()] = AlienRace(strengths[i], block.number);
+      idCounter.increment();
+    }
+  }
 
   function getMintCost() public view returns (uint256) {
     return mintCost;
@@ -35,7 +43,7 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
     require(alienRaces[tokenId].strength == 0, 'Aliens: strength already set');
     uint256 nextBlockNumber = alienRaces[tokenId].createdAtBlock + 1;
     bytes32 nextBlockhash = blockhash(nextBlockNumber);
-    uint randomStrength = uint256(nextBlockhash) % maxStrength;
+    uint256 randomStrength = uint256(nextBlockhash) % maxStrength;
     alienRaces[tokenId].strength = randomStrength;
   }
 

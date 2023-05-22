@@ -2,12 +2,15 @@
 pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol';
+import '@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol';
 import './interfaces/IAliens.sol';
 import './interfaces/IEquipment.sol';
 
-contract BattlefieldEarth {
+contract BattlefieldEarth is ERC721Holder, ERC1155Holder {
   IAliens private aliensContract;
   IEquipment private equipmentContract;
+
+  uint8 private constant FUEL = 0;
 
   struct AlienOnPlanet {
     uint256 tokenId;
@@ -18,7 +21,15 @@ contract BattlefieldEarth {
 
   constructor() {}
 
-  function setAlienContract(address _aliensContract) public {
+  function populatePlanet() public {
+    // Start planet with 4 existing aliens
+    for (uint256 i = 0; i < 4; i++) {
+      aliensContract.safeTransferFrom(msg.sender, address(this), i);
+      aliensOnPlanet.push(AlienOnPlanet(i, msg.sender));
+    }
+  }
+
+  function setAliensContract(address _aliensContract) public {
     aliensContract = IAliens(_aliensContract);
   }
 
@@ -26,21 +37,38 @@ contract BattlefieldEarth {
     equipmentContract = IEquipment(_equipmentContract);
   }
 
-  function attack(uint256 _tokenId) public {
-    require(
-      aliensContract.getApproved(_tokenId) == address(this),
-      'BattlefieldEarth: Alien not approved for transfer'
-    );
-    require(
-      equipmentContract.isApprovedForAll(msg.sender, address(this)),
-      'BattlefieldEarth: Fuel not approved for transfer'
-    );
-    // Move alien to planet
-    aliensContract.safeTransferFrom(msg.sender, address(this), _tokenId);
-    // Burn Fuel
-    equipmentContract.burn(msg.sender, 1, 1);
+  function rewardCurrentInvaders(uint256 excludeToken) internal {
+    // Reward existing aliens with fuel
+    for (uint256 i = 0; i < aliensOnPlanet.length; i++) {
+      if (aliensOnPlanet[i].tokenId != excludeToken) {
+        equipmentContract.reward(aliensOnPlanet[i].owner, FUEL, 1);
+      }
+    }
+  }
 
-    // Find weakest alien currently on planet
+  function attack(uint256 _tokenId) public {
+    // Move alien to planet and burn fuel
+    aliensContract.safeTransferFrom(msg.sender, address(this), _tokenId);
+    equipmentContract.burn(msg.sender, FUEL, 3);
+
+    // Send weakest alien back to owner
+    uint256 weakestAlienIndex = getWeakestAlienIndex();
+    aliensContract.safeTransferFrom(
+      address(this),
+      aliensOnPlanet[weakestAlienIndex].owner,
+      aliensOnPlanet[weakestAlienIndex].tokenId
+    );
+    // Replace weakest alien from planet with new comer
+    AlienOnPlanet memory newAlien = AlienOnPlanet(_tokenId, msg.sender);
+    aliensOnPlanet[weakestAlienIndex] = newAlien;
+    rewardCurrentInvaders(_tokenId);
+  }
+
+  function getAliens() public view returns (AlienOnPlanet[] memory) {
+    return aliensOnPlanet;
+  }
+
+  function getWeakestAlienIndex() internal view returns (uint256) {
     uint256 weakestAlienStrength;
     uint256 weakestAlienIndex;
     for (uint256 i = 0; i < aliensOnPlanet.length; i++) {
@@ -52,18 +80,12 @@ contract BattlefieldEarth {
         weakestAlienIndex = aliensOnPlanet[i].tokenId;
       }
     }
-    // Send alien back to owner
-    aliensContract.safeTransferFrom(
-      address(this),
-      aliensOnPlanet[weakestAlienIndex].owner,
-      aliensOnPlanet[weakestAlienIndex].tokenId
-    );
-    // Replace weakest alien from planet with new comer
-    AlienOnPlanet memory newAlien = AlienOnPlanet(_tokenId, msg.sender);
-    aliensOnPlanet[weakestAlienIndex] = newAlien;
+    return weakestAlienIndex;
   }
 
-  function getAliens() public view returns (AlienOnPlanet[] memory) {
-    return aliensOnPlanet;
+  receive() external payable {
+    // Eth is recieved here from the equipment contract
   }
+
+  fallback() external payable {}
 }
