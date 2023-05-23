@@ -48,4 +48,9 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   function burn(address account, uint256 id, uint256 amount) public override {
     _burn(account, id, amount);
   }
+
+  receive() external payable {
+    (bool sent, ) = owner().call{value: msg.value}('');
+    require(sent, 'Aliens: Failed to pass on value');
+  }
 }

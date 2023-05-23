@@ -66,4 +66,9 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
   function baseTokenURI() public view returns (string memory) {
     return baseUri;
   }
+
+  receive() external payable {
+    (bool sent, ) = owner().call{value: msg.value}('');
+    require(sent, 'Aliens: Failed to pass on value');
+  }
 }

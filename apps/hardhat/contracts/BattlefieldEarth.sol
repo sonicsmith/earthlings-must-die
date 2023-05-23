@@ -3,10 +3,11 @@ pragma solidity ^0.8.9;
 
 import '@openzeppelin/contracts/token/ERC721/utils/ERC721Holder.sol';
 import '@openzeppelin/contracts/token/ERC1155/utils/ERC1155Holder.sol';
+import '@openzeppelin/contracts/access/Ownable.sol';
 import './interfaces/IAliens.sol';
 import './interfaces/IEquipment.sol';
 
-contract BattlefieldEarth is ERC721Holder, ERC1155Holder {
+contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
   IAliens private aliensContract;
   IEquipment private equipmentContract;
 
@@ -21,7 +22,11 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder {
 
   constructor() {}
 
-  function populatePlanet() public {
+  function populatePlanet() public onlyOwner {
+    require(
+      aliensOnPlanet.length == 0,
+      'BattlefieldEarth: Planet already populated'
+    );
     // Start planet with 4 existing aliens
     for (uint256 i = 0; i < 4; i++) {
       aliensContract.safeTransferFrom(msg.sender, address(this), i);
@@ -29,11 +34,11 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder {
     }
   }
 
-  function setAliensContract(address _aliensContract) public {
+  function setAliensContract(address _aliensContract) public onlyOwner {
     aliensContract = IAliens(_aliensContract);
   }
 
-  function setEquipmentContract(address _equipmentContract) public {
+  function setEquipmentContract(address _equipmentContract) public onlyOwner {
     equipmentContract = IEquipment(_equipmentContract);
   }
 
@@ -84,8 +89,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder {
   }
 
   receive() external payable {
-    // Eth is recieved here from the equipment contract
+    (bool sent, ) = owner().call{value: msg.value}('');
+    require(sent, 'Aliens: Failed to pass on value');
   }
-
-  fallback() external payable {}
 }
