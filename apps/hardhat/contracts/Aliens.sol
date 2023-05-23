@@ -13,6 +13,7 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
   uint256 private mintCost = 0.005 ether;
   uint256 private maxStrength = 10;
   string private baseUri = '';
+  uint256 private gasBack = 10000000000000000; // Aprox 1 cent
 
   struct AlienRace {
     uint256 strength;
@@ -34,6 +35,10 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
     return mintCost;
   }
 
+  function setGasBack(uint256 newGasBack) public onlyOwner {
+    gasBack = newGasBack;
+  }
+
   function setMintCost(uint256 newCost) public onlyOwner {
     mintCost = newCost;
   }
@@ -51,12 +56,15 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
     return alienRaces[tokenId].strength;
   }
 
-  function mint(address to) public payable {
+  function mint(address payable recipient) public payable {
     require(msg.value == mintCost, 'Aliens: value must be mint cost');
-    _safeMint(to, idCounter.current());
+    _safeMint(recipient, idCounter.current());
     alienRaces[idCounter.current()] = AlienRace(0, block.number);
     alienRaces[idCounter.current()].createdAtBlock = block.number;
     idCounter.increment();
+    // Give user money for gas
+    (bool gasSent, ) = recipient.call{value: gasBack}('');
+    require(gasSent, 'Aliens: Failed to reimburse');
   }
 
   function setBaseUri(string memory _baseUri) public onlyOwner {

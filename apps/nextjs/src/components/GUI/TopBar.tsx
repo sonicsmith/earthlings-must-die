@@ -8,7 +8,7 @@ import Router from 'next/router';
 
 const HomeIcon = ({ onClick }: any) => {
   return (
-    <div onClick={onClick} className="p-1 hover:cursor-pointer">
+    <div onClick={onClick} className="p-1  hover:cursor-pointer">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -50,17 +50,18 @@ const ProfileButton = ({
   );
 };
 
-const MENU_ITEM_CLASS = 'hover:bg-gray-100 p-2 hover:cursor-pointer';
+const MENU_ITEM_CLASS =
+  'hover:bg-slate-500 p-2 hover:cursor-pointer px-6 rounded-lg';
 
 const Menu = ({ logout }: { logout: () => void }) => {
   return (
-    <div className="w-fit rounded-xl bg-white p-4">
+    <div className="w-fit rounded-xl bg-slate-700 py-2 text-white">
       <ul>
-        <li className={MENU_ITEM_CLASS}>Create Aliens</li>
+        <li className={MENU_ITEM_CLASS}>Spawn Alien Race</li>
         <li className={MENU_ITEM_CLASS}>Buy Fuel</li>
-        <li className={MENU_ITEM_CLASS}>Send Aliens</li>
+        <li className={MENU_ITEM_CLASS}>Invade</li>
         <li className={MENU_ITEM_CLASS}>Inventory</li>
-        <li className={MENU_ITEM_CLASS}>Sell Humans</li>
+        {/* <li className={MENU_ITEM_CLASS}>Sell Humans</li> */}
         <li className={MENU_ITEM_CLASS} onClick={logout}>
           Logout
         </li>
@@ -84,12 +85,12 @@ export default function TopBar({
 }) {
   return (
     <div>
-      <div className="flex w-full flex-row justify-between bg-white p-2">
+      <div className="flex w-full flex-row justify-between bg-slate-700 p-2 text-white">
         {isConnected ? (
           <>
             <HomeIcon />
             <>
-              <div className="p-1">Humans gathered: {0}</div>
+              {/* <div className="p-1">Humans gathered: {0}</div> */}
               <ProfileButton
                 user={user}
                 onClick={() => setShowMenu(!showMenu)}
