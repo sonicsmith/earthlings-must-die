@@ -13,7 +13,7 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
   uint256 private mintCost = 0.005 ether;
   uint256 private maxStrength = 10;
   string private baseUri = '';
-  uint256 private gasBack = 10000000000000000; // Aprox 1 cent
+  uint256 private gasBack = 0.0001 ether;
 
   struct AlienRace {
     uint256 strength;

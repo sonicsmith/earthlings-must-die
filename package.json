@@ -11,11 +11,15 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run hardhat:test --scope=hardhat",
-    "compile": "turbo run hardhat:compile --scope=hardhat"
+    "compile": "turbo run hardhat:compile --scope=hardhat",
+    "deploy": "turbo run hardhat:deploy --scope=hardhat "
   },
   "devDependencies": {
     "prettier": "^2.5.1",
     "turbo": "^1.9.3"
   },
-  "packageManager": "npm@9.5.0"
+  "packageManager": "npm@9.5.0",
+  "dependencies": {
+    "@crossmint/client-sdk-react-ui": "^0.2.8-alpha.3"
+  }
 }

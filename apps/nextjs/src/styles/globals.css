@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+button.buy-alien-btn {
+    background-color: rgb(51 65 85);
+}
+button.buy-alien-btn span {
+    display: none;
+}
+button.buy-alien-btn:after {
+    content: "Spawn with credit card";
+    color: white; 
+}
+
+button.buy-equipment-btn {
+    background-color: rgb(51 65 85);
+}
+button.buy-equipment-btn span {
+    display: none;
+}
+button.buy-equipment-btn:after {
+    content: "Buy with credit card";
+    color: white; 
+}

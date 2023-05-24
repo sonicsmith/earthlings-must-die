@@ -1,7 +1,5 @@
 import { Html } from '@react-three/drei';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
-
-import Button from '../Button';
 import TopBar from './TopBar';
 import { useContext, useEffect, useState } from 'react';
 import { UserInfo } from '@web3auth/base';

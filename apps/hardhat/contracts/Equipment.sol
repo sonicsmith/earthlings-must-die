@@ -9,7 +9,7 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   uint256 public mintCost = 0.005 ether;
 
   address private battlefieldAddress;
-  uint256 private gasBack = 10000000000000000; // Aprox 1 cent
+  uint256 private gasBack = 0.0001 ether;
 
   constructor() ERC1155('') {}
 

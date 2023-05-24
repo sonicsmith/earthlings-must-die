@@ -14,11 +14,12 @@ const config: HardhatUserConfig = {
       accounts: process.env.DEPLOYMENT_PRIVATE_KEY
         ? [process.env.DEPLOYMENT_PRIVATE_KEY]
         : [],
+      gasPrice: 150000000000,
     },
   },
-  // etherscan: {
-  //   apiKey: process.env.POLYGONSCAN_API_KEY,
-  // },
+  etherscan: {
+    apiKey: process.env.POLYGONSCAN_API_KEY,
+  },
 };
 
 export default config;

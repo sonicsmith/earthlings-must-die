@@ -5,7 +5,7 @@
   "scripts": {
     "hardhat:test": "REPORT_GAS=true hardhat test",
     "hardhat:compile": "hardhat compile",
-    "hardhat:deploy": "hardhat run scripts/deploy.ts"
+    "hardhat:deploy": "hardhat run --network mumbai scripts/deploy.ts"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",

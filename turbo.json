@@ -8,6 +8,7 @@
     },
     "hardhat:test": {},
     "hardhat:compile": {},
+    "hardhat:deploy": {},
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**"],
