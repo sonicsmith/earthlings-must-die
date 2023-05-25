@@ -2,8 +2,12 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import HomeIcon from '~/components/HomeButton';
 import { CrossmintPayButton } from '@crossmint/client-sdk-react-ui';
+import NumberInput from '~/components/NumberInput';
+import { useState } from 'react';
 
 const Dashboard: NextPage = () => {
+  const [fuelAmount, setFuelAmount] = useState(1);
+
   return (
     <>
       <Head>
@@ -41,8 +45,12 @@ const Dashboard: NextPage = () => {
             </div>
           </div>
           <div className="flex flex-col items-center justify-center p-4">
-            <div className="p-2">
+            <div className="p-1">
               <h1>Buy Fuel</h1>
+            </div>
+            <div className="flex p-1">
+              <div className="mr-3">(Quantity:</div>
+              <NumberInput amount={fuelAmount} setAmount={setFuelAmount} />)
             </div>
             <div>
               <CrossmintPayButton
