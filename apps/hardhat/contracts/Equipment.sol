@@ -6,10 +6,9 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol';
 
 contract Equipment is ERC1155, Ownable, ERC1155Burnable {
-  uint256 public mintCost = 0.005 ether;
-
+  uint256 private mintCost = 10 ether;
+  uint256 private gasBack = 0.01 ether;
   address private battlefieldAddress;
-  uint256 private gasBack = 0.0001 ether;
 
   constructor() ERC1155('') {}
 
@@ -37,12 +36,13 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
 
   function mint(address recipient, uint256 id, uint256 amount) public payable {
     require(msg.value == mintCost, 'Equipment: value must be mint cost');
-    (bool sent, ) = battlefieldAddress.call{value: msg.value}('');
+    uint256 battleAmount = mintCost - gasBack;
+    (bool sent, ) = battlefieldAddress.call{value: battleAmount}('');
     require(sent, 'Equipment: Failed to pass on value');
     _mint(recipient, id, amount, '');
     // Give user money for gas
     (bool gasSent, ) = recipient.call{value: gasBack}('');
-    require(gasSent, 'Aliens: Failed to reimburse');
+    require(gasSent, 'Equipment: Failed to reimburse');
   }
 
   function reward(address account, uint256 id, uint256 amount) external {

@@ -3,6 +3,7 @@ import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 
 const FUEL_ID = 0;
+const REWARD_ID = 1;
 
 describe('Battlefield Earth', function () {
   async function deployBattlefieldEarthFixture() {
@@ -28,7 +29,9 @@ describe('Battlefield Earth', function () {
     const equipment = await Equipment.deploy();
     await equipment.deployed();
     const equipmentMintCost = await equipment.getMintCost();
-    await equipment.mint(player1.address, 0, 10, { value: equipmentMintCost });
+    await equipment.mint(player1.address, FUEL_ID, 10, {
+      value: equipmentMintCost,
+    });
 
     const earth = await BattlefieldEarth.deploy();
     await earth.deployed();
@@ -51,7 +54,7 @@ describe('Battlefield Earth', function () {
     });
   });
 
-  describe.only('Attacking', function () {
+  describe('Attacking', function () {
     it('Should allow a player to attack the planet', async function () {
       const { earth, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
@@ -62,7 +65,7 @@ describe('Battlefield Earth', function () {
       );
       expect(aliensOnPlanet).to.include('4');
     });
-    it('Should burn 3 fuel', async function () {
+    it('Should burn 1 fuel', async function () {
       const { earth, equipment, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
@@ -73,7 +76,7 @@ describe('Battlefield Earth', function () {
       const balanceAfter = (
         await equipment.balanceOf(player1.address, FUEL_ID)
       ).toNumber();
-      expect(balanceAfter).to.equal(balanceBefore - 3);
+      expect(balanceAfter).to.equal(balanceBefore - 1);
     });
     it('Should replace weakest alien with new alien', async function () {
       const { earth, aliens, player1 } = await loadFixture(
@@ -109,14 +112,9 @@ describe('Battlefield Earth', function () {
       const { earth, equipment, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      const balanceBefore = (
-        await equipment.balanceOf(owner.address, FUEL_ID)
-      ).toNumber();
       await earth.connect(player1).attack(4);
-      const balanceAfter = (
-        await equipment.balanceOf(owner.address, FUEL_ID)
-      ).toNumber();
-      expect(balanceAfter - 3).to.equal(balanceBefore);
+      const balance = await equipment.balanceOf(owner.address, REWARD_ID);
+      expect(balance).to.equal(3);
     });
   });
 });

@@ -12,6 +12,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
   IEquipment private equipmentContract;
 
   uint8 private constant FUEL = 0;
+  uint8 private constant REWARD = 1;
 
   struct AlienOnPlanet {
     uint256 tokenId;
@@ -46,7 +47,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
     // Reward existing aliens with fuel
     for (uint256 i = 0; i < aliensOnPlanet.length; i++) {
       if (aliensOnPlanet[i].tokenId != excludeToken) {
-        equipmentContract.reward(aliensOnPlanet[i].owner, FUEL, 1);
+        equipmentContract.reward(aliensOnPlanet[i].owner, REWARD, 1);
       }
     }
   }
@@ -54,7 +55,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
   function attack(uint256 _tokenId) public {
     // Move alien to planet and burn fuel
     aliensContract.safeTransferFrom(msg.sender, address(this), _tokenId);
-    equipmentContract.burn(msg.sender, FUEL, 3);
+    equipmentContract.burn(msg.sender, FUEL, 1);
 
     // Send weakest alien back to owner
     uint256 weakestAlienIndex = getWeakestAlienIndex();
