@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+body {
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
 button.buy-alien-btn {
     background-color: rgb(51 65 85);
 }
@@ -9,7 +13,7 @@ button.buy-alien-btn span {
     display: none;
 }
 button.buy-alien-btn:after {
-    content: "Spawn with credit card";
+    content: "With credit card";
     color: white; 
 }
 
@@ -20,6 +24,6 @@ button.buy-equipment-btn span {
     display: none;
 }
 button.buy-equipment-btn:after {
-    content: "Buy with credit card";
+    content: "With credit card";
     color: white; 
 }

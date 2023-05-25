@@ -1,7 +1,11 @@
 import Button from '../Button';
 import { UserInfo } from '@web3auth/base';
 import Router from 'next/router';
-import HomeIcon from '../HomeIcon';
+import {
+  RocketLaunchIcon,
+  ArrowRightOnRectangleIcon,
+} from '@heroicons/react/24/solid';
+import HomeIcon from '../HomeButton';
 
 const ProfileButton = ({
   onClick,
@@ -41,9 +45,16 @@ const Menu = ({ logout }: { logout: () => void }) => {
         >
           Dashboard
         </li>
-        <li className={MENU_ITEM_CLASS}>Invade</li>
+        <li className={MENU_ITEM_CLASS}>
+          <div className="flex">
+            Invade <RocketLaunchIcon className="ml-2 h-5 w-5 text-white" />
+          </div>
+        </li>
         <li className={MENU_ITEM_CLASS} onClick={logout}>
-          Logout
+          <div className="flex">
+            Logout
+            <ArrowRightOnRectangleIcon className="ml-2 h-5 w-5 text-white" />
+          </div>
         </li>
       </ul>
     </div>
