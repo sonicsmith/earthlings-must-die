@@ -14,17 +14,23 @@ const ProfileButton = ({
   onClick: () => void;
   user: Partial<UserInfo> | null;
 }) => {
+  const nameArray = (user?.name || '').split(' ');
+  const initialArray = nameArray.map((word) => word.charAt(0).toUpperCase());
+  const initials = initialArray.join('');
+
   return (
     <div
       onClick={onClick}
       className={'h-8 w-8 rounded-full bg-slate-500 hover:cursor-pointer'}
     >
-      {user?.profileImage && (
+      {user?.profileImage ? (
         <img
           className={'rounded-full'}
           src={user.profileImage}
-          alt={'profile-pic'}
+          alt={initials}
         />
+      ) : (
+        <div className={'p-1 text-white'}>{initials}</div>
       )}
     </div>
   );
@@ -40,10 +46,10 @@ const Menu = ({ logout }: { logout: () => void }) => {
         <li
           className={MENU_ITEM_CLASS}
           onClick={() => {
-            Router.push('/dashboard');
+            Router.push('/store');
           }}
         >
-          Dashboard
+          Store
         </li>
         <li className={MENU_ITEM_CLASS}>
           <div className="flex">

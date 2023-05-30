@@ -11,7 +11,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   const [provider, setProvider] = useState<SafeEventEmitterProvider | null>(
     null
   );
-  const [showApp, setShowApp] = useState(true);
+  // const [showApp, setShowApp] = useState(true);
 
   useEffect(() => {
     const init = async () => {
@@ -26,7 +26,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
         uiConfig: {
           theme: 'light',
           loginMethodsOrder: ['google', 'facebook'],
-          appLogo: 'https://web3auth.io/images/w3a-L-Favicon-1.svg', // Your App Logo Here
+          appLogo: 'https://web3auth.io/images/w3a-L-Favicon-1.svg',
           modalZIndex: '99998',
         },
       });
@@ -37,15 +37,17 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   }, []);
 
   const connect = useCallback(async () => {
+    console.log('connecting..');
     const provider = await web3Auth?.connect();
     if (provider) {
+      console.log('setting provider', provider);
       setProvider(provider);
     }
   }, [web3Auth]);
 
   return (
     <Web3AuthContext.Provider value={{ web3Auth, provider, connect }}>
-      {showApp && <Component {...pageProps} />}
+      <Component {...pageProps} />
     </Web3AuthContext.Provider>
   );
 };

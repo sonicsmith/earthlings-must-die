@@ -1,8 +1,13 @@
-export default function Button({ children, onClick }: any) {
+const disabledOpacity = 'opacity-10 cursor-not-allowed';
+
+export default function Button({ children, onClick, disabled }: any) {
   return (
     <button
+      disabled={disabled}
       onClick={onClick}
-      className="rounded bg-blue-500 px-4 py-1 font-bold text-white hover:bg-blue-700"
+      className={
+        'rounded bg-blue-500 px-4 py-1 font-bold text-white hover:bg-blue-700 disabled:opacity-50'
+      }
     >
       {children}
     </button>

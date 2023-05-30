@@ -1,12 +1,46 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import HomeIcon from '~/components/HomeButton';
-import { CrossmintPayButton } from '@crossmint/client-sdk-react-ui';
+import {
+  CrossmintPayButton,
+  CrossmintNFTCollectionView,
+} from '@crossmint/client-sdk-react-ui';
 import NumberInput from '~/components/NumberInput';
-import { useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { Web3AuthContext } from '~/providers/Web3AuthContext';
+import { ethers } from 'ethers';
+import { NonEmptyArray } from '@trpc/client/dist/internals/types';
+import Button from '~/components/Button';
 
-const Dashboard: NextPage = () => {
+interface Wallet {
+  chain: string;
+  publicKey: string;
+}
+
+const Store: NextPage = () => {
   const [fuelAmount, setFuelAmount] = useState(1);
+  const [address, setAddress] = useState('');
+
+  const { web3Auth } = useContext(Web3AuthContext);
+
+  useEffect(() => {
+    console.log(web3Auth?.status);
+    const test2 = async () => {
+      if (web3Auth?.status === 'connected') {
+        const provider = new ethers.providers.Web3Provider(
+          web3Auth.provider as any
+        );
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        setAddress(address);
+      }
+    };
+    test2();
+  }, [web3Auth?.status]);
+
+  const numberOfAliens = 0;
+  const numberOfFuel = 0;
+  const numberOfRewards = 0;
 
   return (
     <>
@@ -27,9 +61,10 @@ const Dashboard: NextPage = () => {
         </div>
 
         <div className="p-4 text-lg text-white">
+          {/* Alien Species */}
           <div className="flex flex-col items-center justify-center p-4">
             <div className="p-2">
-              <h1>Spawn New Alien Race</h1>
+              <div className={'text-2xl'}>Alien Species</div>
             </div>
             <div>
               <CrossmintPayButton
@@ -44,31 +79,56 @@ const Dashboard: NextPage = () => {
               />
             </div>
           </div>
+
+          {/* Fuel Tanks */}
           <div className="flex flex-col items-center justify-center p-4">
             <div className="p-1">
-              <h1>Buy Fuel</h1>
+              <div className={'text-2xl'}>Fuel tanks</div>
             </div>
             <div className="flex p-1">
               <div className="mr-3">(Quantity:</div>
               <NumberInput amount={fuelAmount} setAmount={setFuelAmount} />)
             </div>
-            <div>
+            <div className={'p-2'}>
               <CrossmintPayButton
                 clientId="0b05de58-033d-4e62-9368-11b74cb5d8e7"
                 mintConfig={{
                   type: 'erc-1155',
                   totalPrice: '0.005',
-                  quantity: '1',
+                  quantity: fuelAmount,
                 }}
                 environment="staging"
                 className="buy-equipment-btn"
               />
             </div>
           </div>
+
+          {/* Reward */}
+          <div className="flex flex-col items-center justify-center p-4">
+            <div className="p-2">
+              <div className={'text-2xl'}>
+                Soylent Green (Owned: {numberOfRewards})
+              </div>
+            </div>
+            <div>
+              <Button disabled={numberOfRewards === 0}>Sell for MATIC</Button>
+            </div>
+          </div>
+        </div>
+
+        <div className={'m-auto h-96 w-1/2'}>
+          <CrossmintNFTCollectionView
+            wallets={[
+              {
+                chain: 'polygon',
+                publicKey: address,
+              },
+            ]}
+          />
         </div>
       </main>
     </>
   );
 };
 
-export default Dashboard;
+export default Store;
