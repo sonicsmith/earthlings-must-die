@@ -9,6 +9,7 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   uint256 private mintCost = 10 ether;
   uint256 private gasBack = 0.01 ether;
   address private battlefieldAddress;
+  mapping(uint256 => uint256) private totalSupply;
 
   constructor() ERC1155('') {}
 
@@ -36,13 +37,15 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
 
   function mint(address recipient, uint256 id, uint256 amount) public payable {
     require(msg.value == mintCost, 'Equipment: value must be mint cost');
+    // Send money to battlefield contract
     uint256 battleAmount = mintCost - gasBack;
     (bool sent, ) = battlefieldAddress.call{value: battleAmount}('');
     require(sent, 'Equipment: Failed to pass on value');
-    _mint(recipient, id, amount, '');
     // Give user money for gas
     (bool gasSent, ) = recipient.call{value: gasBack}('');
     require(gasSent, 'Equipment: Failed to reimburse');
+    _mint(recipient, id, amount, '');
+    totalSupply[id] += amount;
   }
 
   function reward(address account, uint256 id, uint256 amount) external {
@@ -51,10 +54,16 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
       'Equipment: Only Battlefield contract can reward'
     );
     _mint(account, id, amount, '');
+    totalSupply[id] += amount;
   }
 
   function burn(address account, uint256 id, uint256 amount) public override {
     _burn(account, id, amount);
+    totalSupply[id] -= amount;
+  }
+
+  function totalSupplyOf(uint256 id) public view returns (uint256) {
+    return totalSupply[id];
   }
 
   receive() external payable {

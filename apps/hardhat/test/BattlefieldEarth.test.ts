@@ -43,7 +43,15 @@ describe('Battlefield Earth', function () {
     await equipment.setBattlefieldContract(earth.address);
     await earth.populatePlanet();
 
-    return { earth, owner, player1, player2, aliens, equipment };
+    return {
+      earth,
+      owner,
+      player1,
+      player2,
+      aliens,
+      equipment,
+      equipmentMintCost,
+    };
   }
 
   describe('Deployment', function () {
@@ -66,7 +74,7 @@ describe('Battlefield Earth', function () {
       expect(aliensOnPlanet).to.include('4');
     });
     it('Should burn 1 fuel', async function () {
-      const { earth, equipment, owner, player1 } = await loadFixture(
+      const { earth, equipment, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
       const balanceBefore = (
@@ -115,6 +123,21 @@ describe('Battlefield Earth', function () {
       await earth.connect(player1).attack(4);
       const balance = await equipment.balanceOf(owner.address, REWARD_ID);
       expect(balance).to.equal(3);
+    });
+
+    it('Should payout in return for reward tokens', async function () {
+      const { earth, owner, player1, equipmentMintCost } = await loadFixture(
+        deployBattlefieldEarthFixture
+      );
+      await earth.connect(player1).attack(4);
+      const balanceBefore = await owner.getBalance();
+      await earth.sellRewardTokens(1);
+      const balanceAfter = await owner.getBalance();
+      const expected = equipmentMintCost.mul(3).add(balanceBefore);
+      expect(balanceAfter.toString().length).to.eq(expected.toString().length);
+      expect(balanceAfter.toString().substring(0, 2)).to.eq(
+        expected.toString().substring(0, 2)
+      );
     });
   });
 });

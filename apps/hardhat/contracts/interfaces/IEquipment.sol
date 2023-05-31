@@ -16,4 +16,6 @@ interface IEquipment {
   function reward(address account, uint256 id, uint256 amount) external;
 
   function burn(address account, uint256 id, uint256 value) external;
+
+  function totalSupplyOf(uint256 id) external view returns (uint256);
 }
