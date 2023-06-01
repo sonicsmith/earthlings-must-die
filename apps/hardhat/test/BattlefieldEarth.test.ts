@@ -139,5 +139,17 @@ describe('Battlefield Earth', function () {
         expected.toString().substring(0, 2)
       );
     });
+
+    it('Should payout in return for reward tokens', async function () {
+      const { earth, player1, equipment } = await loadFixture(
+        deployBattlefieldEarthFixture
+      );
+      await earth.connect(player1).attack(4);
+      const balanceBefore = await equipment.totalSupplyOf(REWARD_ID);
+      await earth.sellRewardTokens(1);
+      const balanceAfter = await equipment.totalSupplyOf(REWARD_ID);
+      expect(balanceBefore).to.eq(3);
+      expect(balanceAfter).to.eq(2);
+    });
   });
 });

@@ -15,7 +15,6 @@ import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
-import { Web3AuthContext } from '~/providers/Web3AuthContext';
 import Loading from './Loading';
 
 // const Dolly = ({ position }: any) => {

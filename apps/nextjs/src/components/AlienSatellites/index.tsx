@@ -1,5 +1,5 @@
 import { useAlienRaces } from '~/hooks/useAlienRaces';
-import SatelliteGroup from './SateliteGroup';
+import SatelliteGroup from './SatelliteGroup';
 
 export default function AlienSatellites() {
   const alienRaces = useAlienRaces();

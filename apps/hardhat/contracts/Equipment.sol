@@ -58,6 +58,10 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   }
 
   function burn(address account, uint256 id, uint256 amount) public override {
+    require(
+      msg.sender == battlefieldAddress,
+      'Equipment: Only Battlefield contract can burn'
+    );
     _burn(account, id, amount);
     totalSupply[id] -= amount;
   }
@@ -68,6 +72,6 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
 
   receive() external payable {
     (bool sent, ) = owner().call{value: msg.value}('');
-    require(sent, 'Aliens: Failed to pass on value');
+    require(sent, 'Equipment: Failed to pass on value');
   }
 }

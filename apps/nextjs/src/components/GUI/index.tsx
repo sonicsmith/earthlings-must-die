@@ -12,7 +12,7 @@ export default function GUI({
   setShowMenu: (show: boolean) => void;
 }) {
   const [user, setUser] = useState<Partial<UserInfo> | null>(null);
-  const { web3Auth } = useContext(Web3AuthContext);
+  const web3Auth = useContext(Web3AuthContext);
 
   const isConnected = web3Auth?.status === 'connected';
   console.log('isConnected', isConnected);

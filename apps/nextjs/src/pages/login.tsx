@@ -2,19 +2,21 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useContext, useEffect } from 'react';
+import { useConnect } from 'wagmi';
 import Button from '~/components/Button';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
 const Login: NextPage = () => {
-  const { web3Auth, connect, provider } = useContext(Web3AuthContext);
+  const web3Auth = useContext(Web3AuthContext);
+  const { connect, connectors } = useConnect();
 
   useEffect(() => {
     if (web3Auth?.status === 'connected') {
       Router.push('/');
     } else {
-      connect();
+      connect({ connector: connectors[0] });
     }
-  }, [web3Auth?.status, connect, provider]);
+  }, [web3Auth?.status]);
 
   return (
     <>

@@ -9,7 +9,6 @@ import NumberInput from '~/components/NumberInput';
 import { useContext, useEffect, useState } from 'react';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 import { ethers } from 'ethers';
-import { NonEmptyArray } from '@trpc/client/dist/internals/types';
 import Button from '~/components/Button';
 
 interface Wallet {
@@ -21,7 +20,7 @@ const Store: NextPage = () => {
   const [fuelAmount, setFuelAmount] = useState(1);
   const [address, setAddress] = useState('');
 
-  const { web3Auth } = useContext(Web3AuthContext);
+  const web3Auth = useContext(Web3AuthContext);
 
   useEffect(() => {
     console.log(web3Auth?.status);

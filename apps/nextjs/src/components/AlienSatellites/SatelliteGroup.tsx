@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 import React, { useRef, useMemo } from 'react';
-import { extend, useFrame } from '@react-three/fiber';
+import { useFrame } from '@react-three/fiber';
 
 const UFO_SIZE = 0.02;
 

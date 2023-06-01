@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { alienSpecies } from '~/data/alien';
 
 /**
  *
@@ -16,10 +17,10 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const imageName = Number(id).toString().padStart(3, '0');
 
   res.status(200).json({
-    description: `These aliens eh? They're a bit of a handful.`,
+    name: alienSpecies[Number(id)]?.name,
+    description: alienSpecies[Number(id)]?.description,
     external_url: 'https://earthlingsmustdie.io',
     image: `https://earthlingsmustdie.io/images/aliens/${imageName}.jpg`,
-    name: `Alien Species #${id}`,
     attributes: [],
   });
 }
