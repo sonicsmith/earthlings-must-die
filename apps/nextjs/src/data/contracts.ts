@@ -1,5 +1,5 @@
-const POLYGON = 137;
-const MUMBAI = 80001;
+export const POLYGON = 137;
+export const MUMBAI = 80001;
 
 export const addresses: {
   [index: number]: {

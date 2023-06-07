@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { alienSpecies } from '~/data/alien';
+import { getThreeDigitNumber } from '~/utils/getThreeDigitNumber';
 
 /**
  *
@@ -14,7 +15,7 @@ import { alienSpecies } from '~/data/alien';
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { id } = req.query;
 
-  const imageName = Number(id).toString().padStart(3, '0');
+  const imageName = getThreeDigitNumber(Number(id));
 
   res.status(200).json({
     name: alienSpecies[Number(id)]?.name,

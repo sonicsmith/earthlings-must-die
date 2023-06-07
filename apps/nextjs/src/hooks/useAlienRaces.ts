@@ -2,67 +2,60 @@ import { useContext, useEffect, useState } from 'react';
 import alienJson from './../../../hardhat/artifacts/contracts/Aliens.sol/Aliens.json';
 import battlefieldJson from './../../../hardhat/artifacts/contracts/BattleFieldEarth.sol/BattleFieldEarth.json';
 
-import { addresses } from '~/data/contracts';
-import { useContractRead, useNetwork } from 'wagmi';
+import { MUMBAI, addresses } from '~/data/contracts';
+import { readContracts, useContractRead, useNetwork } from 'wagmi';
+import { getThreeDigitNumber } from '~/utils/getThreeDigitNumber';
+import { alienSpecies } from '~/data/alien';
 
 export interface AlienRace {
   description: string;
   image: string;
   color: string;
+  power: string;
 }
 
-const devDefault = [
-  {
-    image: '/images/aliens/001.jpg',
-    description: `Skeletals: Fast and agile, Skeletals will kill in seconds`,
-    color: '#FFAFFA',
-    power: 3,
-  },
-  {
-    image: '/images/aliens/002.jpg',
-    description: `Cognizance: This species kills with mind control techniques`,
-    color: '#EFBFFB',
-    power: 4,
-  },
-  {
-    image: '/images/aliens/003.jpg',
-    description: `Octopods: This species kills with mind control techniques`,
-    color: '#DFCFFC',
-    power: 6,
-  },
-  {
-    image: '/images/aliens/004.jpg',
-    description: `Reptals: Pure muscle, Reptals may eat humans alive`,
-    color: '#CFDFFD',
-    power: 3,
-  },
-  {
-    image: '/images/aliens/005.jpg',
-    description: `Apetans: Simple and strong, Apetans hate humans`,
-    color: '#BFEFFE',
-    power: 4,
-  },
-];
+type BattlefieldAliens = {
+  owner: string;
+  tokenId: number;
+};
 
 export const useAlienRaces = () => {
   const [aliens, setAliens] = useState<AlienRace[]>([]);
   const { chain } = useNetwork();
 
-  const { data, isError, isLoading } = useContractRead({
-    address: addresses[chain?.id || 137]!.aliens,
+  const { data } = useContractRead({
+    address: addresses[chain?.id || MUMBAI]!.battlefield,
     abi: battlefieldJson.abi,
     functionName: 'getAliens',
   });
 
-  console.log({ data, isError, isLoading });
-
   useEffect(() => {
     const fetchAliens = async () => {
-      setAliens(devDefault);
+      const alienData = data as BattlefieldAliens[];
+      const contracts = alienData.map(({ tokenId }) => ({
+        address: addresses[chain?.id || MUMBAI]!.aliens,
+        abi: alienJson.abi,
+        functionName: 'getAlienStrength',
+        args: [tokenId],
+      }));
+      const strengthData = (await readContracts({ contracts })) as BigInt[];
+      setAliens(
+        alienData.map(({ tokenId }, index) => {
+          const stringNumber = getThreeDigitNumber(tokenId);
+          return {
+            image: `/images/aliens/${stringNumber}.jpg`,
+            description: alienSpecies[tokenId]?.description || '',
+            color: alienSpecies[tokenId]?.color || '#FFF',
+            power: strengthData?.[index]?.toString() || '0',
+          };
+        })
+      );
     };
 
-    fetchAliens();
-  }, []);
+    if ((data as any)?.length) {
+      fetchAliens();
+    }
+  }, [data]);
 
   return aliens;
 };

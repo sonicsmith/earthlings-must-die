@@ -16,9 +16,11 @@ export default function AlienCard({ image, power, description }: any) {
         <Image src={'/images/card.png'} width={200} height={200} alt={'card'} />
       </div>
       {/* POWER */}
-      <div className="absolute right-5 top-3 font-bold text-white">{power}</div>
+      <div className="absolute right-5 top-3.5 font-bold text-white">
+        {power}
+      </div>
       {/* DESCRIPTION */}
-      <div className="absolute left-1 top-28 p-5 pt-6 text-xs text-white">
+      <div className="absolute left-1 top-32 p-5 pt-6 text-xs text-white">
         {description}
       </div>
     </div>

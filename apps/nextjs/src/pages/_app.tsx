@@ -1,7 +1,7 @@
 import '~/styles/globals.css';
 import { type AppType } from 'next/app';
 import { api } from '~/utils/api';
-import { polygon } from 'wagmi/chains';
+import { polygonMumbai } from 'wagmi/chains';
 import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector';
 import { Web3Auth } from '@web3auth/modal';
 import { createClient, WagmiConfig, configureChains } from 'wagmi';
@@ -11,7 +11,7 @@ import { CHAIN_NAMESPACES } from '@web3auth/base';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
 const { chains, provider, webSocketProvider } = configureChains(
-  [polygon],
+  [polygonMumbai],
   [publicProvider()]
 );
 // Instantiating Web3Auth
