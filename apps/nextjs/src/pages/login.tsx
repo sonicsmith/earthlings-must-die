@@ -1,9 +1,11 @@
+import { Loader } from '@react-three/drei';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
 import { useContext, useEffect } from 'react';
 import { useConnect } from 'wagmi';
 import Button from '~/components/Button';
+import Loading from '~/components/Loading';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
 const Login: NextPage = () => {
@@ -26,7 +28,7 @@ const Login: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen bg-black pt-64 text-center">
-        <Button>Back</Button>
+        <Loading />
       </main>
     </>
   );
