@@ -1,8 +1,9 @@
 {
-  "name": "hardhat",
+  "name": "chain",
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "build": "hardhat compile",
     "hardhat:test": "REPORT_GAS=true hardhat test",
     "hardhat:compile": "hardhat compile",
     "hardhat:deploy": "hardhat run --network mumbai scripts/deploy.ts"

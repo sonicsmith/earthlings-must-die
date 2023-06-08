@@ -6,6 +6,8 @@
       "persistent": true,
       "cache": false
     },
+    "lint": {},
+    "lint:fix": {},
     "hardhat:test": {},
     "hardhat:compile": {},
     "hardhat:deploy": {},
@@ -13,8 +15,6 @@
       "dependsOn": ["^build"],
       "outputs": [".next/**"],
       "env": ["NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID"]
-    },
-    "lint": {},
-    "lint:fix": {}
+    }
   }
 }
