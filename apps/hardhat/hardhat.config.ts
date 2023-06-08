@@ -20,6 +20,10 @@ const config: HardhatUserConfig = {
   etherscan: {
     apiKey: process.env.POLYGONSCAN_API_KEY,
   },
+  typechain: {
+    outDir: 'typechain',
+    target: 'ethers-v5',
+  },
 };
 
 export default config;

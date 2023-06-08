@@ -6,6 +6,7 @@
     "apps/*"
   ],
   "scripts": {
+    "prebuild": "turbo run hardhat:compile --scope=hardhat",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",

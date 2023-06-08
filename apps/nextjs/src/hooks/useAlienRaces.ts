@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import alienJson from './../../../hardhat/artifacts/contracts/Aliens.sol/Aliens.json';
-import battlefieldJson from './../../../hardhat/artifacts/contracts/BattleFieldEarth.sol/BattleFieldEarth.json';
+import alienJson from '../../../hardhat/artifacts/contracts/Aliens.sol/Aliens.json';
+import battlefieldJson from '../../../hardhat/artifacts/contracts/BattleFieldEarth.sol/BattleFieldEarth.json';
 
 import { FUNCTIONS, MUMBAI, ADDRESSES } from '~/data/contracts';
 import { readContracts, useContractRead, useNetwork } from 'wagmi';
@@ -23,7 +23,7 @@ export const useAlienRaces = () => {
   const [aliens, setAliens] = useState<AlienRace[]>([]);
   const { chain } = useNetwork();
 
-  const { data } = useContractRead({
+  const { data: alienData } = useContractRead({
     address: ADDRESSES[chain?.id || MUMBAI]!.BATTLEFIELD,
     abi: battlefieldJson.abi,
     functionName: FUNCTIONS.ALIENS.getAliens,
@@ -31,16 +31,17 @@ export const useAlienRaces = () => {
 
   useEffect(() => {
     const fetchAliens = async () => {
-      const alienData = data as BattlefieldAliens[];
-      const contracts = alienData.map(({ tokenId }) => ({
-        address: ADDRESSES[chain?.id || MUMBAI]!.ALIENS,
-        abi: alienJson.abi,
-        functionName: FUNCTIONS.ALIENS.getAlienStrength,
-        args: [tokenId],
-      }));
+      const contracts = (alienData as BattlefieldAliens[]).map(
+        ({ tokenId }) => ({
+          address: ADDRESSES[chain?.id || MUMBAI]!.ALIENS,
+          abi: alienJson.abi,
+          functionName: FUNCTIONS.ALIENS.getAlienStrength,
+          args: [tokenId],
+        })
+      );
       const strengthData = (await readContracts({ contracts })) as BigInt[];
       setAliens(
-        alienData.map(({ tokenId }, index) => {
+        (alienData as BattlefieldAliens[]).map(({ tokenId }, index) => {
           const stringNumber = getThreeDigitNumber(tokenId);
           return {
             image: `/images/aliens/${stringNumber}.jpg`,
@@ -52,10 +53,10 @@ export const useAlienRaces = () => {
       );
     };
 
-    if ((data as any)?.length) {
+    if ((alienData as BattlefieldAliens[])?.length) {
       fetchAliens();
     }
-  }, [data]);
+  }, [alienData]);
 
   return aliens;
 };
