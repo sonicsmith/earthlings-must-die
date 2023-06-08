@@ -10,7 +10,7 @@
     "hardhat:compile": {},
     "hardhat:deploy": {},
     "build": {
-      "dependsOn": ["hardhat:compile"],
+      "dependsOn": ["^build"],
       "outputs": [".next/**"],
       "env": ["NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID"]
     },
