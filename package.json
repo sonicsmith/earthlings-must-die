@@ -19,8 +19,5 @@
     "turbo": "^1.9.3"
   },
   "packageManager": "npm@9.5.0",
-  "dependencies": {
-    "@crossmint/client-sdk-react-ui": "^0.2.8-alpha.3",
-    "@heroicons/react": "^2.0.18"
-  }
+  "dependencies": {}
 }
