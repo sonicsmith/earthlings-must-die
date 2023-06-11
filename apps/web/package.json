@@ -9,6 +9,8 @@
     "start": "next start"
   },
   "dependencies": {
+    "@crossmint/client-sdk-react-ui": "^0.2.8-alpha.3",
+    "@heroicons/react": "^2.0.18",
     "@react-three/drei": "^9.66.1",
     "@react-three/fiber": "^8.13.0",
     "@t3-oss/env-nextjs": "^0.2.1",
