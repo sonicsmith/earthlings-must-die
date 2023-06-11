@@ -30,7 +30,7 @@
     "react-dom": "18.2.0",
     "superjson": "1.12.2",
     "three": "^0.152.2",
-    "wagmi": "^0.10.15",
+    "wagmi": "^0.12.13",
     "zod": "^3.21.4"
   },
   "devDependencies": {

@@ -1,6 +1,5 @@
 import '~/styles/globals.css';
 import { type AppType } from 'next/app';
-import { api } from '~/utils/api';
 import { polygonMumbai } from 'wagmi/chains';
 import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector';
 import { Web3Auth } from '@web3auth/modal';
@@ -62,4 +61,4 @@ const MyApp: AppType = ({ Component, pageProps }) => {
   );
 };
 
-export default api.withTRPC(MyApp);
+export default MyApp;
