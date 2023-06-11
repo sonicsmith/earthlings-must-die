@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import alienJson from 'chain/artifacts/contracts/Aliens.sol/Aliens.json';
-import battlefieldJson from 'chain/artifacts/contracts/BattleFieldEarth.sol/BattleFieldEarth.json';
+import battlefieldJson from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
 
 import { FUNCTIONS, MUMBAI, ADDRESSES } from '~/data/contracts';
 import { readContracts, useContractRead, useNetwork } from 'wagmi';
