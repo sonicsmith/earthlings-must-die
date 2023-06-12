@@ -1,6 +1,12 @@
 import { type NextPage } from 'next';
+import dynamic from 'next/dynamic';
 import Head from 'next/head';
-import Scene from '~/components/Scene';
+// import Scene from '~/components/Scene';
+
+const Scene = dynamic(
+  () => import('../components/Scene').then((mod) => (mod as any).Scene),
+  { ssr: false }
+);
 
 const Home: NextPage = () => {
   return (
@@ -9,12 +15,6 @@ const Home: NextPage = () => {
         <title>Earthlings Must Die</title>
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@1,700&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <main className="h-screen">
         <Scene />

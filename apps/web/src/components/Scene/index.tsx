@@ -1,31 +1,16 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
+import { Canvas } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import SkyBox from '../Skybox';
 import Earth from '../Earth';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import {
-  Suspense,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
 import Loading from '../Loading';
 
-// const Dolly = ({ position }: any) => {
-//   const { z } = position;
-//   useFrame(({ clock, camera }) => {
-//     camera.position.lerp(position, 0.025);
-//   });
-//   return null;
-// };
-
-export default function Scene() {
+export function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
@@ -52,7 +37,7 @@ export default function Scene() {
         <AlienSatellites />
         <ambientLight intensity={0.005} />
         <pointLight position={sunPosition} intensity={1} />
-        <Environment preset="night" background blur={0.5} />
+        {/* <Environment preset="night" background blur={0.5} /> */}
         <OrbitControls
           enableZoom={false}
           autoRotate={true}
