@@ -10,7 +10,7 @@ import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
 import Loading from '../Loading';
 
-export function Scene() {
+export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
   const [showMenu, setShowMenu] = useState(false);

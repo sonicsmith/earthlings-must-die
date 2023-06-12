@@ -3,10 +3,7 @@ import dynamic from 'next/dynamic';
 import Head from 'next/head';
 // import Scene from '~/components/Scene';
 
-const Scene = dynamic(
-  () => import('../components/Scene').then((mod) => (mod as any).Scene),
-  { ssr: false }
-);
+const Scene = dynamic(() => import('../components/Scene'), { ssr: false });
 
 const Home: NextPage = () => {
   return (
