@@ -1,7 +1,5 @@
 import { useEffect, useState } from 'react';
-import alienJson from 'chain/artifacts/contracts/Aliens.sol/Aliens.json';
-import battlefieldJson from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
-
+import { battlefieldArtifacts, aliensArtifacts } from 'chain';
 import { FUNCTIONS, MUMBAI, ADDRESSES } from '~/data/contracts';
 import { readContracts, useContractRead, useNetwork } from 'wagmi';
 import { getThreeDigitNumber } from '~/utils/getThreeDigitNumber';
@@ -25,7 +23,7 @@ export const useAlienRaces = () => {
 
   const { data: alienData } = useContractRead({
     address: ADDRESSES[chain?.id || MUMBAI]!.BATTLEFIELD,
-    abi: battlefieldJson.abi,
+    abi: battlefieldArtifacts.abi,
     functionName: FUNCTIONS.ALIENS.getAliens,
   });
 
@@ -34,7 +32,7 @@ export const useAlienRaces = () => {
       const contracts = (alienData as BattlefieldAliens[]).map(
         ({ tokenId }) => ({
           address: ADDRESSES[chain?.id || MUMBAI]!.ALIENS,
-          abi: alienJson.abi,
+          abi: aliensArtifacts.abi,
           functionName: FUNCTIONS.ALIENS.getAlienStrength,
           args: [tokenId],
         })
