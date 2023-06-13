@@ -9,11 +9,13 @@ import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
 import Loading from '../Loading';
+import { useAlienRaces } from '~/hooks/useAlienRaces';
 
 export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
+  const alienRaces = useAlienRaces();
 
   const cameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
@@ -34,7 +36,7 @@ export default function Scene() {
             setIsAlienDetailView(!isAlienDetailView);
           }}
         />
-        <AlienSatellites />
+        <AlienSatellites alienRaces={alienRaces} />
         <ambientLight intensity={0.005} />
         <pointLight position={sunPosition} intensity={1} />
         {/* <Environment preset="night" background blur={0.5} /> */}
@@ -53,7 +55,7 @@ export default function Scene() {
             }
           }}
         />
-        <AlienCards isShowing={isAlienDetailView} />
+        <AlienCards isShowing={isAlienDetailView} alienRaces={alienRaces} />
       </Canvas>
     </Suspense>
   );

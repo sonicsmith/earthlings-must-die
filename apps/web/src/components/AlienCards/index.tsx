@@ -1,6 +1,6 @@
 import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
-import { useAlienRaces } from '~/hooks/useAlienRaces';
+import { AlienRace } from '~/hooks/useAlienRaces';
 
 const GROUP_POSITIONS = [
   '',
@@ -20,8 +20,13 @@ const CARD_POSITION = [
   'left-40',
 ];
 
-export default function AlienCards({ isShowing }: any) {
-  const alienRaces = useAlienRaces();
+export default function AlienCards({
+  isShowing,
+  alienRaces,
+}: {
+  alienRaces: AlienRace[];
+  isShowing: boolean;
+}) {
   const xPos = GROUP_POSITIONS[alienRaces.length];
 
   return (

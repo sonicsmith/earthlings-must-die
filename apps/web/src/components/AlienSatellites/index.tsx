@@ -1,8 +1,11 @@
-import { useAlienRaces } from '~/hooks/useAlienRaces';
+import { AlienRace } from '~/hooks/useAlienRaces';
 import SatelliteGroup from './SatelliteGroup';
 
-export default function AlienSatellites() {
-  const alienRaces = useAlienRaces();
+export default function AlienSatellites({
+  alienRaces,
+}: {
+  alienRaces: AlienRace[];
+}) {
   return (
     <>
       {alienRaces.map(({ color }, i) => (
