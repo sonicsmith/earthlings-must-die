@@ -13,7 +13,7 @@ const { chains, provider, webSocketProvider } = configureChains(
   [polygonMumbai],
   [publicProvider()]
 );
-// Instantiating Web3Auth
+
 const web3AuthInstance = new Web3Auth({
   clientId: process.env.NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID || '',
   web3AuthNetwork: 'testnet',

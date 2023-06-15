@@ -1,6 +1,6 @@
 import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
-import { AlienRace } from '~/hooks/useAlienRaces';
+import { AlienRace } from '~/hooks/useAliensOnPlanet';
 
 const GROUP_POSITIONS = [
   '',

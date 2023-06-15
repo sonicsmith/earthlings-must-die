@@ -1,4 +1,4 @@
-import { AlienRace } from '~/hooks/useAlienRaces';
+import { AlienRace } from '~/hooks/useAliensOnPlanet';
 import SatelliteGroup from './SatelliteGroup';
 
 export default function AlienSatellites({

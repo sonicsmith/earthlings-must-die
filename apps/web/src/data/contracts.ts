@@ -19,10 +19,3 @@ export const ADDRESSES: {
     BATTLEFIELD: '0xaeACe11c35ddbf4531B4BB7A2e99714C6f7D1011',
   },
 };
-
-export const FUNCTIONS = {
-  ALIENS: {
-    getAliens: 'getAliens',
-    getAlienStrength: 'getAlienStrength',
-  },
-};

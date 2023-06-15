@@ -7,9 +7,11 @@ import { UserInfo } from '@web3auth/base';
 export default function GUI({
   showMenu,
   setShowMenu,
+  setIsAlienSelectionView,
 }: {
   showMenu: boolean;
   setShowMenu: (show: boolean) => void;
+  setIsAlienSelectionView: (show: boolean) => void;
 }) {
   const [user, setUser] = useState<Partial<UserInfo> | null>(null);
   const web3Auth = useContext(Web3AuthContext);
@@ -40,6 +42,7 @@ export default function GUI({
           }}
           showMenu={showMenu}
           setShowMenu={setShowMenu}
+          setIsAlienSelectionView={setIsAlienSelectionView}
         />
       </div>
     </Html>

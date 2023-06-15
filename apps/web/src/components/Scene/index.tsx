@@ -9,13 +9,16 @@ import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
 import Loading from '../Loading';
-import { useAlienRaces } from '~/hooks/useAlienRaces';
+import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
+import AlienSelectorDialog from '../AlienSelectorDialog';
 
 export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
+  const [isAlienSelectionView, setIsAlienSelectionView] = useState(false);
+
   const [showMenu, setShowMenu] = useState(false);
-  const alienRaces = useAlienRaces();
+  const alienRaces = useAliensOnPlanet();
 
   const cameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
@@ -30,7 +33,11 @@ export default function Scene() {
   return (
     <Suspense fallback={<Loading />}>
       <Canvas camera={{ position: cameraPosition, fov: 50 }}>
-        <GUI showMenu={showMenu} setShowMenu={setShowMenu} />
+        <GUI
+          showMenu={showMenu}
+          setShowMenu={setShowMenu}
+          setIsAlienSelectionView={setIsAlienSelectionView}
+        />
         <Earth
           onClick={() => {
             setIsAlienDetailView(!isAlienDetailView);
@@ -39,7 +46,6 @@ export default function Scene() {
         <AlienSatellites alienRaces={alienRaces} />
         <ambientLight intensity={0.005} />
         <pointLight position={sunPosition} intensity={1} />
-        {/* <Environment preset="night" background blur={0.5} /> */}
         <OrbitControls
           enableZoom={false}
           autoRotate={true}
@@ -56,6 +62,10 @@ export default function Scene() {
           }}
         />
         <AlienCards isShowing={isAlienDetailView} alienRaces={alienRaces} />
+        <AlienSelectorDialog
+          isShowing={isAlienSelectionView}
+          setIsAlienSelectionView={setIsAlienSelectionView}
+        />
       </Canvas>
     </Suspense>
   );

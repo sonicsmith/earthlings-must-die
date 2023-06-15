@@ -19,5 +19,9 @@
     "prettier": "^2.5.1",
     "turbo": "^1.9.3"
   },
-  "packageManager": "npm@9.5.0"
+  "packageManager": "npm@9.5.0",
+  "dependencies": {
+    "@moralisweb3/common-evm-utils": "^2.22.2",
+    "moralis": "^2.22.2"
+  }
 }
