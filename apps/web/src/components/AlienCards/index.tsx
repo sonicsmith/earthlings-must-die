@@ -1,6 +1,8 @@
 import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
 import { AlienRace } from '~/hooks/useAliensOnPlanet';
+import { useMemo } from 'react';
+import { useAccount } from 'wagmi';
 
 const GROUP_POSITIONS = [
   '',
@@ -20,6 +22,17 @@ const CARD_POSITION = [
   'left-40',
 ];
 
+const AlienStatus = ({ numberOwned }: { numberOwned: number }) => {
+  return (
+    <div className="absolute -left-32 bottom-52 w-64 text-xl text-white">
+      <div className="text-center">Aliens on planet: 4</div>
+      <div className="text-center text-gray-300">
+        (Owned by you: {numberOwned})
+      </div>
+    </div>
+  );
+};
+
 export default function AlienCards({
   isShowing,
   alienRaces,
@@ -27,6 +40,17 @@ export default function AlienCards({
   alienRaces: AlienRace[];
   isShowing: boolean;
 }) {
+  const { address } = useAccount();
+
+  const numberOwned = useMemo(() => {
+    return alienRaces.reduce((acc, alien) => {
+      if (alien.owner === address) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0);
+  }, [alienRaces]);
+
   const xPos = GROUP_POSITIONS[alienRaces.length];
 
   return (
@@ -36,7 +60,8 @@ export default function AlienCards({
           isShowing ? 'scale-100' : 'scale-0'
         }`}
       >
-        <div className={`absolute bottom-64 ${xPos}`}>
+        <AlienStatus numberOwned={numberOwned} />
+        <div className={`absolute bottom-40 ${xPos}`}>
           <div className="flex flex-row">
             {alienRaces.map((alienDetails, index) => {
               const className = `absolute ${CARD_POSITION[index]}`;

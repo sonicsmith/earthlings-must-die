@@ -9,6 +9,7 @@ export interface AlienRace {
   image: string;
   color: string;
   power: string;
+  owner?: string;
 }
 
 type BattlefieldAliens = {
@@ -37,7 +38,15 @@ export const useAliensOnPlanet = () => {
   useEffect(() => {
     if (tokenIds.length) {
       getAlienDataFromIds({ tokenIds, chainId: chain?.id || MUMBAI }).then(
-        setAliens
+        (alienData) => {
+          const battleAliens = data as BattlefieldAliens[];
+          setAliens(
+            alienData.map((alien, index) => {
+              const owner = battleAliens?.[index]?.owner;
+              return { ...alien, owner };
+            })
+          );
+        }
       );
     }
   }, [tokenIds]);
