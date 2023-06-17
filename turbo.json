@@ -11,6 +11,7 @@
     "hardhat:compile": {},
     "hardhat:deploy": {},
     "build": {
+      "cache": false,
       "dependsOn": ["^build"],
       "outputs": [".next/**"],
       "env": ["NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID"]
