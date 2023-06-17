@@ -11,6 +11,7 @@ import GUI from '../GUI';
 import Loading from '../Loading';
 import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
+import { useLaunchAliens } from '~/hooks/useLaunchAliens';
 
 export default function Scene() {
   const { width } = useWindowSize();
@@ -19,6 +20,7 @@ export default function Scene() {
 
   const [showMenu, setShowMenu] = useState(false);
   const alienRaces = useAliensOnPlanet();
+  const { launchAlien } = useLaunchAliens();
 
   const cameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
@@ -65,6 +67,7 @@ export default function Scene() {
         <AlienSelectorDialog
           isShowing={isAlienSelectionView}
           setIsAlienSelectionView={setIsAlienSelectionView}
+          launchAlien={launchAlien}
         />
       </Canvas>
     </Suspense>

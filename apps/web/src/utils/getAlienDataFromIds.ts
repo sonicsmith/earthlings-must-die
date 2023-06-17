@@ -6,6 +6,7 @@ import { getThreeDigitNumber } from '~/utils';
 import { useEffect, useState } from 'react';
 
 export interface AlienRace {
+  name: string;
   description: string;
   image: string;
   color: string;
@@ -30,6 +31,7 @@ export const getAlienDataFromIds = async ({
       const stringNumber = getThreeDigitNumber(tokenId);
       return {
         image: `/images/aliens/${stringNumber}.jpg`,
+        name: alienSpecies[tokenId]?.name || '',
         description: alienSpecies[tokenId]?.description || '',
         color: alienSpecies[tokenId]?.color || '#FFF',
         power: strengthData?.[index]?.toString() || '0',

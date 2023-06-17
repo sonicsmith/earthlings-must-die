@@ -2,47 +2,47 @@ export const alienSpecies = [
   {
     name: 'Zoglonians',
     description: 'Telepathic communicators',
-    color: '#FFAFFA',
+    color: '#4682B4',
   },
   {
     name: 'Gorvorks',
     description: 'Emit high-pitched frequencies',
-    color: '#FFAFFA',
+    color: '#008080',
   },
   {
     name: 'Lumigons',
     description: 'Bioluminescent skin',
-    color: '#FFAFFA',
+    color: '#4169E1',
   },
   {
     name: 'Quaxons',
     description: 'Gravity-defying jumpers',
-    color: '#FFAFFA',
+    color: '#000080',
   },
   {
     name: 'Xyloids',
     description: 'Melodic hums as a means of communication',
-    color: '#FFAFFA',
+    color: '#2E8B57',
   },
   {
     name: 'Vortigans',
     description: 'Absorb and emit various forms of energy',
-    color: '#FFAFFA',
+    color: '#808000',
   },
   {
     name: 'Morphixians',
     description: 'Shape-shifters with advanced mimicry abilities',
-    color: '#FFAFFA',
+    color: '#00FF00',
   },
   {
     name: 'Nebulites',
     description: 'Glowing gas-filled bodies',
-    color: '#FFAFFA',
+    color: '#228B22',
   },
   {
     name: 'Cragons',
     description: 'Living rocks with seismic sensitivity',
-    color: '#FFAFFA',
+    color: '#006400',
   },
   {
     name: 'Zephyrians',

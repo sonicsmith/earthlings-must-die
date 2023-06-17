@@ -8,9 +8,11 @@ import Button from '../Button';
 export default function AlienSelectorDialog({
   isShowing,
   setIsAlienSelectionView,
+  launchAlien,
 }: {
   isShowing: boolean;
   setIsAlienSelectionView: (isShowing: boolean) => void;
+  launchAlien: (tokenId: number) => void;
 }) {
   const [selectedAlien, setSelectedAlien] = useState(-1);
   const tokenIds = [1, 2, 3];
@@ -49,7 +51,13 @@ export default function AlienSelectorDialog({
           </div>
           <div className="flex justify-center">
             <div className="flex w-1/3 justify-around">
-              <Button onClick={console.log} disabled={selectedAlien === -1}>
+              <Button
+                onClick={() => {
+                  launchAlien(selectedAlien);
+                  setIsAlienSelectionView(false);
+                }}
+                disabled={selectedAlien === -1}
+              >
                 Launch
               </Button>
               <Button

@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default function AlienCard({ image, power, description }: any) {
+export default function AlienCard({ image, power, name, description }: any) {
   return (
     <div
       className="relative h-60 w-40 transition ease-in-out hover:z-10 hover:scale-110 hover:cursor-pointer"
@@ -20,8 +20,10 @@ export default function AlienCard({ image, power, description }: any) {
         {power}
       </div>
       {/* DESCRIPTION */}
-      <div className="absolute left-1 top-32 p-5 pt-6 text-xs text-white">
-        {description}
+      <div className="absolute left-1 top-32 p-5 pt-2 text-xs text-white">
+        <div>{name}</div>
+        <div className="text-gray-300">{description}</div>
+        <div className="text-gray-300">Strength: {power}</div>
       </div>
     </div>
   );

@@ -11,6 +11,7 @@ export interface AlienRace {
 }
 
 export const usePlayersAliens = () => {
+  // ToDO, get balance from contract
   const tokenIds = [1, 2, 3];
 
   // const aliens = useAliensFromIds(tokenIds);

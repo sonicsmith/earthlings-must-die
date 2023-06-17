@@ -1,8 +1,8 @@
-import { use, useCallback, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { battlefieldArtifacts } from 'chain';
 import { MUMBAI, ADDRESSES } from '~/data/contracts';
 import { useContractRead, useNetwork } from 'wagmi';
-import { getAlienDataFromIds } from '~/utils/getAlienDataFromIds';
+import { getAlienDataFromIds } from '~/utils';
 
 export interface AlienRace {
   description: string;
@@ -28,7 +28,7 @@ export const useAliensOnPlanet = () => {
 
   const tokenIds = useMemo(() => {
     const battleAliens = data as BattlefieldAliens[];
-    if (battleAliens.length) {
+    if (battleAliens?.length) {
       return battleAliens.map((b) => b.tokenId);
     }
     return [];
