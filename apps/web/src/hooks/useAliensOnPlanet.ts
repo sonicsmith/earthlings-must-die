@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { battlefieldArtifacts } from 'chain';
-import { MUMBAI, ADDRESSES } from '~/data/contracts';
+import { ADDRESSES, IDS } from 'chain';
 import { useContractRead, useNetwork } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
 
@@ -25,13 +25,14 @@ export const useAliensOnPlanet = () => {
   const [aliens, setAliens] = useState<AlienOnPlanet[]>([]);
 
   const { data } = useContractRead({
-    address: ADDRESSES[chain?.id || MUMBAI]!.BATTLEFIELD,
+    address: ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD,
     abi: battlefieldArtifacts.abi,
     functionName: 'getAliens',
   });
 
   useEffect(() => {
     const battleAliens = data as BattlefieldAliens[];
+
     if (battleAliens?.length) {
       const combinedAlienData: AlienOnPlanet[] = battleAliens.map(
         (onPlanet) => {
@@ -40,12 +41,13 @@ export const useAliensOnPlanet = () => {
             name: detail.name,
             image: detail.image,
             color: detail.color,
-            strength: onPlanet.strength,
+            strength: Number(onPlanet.strength),
             owner: onPlanet.owner,
-            rewardsGiven: onPlanet.rewardsGiven,
+            rewardsGiven: Number(onPlanet.rewardsGiven),
           };
         }
       );
+      console.log(combinedAlienData);
       setAliens(combinedAlienData);
     }
   }, [data]);

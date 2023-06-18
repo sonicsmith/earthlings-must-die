@@ -8,7 +8,9 @@
     "build": "hardhat compile",
     "hardhat:test": "REPORT_GAS=true hardhat test",
     "hardhat:compile": "hardhat compile",
-    "hardhat:deploy": "hardhat run --network mumbai scripts/deploy.ts"
+    "hardhat:deploy": "hardhat run --network mumbai scripts/deploy.ts",
+    "task:verifyContracts": "hardhat verifyContracts",
+    "task:setupContracts": "hardhat setupContracts"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { alienSpecies } from '~/data/alien';
+import { alienNames, alienColors } from '~/data/alien';
 import { getThreeDigitNumber } from '~/utils/getThreeDigitNumber';
 
 /**
@@ -18,10 +18,15 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   const imageName = getThreeDigitNumber(Number(id));
 
   res.status(200).json({
-    name: alienSpecies[Number(id)]?.name,
+    name: alienNames[Number(id)],
     external_url: 'https://earthlingsmustdie.io',
     image: `https://earthlingsmustdie.io/images/aliens/${imageName}.jpg`,
-    attributes: [],
+    attributes: [
+      {
+        trait_type: 'Color',
+        value: alienColors[Number(id)],
+      },
+    ],
   });
 }
 

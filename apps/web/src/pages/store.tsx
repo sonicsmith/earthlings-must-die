@@ -110,7 +110,7 @@ const Store: NextPage = () => {
               </div>
             </div>
             <div>
-              <Button disabled={numberOfRewards === 0}>Sell for MATIC</Button>
+              <Button disabled={numberOfRewards === 0}>Sell for Crypto</Button>
             </div>
           </div>
         </div>

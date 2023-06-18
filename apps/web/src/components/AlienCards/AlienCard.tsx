@@ -6,7 +6,7 @@ export default function AlienCard({
 }: {
   alienDetails: AlienOnPlanet;
 }) {
-  const { name, strength, image, rewardsGiven } = alienDetails;
+  const { name, strength, image, rewardsGiven, color } = alienDetails;
   return (
     <div className="relative h-60 w-40 transition ease-in-out hover:z-10 hover:scale-110 hover:cursor-pointer">
       <div className="absolute px-2 pt-4">
@@ -19,11 +19,16 @@ export default function AlienCard({
       <div className="absolute right-5 top-3.5 font-bold text-white">
         {strength}
       </div>
+      {/* COLOR */}
+      <div
+        className={`absolute bottom-6 right-1.5 h-5 w-5 rounded-full border border-white`}
+        style={{ backgroundColor: color }}
+      />
       {/* DESCRIPTION */}
       <div className="absolute left-1 top-32 p-5 pt-2 text-xs text-white">
         <div>{name}</div>
         <div className="text-gray-300">Strength: {strength}</div>
-        <div className="text-gray-300">Humans gathered: {rewardsGiven}</div>
+        <div className="text-gray-300">Reaped: {rewardsGiven}kg</div>
       </div>
     </div>
   );

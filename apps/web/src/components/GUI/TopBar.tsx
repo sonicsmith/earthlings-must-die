@@ -67,6 +67,22 @@ const Menu = ({
             Invade <RocketLaunchIcon className="ml-2 h-5 w-5 text-white" />
           </div>
         </li>
+        <li
+          className={`${MENU_ITEM_CLASS} text-gray-300`}
+          onClick={() => {
+            //
+          }}
+        >
+          <div className="flex">How to Play</div>
+        </li>
+        <li
+          className={`${MENU_ITEM_CLASS} text-gray-300`}
+          onClick={() => {
+            //
+          }}
+        >
+          <div className="flex">Lite paper</div>
+        </li>
         <li className={MENU_ITEM_CLASS} onClick={logout}>
           <div className="flex">
             Logout
