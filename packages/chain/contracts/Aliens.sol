@@ -23,10 +23,9 @@ contract Aliens is ERC721, ERC721Burnable, Ownable {
 
   constructor() ERC721('Aliens', 'ALN') {
     // Premint 4 to aliens to creator
-    uint8[4] memory strengths = [1, 2, 2, 2];
     for (uint256 i = 0; i < 4; i++) {
       _safeMint(msg.sender, idCounter.current());
-      alienRaces[idCounter.current()] = AlienRace(strengths[i], block.number);
+      alienRaces[idCounter.current()] = AlienRace(1, block.number);
       idCounter.increment();
     }
   }

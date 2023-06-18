@@ -17,6 +17,8 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
   struct AlienOnPlanet {
     uint256 tokenId;
     address owner;
+    uint256 strength;
+    uint256 rewardsGiven;
   }
 
   AlienOnPlanet[] private aliensOnPlanet;
@@ -31,7 +33,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
     // Start planet with 4 existing aliens
     for (uint256 i = 0; i < 4; i++) {
       aliensContract.safeTransferFrom(msg.sender, address(this), i);
-      aliensOnPlanet.push(AlienOnPlanet(i, msg.sender));
+      aliensOnPlanet.push(AlienOnPlanet(i, msg.sender, 1, 0));
     }
   }
 
@@ -48,6 +50,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
     for (uint256 i = 0; i < aliensOnPlanet.length; i++) {
       if (aliensOnPlanet[i].tokenId != excludeToken) {
         equipmentContract.reward(aliensOnPlanet[i].owner, REWARD, 1);
+        aliensOnPlanet[i].rewardsGiven += 1;
       }
     }
   }
@@ -73,7 +76,13 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
       aliensOnPlanet[weakestAlienIndex].tokenId
     );
     // Replace weakest alien from planet with new comer
-    AlienOnPlanet memory newAlien = AlienOnPlanet(_tokenId, msg.sender);
+    uint256 alienStrength = aliensContract.getAlienStrength(_tokenId);
+    AlienOnPlanet memory newAlien = AlienOnPlanet(
+      _tokenId,
+      msg.sender,
+      alienStrength,
+      0
+    );
     aliensOnPlanet[weakestAlienIndex] = newAlien;
     rewardCurrentInvaders(_tokenId);
   }
@@ -86,11 +95,8 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
     uint256 weakestAlienStrength;
     uint256 weakestAlienIndex;
     for (uint256 i = 0; i < aliensOnPlanet.length; i++) {
-      uint256 alienStrength = aliensContract.getAlienStrength(
-        aliensOnPlanet[i].tokenId
-      );
-      if (alienStrength < weakestAlienStrength) {
-        weakestAlienStrength = alienStrength;
+      if (aliensOnPlanet[i].strength < weakestAlienStrength) {
+        weakestAlienStrength = aliensOnPlanet[i].strength;
         weakestAlienIndex = aliensOnPlanet[i].tokenId;
       }
     }

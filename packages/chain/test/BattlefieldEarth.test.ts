@@ -1,6 +1,7 @@
 import { ethers, network } from 'hardhat';
 import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
+import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
 
 const FUEL_ID = 0;
 const REWARD_ID = 1;
@@ -123,9 +124,34 @@ describe('Battlefield Earth', function () {
       await earth.connect(player1).attack(4);
       const balance = await equipment.balanceOf(owner.address, REWARD_ID);
       expect(balance).to.equal(3);
+      const aliensOnPlanet = await earth.getAliens();
+      expect(aliensOnPlanet.length).to.equal(3);
     });
 
-    it('Should payout in return for reward tokens', async function () {
+    it.only('Should return the correct data for getAliens call', async function () {
+      const { earth, equipment, owner, player1 } = await loadFixture(
+        deployBattlefieldEarthFixture
+      );
+      await earth.connect(player1).attack(4);
+      const aliensOnPlanet = await earth.getAliens();
+      expect(aliensOnPlanet.length).to.equal(4);
+      const tokenIds = aliensOnPlanet.map((alien) => Number(alien.tokenId));
+      const owners = aliensOnPlanet.map((alien) => alien.owner);
+      const strengths = aliensOnPlanet.map((alien) => Number(alien.strength));
+      const rewards = aliensOnPlanet.map((alien) => Number(alien.rewardsGiven));
+      expect(tokenIds).to.have.members([1, 2, 3, 4]);
+      expect(owners).to.have.members([
+        owner.address,
+        owner.address,
+        owner.address,
+        player1.address,
+      ]);
+      const anyStrength = strengths[0];
+      expect(strengths).to.have.members([anyStrength, 1, 1, 1]);
+      expect(rewards).to.have.members([0, 1, 1, 1]);
+    });
+
+    it('Should allow user to cash out reward tokens', async function () {
       const { earth, owner, player1, equipmentMintCost } = await loadFixture(
         deployBattlefieldEarthFixture
       );
