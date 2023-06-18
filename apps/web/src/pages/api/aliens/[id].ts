@@ -19,7 +19,6 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.status(200).json({
     name: alienSpecies[Number(id)]?.name,
-    description: alienSpecies[Number(id)]?.description,
     external_url: 'https://earthlingsmustdie.io',
     image: `https://earthlingsmustdie.io/images/aliens/${imageName}.jpg`,
     attributes: [],

@@ -1,6 +1,6 @@
 import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
-import { AlienRace } from '~/hooks/useAliensOnPlanet';
+import { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
 
@@ -35,23 +35,23 @@ const AlienStatus = ({ numberOwned }: { numberOwned: number }) => {
 
 export default function AlienCards({
   isShowing,
-  alienRaces,
+  aliensOnPlanet,
 }: {
-  alienRaces: AlienRace[];
+  aliensOnPlanet: AlienOnPlanet[];
   isShowing: boolean;
 }) {
   const { address } = useAccount();
 
   const numberOwned = useMemo(() => {
-    return alienRaces.reduce((acc, alien) => {
+    return aliensOnPlanet.reduce((acc, alien) => {
       if (alien.owner === address) {
         return acc + 1;
       }
       return acc;
     }, 0);
-  }, [alienRaces]);
+  }, [aliensOnPlanet]);
 
-  const xPos = GROUP_POSITIONS[alienRaces.length];
+  const xPos = GROUP_POSITIONS[aliensOnPlanet.length];
 
   return (
     <Html center>
@@ -63,11 +63,18 @@ export default function AlienCards({
         <AlienStatus numberOwned={numberOwned} />
         <div className={`absolute bottom-40 ${xPos}`}>
           <div className="flex flex-row">
-            {alienRaces.map((alienDetails, index) => {
+            {aliensOnPlanet.map((alienDetails, index) => {
               const className = `absolute ${CARD_POSITION[index]}`;
               return (
-                <div className={className} key={`alienCard${index}`}>
-                  <AlienCard {...alienDetails} />
+                <div
+                  className={className}
+                  key={`alienCard${index}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // setSelected(index);
+                  }}
+                >
+                  <AlienCard alienDetails={alienDetails} />
                 </div>
               );
             })}

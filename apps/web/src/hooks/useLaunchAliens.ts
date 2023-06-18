@@ -1,5 +1,7 @@
 export const useLaunchAliens = () => {
-  const launchAlien = () => {};
+  const launchAlien = () => {
+    console.log('launching alien');
+  };
 
   return { launchAlien };
 };

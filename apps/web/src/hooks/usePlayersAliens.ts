@@ -3,13 +3,6 @@ import { aliensArtifacts } from 'chain';
 import { MUMBAI, ADDRESSES } from '~/data/contracts';
 import { readContracts, useContractRead, useNetwork } from 'wagmi';
 
-export interface AlienRace {
-  description: string;
-  image: string;
-  color: string;
-  power: string;
-}
-
 export const usePlayersAliens = () => {
   // ToDO, get balance from contract
   const tokenIds = [1, 2, 3];

@@ -1,4 +1,4 @@
 import { getThreeDigitNumber } from './getThreeDigitNumber';
-import { getAlienDataFromIds } from './getAlienDataFromIds';
+import { getAlienDetailsForId } from './getAlienDetailsForId';
 
-export { getThreeDigitNumber, getAlienDataFromIds };
+export { getThreeDigitNumber, getAlienDetailsForId };

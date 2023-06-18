@@ -1,14 +1,14 @@
-import { AlienRace } from '~/hooks/useAliensOnPlanet';
+import { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import SatelliteGroup from './SatelliteGroup';
 
 export default function AlienSatellites({
-  alienRaces,
+  aliensOnPlanet,
 }: {
-  alienRaces: AlienRace[];
+  aliensOnPlanet: AlienOnPlanet[];
 }) {
   return (
     <>
-      {alienRaces.map(({ color }, i) => (
+      {aliensOnPlanet.map(({ color }, i) => (
         <SatelliteGroup color={color} key={`alien${i}`} />
       ))}
     </>

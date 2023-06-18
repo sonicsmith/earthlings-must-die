@@ -1,25 +1,28 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { battlefieldArtifacts } from 'chain';
 import { MUMBAI, ADDRESSES } from '~/data/contracts';
 import { useContractRead, useNetwork } from 'wagmi';
-import { getAlienDataFromIds } from '~/utils';
+import { getAlienDetailsForId } from '~/utils';
 
-export interface AlienRace {
-  description: string;
+export interface AlienOnPlanet {
+  name: string;
   image: string;
   color: string;
-  power: string;
-  owner?: string;
+  strength: number;
+  owner: string;
+  rewardsGiven: number;
 }
 
 type BattlefieldAliens = {
   owner: string;
   tokenId: number;
+  strength: number;
+  rewardsGiven: number;
 };
 
 export const useAliensOnPlanet = () => {
   const { chain } = useNetwork();
-  const [aliens, setAliens] = useState<AlienRace[]>([]);
+  const [aliens, setAliens] = useState<AlienOnPlanet[]>([]);
 
   const { data } = useContractRead({
     address: ADDRESSES[chain?.id || MUMBAI]!.BATTLEFIELD,
@@ -27,29 +30,25 @@ export const useAliensOnPlanet = () => {
     functionName: 'getAliens',
   });
 
-  const tokenIds = useMemo(() => {
+  useEffect(() => {
     const battleAliens = data as BattlefieldAliens[];
     if (battleAliens?.length) {
-      return battleAliens.map((b) => b.tokenId);
-    }
-    return [];
-  }, [data]);
-
-  useEffect(() => {
-    if (tokenIds.length) {
-      getAlienDataFromIds({ tokenIds, chainId: chain?.id || MUMBAI }).then(
-        (alienData) => {
-          const battleAliens = data as BattlefieldAliens[];
-          setAliens(
-            alienData.map((alien, index) => {
-              const owner = battleAliens?.[index]?.owner;
-              return { ...alien, owner };
-            })
-          );
+      const combinedAlienData: AlienOnPlanet[] = battleAliens.map(
+        (onPlanet) => {
+          const detail = getAlienDetailsForId(onPlanet.tokenId);
+          return {
+            name: detail.name,
+            image: detail.image,
+            color: detail.color,
+            strength: onPlanet.strength,
+            owner: onPlanet.owner,
+            rewardsGiven: onPlanet.rewardsGiven,
+          };
         }
       );
+      setAliens(combinedAlienData);
     }
-  }, [tokenIds]);
+  }, [data]);
 
   return aliens;
 };

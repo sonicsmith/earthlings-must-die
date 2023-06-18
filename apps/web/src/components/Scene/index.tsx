@@ -19,7 +19,7 @@ export default function Scene() {
   const [isAlienSelectionView, setIsAlienSelectionView] = useState(false);
 
   const [showMenu, setShowMenu] = useState(false);
-  const alienRaces = useAliensOnPlanet();
+  const aliensOnPlanet = useAliensOnPlanet();
   const { launchAlien } = useLaunchAliens();
 
   const cameraPosition = useMemo(() => {
@@ -45,13 +45,13 @@ export default function Scene() {
             setIsAlienDetailView(!isAlienDetailView);
           }}
         />
-        <AlienSatellites alienRaces={alienRaces} />
+        <AlienSatellites aliensOnPlanet={aliensOnPlanet} />
         <ambientLight intensity={0.005} />
         <pointLight position={sunPosition} intensity={1} />
         <OrbitControls
           enableZoom={false}
           autoRotate={true}
-          autoRotateSpeed={0.2}
+          autoRotateSpeed={0.3}
         />
         <SkyBox
           onClick={() => {
@@ -63,7 +63,10 @@ export default function Scene() {
             }
           }}
         />
-        <AlienCards isShowing={isAlienDetailView} alienRaces={alienRaces} />
+        <AlienCards
+          isShowing={isAlienDetailView}
+          aliensOnPlanet={aliensOnPlanet}
+        />
         <AlienSelectorDialog
           isShowing={isAlienSelectionView}
           setIsAlienSelectionView={setIsAlienSelectionView}
