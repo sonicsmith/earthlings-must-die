@@ -26,6 +26,23 @@ async function main() {
   await battlefieldEarth.setAliensContract(aliens.address);
   await battlefieldEarth.setEquipmentContract(equipment.address);
   await equipment.setBattlefieldContract(battlefieldEarth.address);
+  await battlefieldEarth.populatePlanet();
+
+  // Verifying
+  await run('verify:verify', {
+    address: aliens.address,
+    constructorArguments: [],
+  });
+  console.log('Verifying Equipment contract...');
+  await run('verify:verify', {
+    address: equipment.address,
+    constructorArguments: [],
+  });
+  console.log('Verifying BattlefieldEarth contract...');
+  await run('verify:verify', {
+    address: battlefieldEarth.address,
+    constructorArguments: [],
+  });
 
   // Display
   console.log(`Deployment Done`);

@@ -10,6 +10,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 import { ethers } from 'ethers';
 import Button from '~/components/Button';
+import { useAccount } from 'wagmi';
 
 interface Wallet {
   chain: string;
@@ -18,25 +19,9 @@ interface Wallet {
 
 const Store: NextPage = () => {
   const [fuelAmount, setFuelAmount] = useState(1);
-  const [address, setAddress] = useState('');
 
-  const web3Auth = useContext(Web3AuthContext);
-
-  useEffect(() => {
-    console.log(web3Auth?.status);
-    const test2 = async () => {
-      if (web3Auth?.status === 'connected') {
-        const provider = new ethers.providers.Web3Provider(
-          web3Auth.provider as any
-        );
-        const signer = provider.getSigner();
-        const address = await signer.getAddress();
-        setAddress(address);
-      }
-    };
-    test2();
-  }, [web3Auth?.status]);
-
+  const { address, isConnected } = useAccount();
+  console.log(address, isConnected);
   const numberOfAliens = 0;
   const numberOfFuel = 0;
   const numberOfRewards = 0;
@@ -47,12 +32,6 @@ const Store: NextPage = () => {
         <title>Earthlings Must Die</title>
         <meta name="description" content="" />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@1,700&display=swap"
-          rel="stylesheet"
-        />
       </Head>
       <main className="h-screen bg-black">
         <div className="flex w-full flex-row bg-slate-700 p-2 text-white">
@@ -60,6 +39,10 @@ const Store: NextPage = () => {
         </div>
 
         <div className="p-4 text-lg text-white">
+          <div className="flex flex-col items-center justify-center p-4">
+            <div className={'text-2xl'}>TODO</div>
+          </div>
+
           {/* Alien Species */}
           <div className="flex flex-col items-center justify-center p-4">
             <div className="p-2">
@@ -115,16 +98,9 @@ const Store: NextPage = () => {
           </div>
         </div>
 
-        <div className={'m-auto h-96 w-1/2'}>
-          <CrossmintNFTCollectionView
-            wallets={[
-              {
-                chain: 'polygon',
-                publicKey: address,
-              },
-            ]}
-          />
-        </div>
+        {!!address && (
+          <div className={'m-auto h-96 w-1/2'}>Todo, show all things</div>
+        )}
       </main>
     </>
   );

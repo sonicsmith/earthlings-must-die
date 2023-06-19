@@ -3,6 +3,8 @@ import '@nomicfoundation/hardhat-toolbox';
 import * as dotenv from 'dotenv';
 require('@nomiclabs/hardhat-etherscan');
 
+import './tasks/verifyContracts';
+
 dotenv.config();
 
 const config: HardhatUserConfig = {

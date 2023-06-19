@@ -4,6 +4,7 @@ import Image from 'next/image';
 import { useWindowSize } from '~/hooks/useWindowSize';
 import { useState } from 'react';
 import Button from '../Button';
+import { usePlayersAliens } from '~/hooks/usePlayersAliens';
 
 export default function AlienSelectorDialog({
   isShowing,
@@ -14,6 +15,8 @@ export default function AlienSelectorDialog({
   setIsAlienSelectionView: (isShowing: boolean) => void;
   launchAlien: (tokenId: number) => void;
 }) {
+  const playersAliens = usePlayersAliens();
+
   const [selectedAlien, setSelectedAlien] = useState(-1);
   const tokenIds = [1, 2, 3];
   const { width } = useWindowSize();

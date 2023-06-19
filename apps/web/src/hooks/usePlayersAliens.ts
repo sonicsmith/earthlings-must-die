@@ -1,13 +1,36 @@
 import { useEffect, useState } from 'react';
 import { aliensArtifacts } from 'chain';
-import { MUMBAI, ADDRESSES } from '~/data/contracts';
-import { readContracts, useContractRead, useNetwork } from 'wagmi';
+import { IDS, ADDRESSES } from 'chain';
+import { readContracts, useAccount, useContractRead, useNetwork } from 'wagmi';
+
+export interface AlienOnPlanet {
+  name: string;
+  image: string;
+  color: string;
+  strength: number;
+  owner: string;
+  rewardsGiven: number;
+}
 
 export const usePlayersAliens = () => {
-  // ToDO, get balance from contract
-  const tokenIds = [1, 2, 3];
+  const { chain } = useNetwork();
+  const { address } = useAccount();
+  const [aliens, setAliens] = useState<AlienOnPlanet[]>([]);
 
-  // const aliens = useAliensFromIds(tokenIds);
+  const { data: totalSupply } = useContractRead({
+    address: ADDRESSES[chain?.id || IDS.POLYGON]!.ALIENS,
+    abi: aliensArtifacts.abi,
+    functionName: 'balanceOf',
+    args: [address],
+    enabled: !!address,
+  });
 
-  return []; //aliens;
+  useEffect(() => {
+    const fetchAndSetAliens = async () => {
+      //
+    };
+    fetchAndSetAliens();
+  }, [totalSupply]);
+
+  return aliens;
 };
