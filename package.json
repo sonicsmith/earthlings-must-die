@@ -12,8 +12,7 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run hardhat:test --scope=chain",
-    "compile": "turbo run hardhat:compile --scope=chain",
-    "deploy": "turbo run hardhat:deploy --scope=chain"
+    "compile": "turbo run hardhat:compile --scope=chain"
   },
   "devDependencies": {
     "prettier": "^2.5.1",

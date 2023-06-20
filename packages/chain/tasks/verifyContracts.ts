@@ -1,8 +1,6 @@
 import { task } from 'hardhat/config';
-import dotenv from 'dotenv';
 import { ADDRESSES } from '..';
 
-dotenv.config();
 //npx hardhat verify [address] --network mumbai
 task('verifyContracts', 'Verifies deployed contracts on etherscan')
   .addPositionalParam('chainId', 'The chain ID of the deployed contracts')

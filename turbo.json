@@ -9,7 +9,6 @@
     "lint:fix": {},
     "hardhat:test": {},
     "hardhat:compile": {},
-    "hardhat:deploy": {},
     "build": {
       "cache": false,
       "dependsOn": ["^build"],

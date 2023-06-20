@@ -1,7 +1,6 @@
 import { ethers, network } from 'hardhat';
 import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
-import { anyValue } from '@nomicfoundation/hardhat-chai-matchers/withArgs';
 
 const FUEL_ID = 0;
 const REWARD_ID = 1;
@@ -56,7 +55,7 @@ describe('Battlefield Earth', function () {
   }
 
   describe('Deployment', function () {
-    it('Should have allow us to start with 4 aliens', async function () {
+    it('Should start with 4 aliens', async function () {
       const { earth } = await loadFixture(deployBattlefieldEarthFixture);
       const aliensOnPlanet = await earth.getAliens();
       expect(aliensOnPlanet.length).to.equal(4);
@@ -129,7 +128,7 @@ describe('Battlefield Earth', function () {
     });
 
     it.only('Should return the correct data for getAliens call', async function () {
-      const { earth, equipment, owner, player1 } = await loadFixture(
+      const { earth, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
       await earth.connect(player1).attack(4);

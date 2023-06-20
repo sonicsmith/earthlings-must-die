@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 require('@nomiclabs/hardhat-etherscan');
 
 import './tasks/verifyContracts';
+import './tasks/setupContracts';
 
 dotenv.config();
 

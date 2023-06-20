@@ -22,13 +22,17 @@ async function main() {
   console.log(`BattlefieldEarth deployed to: ${battlefieldEarth.address}`);
 
   // Set up contracts
-  console.log('Setting up contracts...');
+  console.log('setAliensContract');
   await battlefieldEarth.setAliensContract(aliens.address);
+  console.log('setEquipmentContract');
   await battlefieldEarth.setEquipmentContract(equipment.address);
+  console.log('setBattlefieldContract');
   await equipment.setBattlefieldContract(battlefieldEarth.address);
+  console.log('populatePlanet');
   await battlefieldEarth.populatePlanet();
 
   // Verifying
+  console.log('Verifying Alien contract...');
   await run('verify:verify', {
     address: aliens.address,
     constructorArguments: [],
