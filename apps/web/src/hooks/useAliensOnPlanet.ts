@@ -24,7 +24,6 @@ export const useAliensOnPlanet = () => {
   const { chain } = useNetwork();
   const [aliens, setAliens] = useState<AlienOnPlanet[]>([]);
 
-  console.log(ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD);
   const { data } = useContractRead({
     address: ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD,
     abi: battlefieldArtifacts.abi,

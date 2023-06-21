@@ -2,9 +2,11 @@ import { Html } from '@react-three/drei';
 import { getThreeDigitNumber } from '~/utils';
 import Image from 'next/image';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import Button from '../Button';
 import { usePlayersAliens } from '~/hooks/usePlayersAliens';
+import Link from 'next/link';
+import Loading from '../Loading';
 
 export default function AlienSelectorDialog({
   isShowing,
@@ -18,59 +20,64 @@ export default function AlienSelectorDialog({
   const playersAliens = usePlayersAliens();
 
   const [selectedAlien, setSelectedAlien] = useState(-1);
-  const tokenIds = [1, 2, 3];
+
   const { width } = useWindowSize();
   const dialogWidth = Number(width) < 640 ? 'w-72' : 'w-[500px]';
   return (
     <Html center>
       {isShowing && (
         <div
-          className={`z-200 h-96 rounded-lg bg-slate-700 pt-3 ${dialogWidth}`}
+          className={`z-200 h-96 rounded-lg bg-slate-700 pt-3 text-center text-lg text-white ${dialogWidth} `}
         >
-          <div className="text-center text-lg text-white">
-            SELECT ALIEN TO SEND
-          </div>
+          <div className="">SELECT ALIEN TO SEND</div>
           <div className="m-4 overflow-scroll">
             <div className="flex flex-nowrap gap-3">
-              {tokenIds.map((tokenId) => {
-                const name = getThreeDigitNumber(tokenId);
-                const url = `/images/aliens/${name}.jpg`;
+              {playersAliens.length === 0 && (
+                <div className="m-auto h-[256px] w-[256px] bg-slate-600 p-8">
+                  You have no aliens to send. Visit the{' '}
+                  <Link href="/store" className="underline">
+                    store
+                  </Link>{' '}
+                  to spawn a new species.
+                </div>
+              )}
+              {playersAliens.map(({ name, image }, index) => {
                 const selectedStyle =
-                  tokenId === selectedAlien
-                    ? 'border-teal-500'
-                    : 'border-black';
+                  index === selectedAlien ? 'border-teal-500' : 'border-black';
+
+                const singleStyle = playersAliens.length === 1 ? 'ml-24' : '';
+
                 return (
                   <div
+                    key={`alien${index}`}
                     onClick={() => {
-                      setSelectedAlien(tokenId);
+                      setSelectedAlien(index);
                     }}
-                    className={`flex-none rounded-lg border-4 hover:cursor-pointer ${selectedStyle}`}
+                    className={`flex-none rounded-lg border-4 hover:cursor-pointer ${selectedStyle} ${singleStyle}`}
                   >
-                    <Image src={url} width={256} height={256} alt={name} />
+                    <Image src={image} width={256} height={256} alt={name} />
                   </div>
                 );
               })}
             </div>
           </div>
-          <div className="flex justify-center">
-            <div className="flex w-1/3 justify-around">
-              <Button
-                onClick={() => {
-                  launchAlien(selectedAlien);
-                  setIsAlienSelectionView(false);
-                }}
-                disabled={selectedAlien === -1}
-              >
-                Launch
-              </Button>
-              <Button
-                onClick={() => {
-                  setIsAlienSelectionView(false);
-                }}
-              >
-                Cancel
-              </Button>
-            </div>
+          <div className="flex justify-center gap-4">
+            <Button
+              onClick={() => {
+                launchAlien(selectedAlien);
+                setIsAlienSelectionView(false);
+              }}
+              disabled={selectedAlien === -1}
+            >
+              Launch
+            </Button>
+            <Button
+              onClick={() => {
+                setIsAlienSelectionView(false);
+              }}
+            >
+              Cancel
+            </Button>
           </div>
         </div>
       )}
