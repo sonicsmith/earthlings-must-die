@@ -21,7 +21,7 @@ export default function AlienCard({
       </div>
       {/* COLOR */}
       <div
-        className={`absolute bottom-6 right-1.5 h-5 w-5 rounded-full border border-white`}
+        className={`absolute bottom-6 right-1.5 h-4 w-4 rounded-full border border-teal-700`}
         style={{ backgroundColor: color }}
       />
       {/* DESCRIPTION */}

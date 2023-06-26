@@ -1,10 +1,10 @@
-import { Canvas } from '@react-three/fiber';
+import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import { OrbitControls, Environment } from '@react-three/drei';
 import SkyBox from '../Skybox';
 import Earth from '../Earth';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import { Suspense, useMemo, useState } from 'react';
-import { Vector3 } from 'three';
+import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import THREE, { Color, Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
@@ -12,6 +12,22 @@ import Loading from '../Loading';
 import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
 import { useLaunchAliens } from '~/hooks/useLaunchAliens';
+import Spaceship from '../Spaceship';
+
+const Camera = (props: { position: Vector3 }) => {
+  const ref = useRef();
+  const set = useThree((state) => state.set);
+  useEffect(() => {
+    set({ camera: ref!.current! });
+  }, []);
+  useFrame(() => {
+    const camera = ref.current as any;
+    if (camera) {
+      camera.updateMatrixWorld();
+    }
+  });
+  return <perspectiveCamera ref={ref as any} {...props} fov={50} />;
+};
 
 export default function Scene() {
   const { width } = useWindowSize();
@@ -22,19 +38,29 @@ export default function Scene() {
   const aliensOnPlanet = useAliensOnPlanet();
   const { launchAlien } = useLaunchAliens();
 
+  const [isLaunching, setIsLaunching] = useState(false);
+
   const cameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
     return new Vector3(x, 0, 0);
-  }, [width]);
+  }, [width, isLaunching]);
 
   // TODO: Make this actually accurate to real life
   const sunPosition = useMemo(() => {
     return new Vector3(10, 0, 0);
   }, []);
 
+  const beginLaunch = () => {
+    setIsAlienSelectionView(false);
+    setIsLaunching(true);
+  };
+
   return (
     <Suspense fallback={<Loading />}>
-      <Canvas camera={{ position: cameraPosition, fov: 50 }}>
+      <Canvas
+      // camera={{ position: cameraPosition, fov: 50 }}
+      >
+        <Camera position={cameraPosition} />
         <GUI
           showMenu={showMenu}
           setShowMenu={setShowMenu}
@@ -50,7 +76,8 @@ export default function Scene() {
         <pointLight position={sunPosition} intensity={1} />
         <OrbitControls
           enableZoom={false}
-          autoRotate={true}
+          enableRotate={!isLaunching}
+          autoRotate={!isLaunching}
           autoRotateSpeed={0.3}
         />
         <SkyBox
@@ -63,15 +90,25 @@ export default function Scene() {
             }
           }}
         />
-        <AlienCards
-          isShowing={isAlienDetailView}
-          aliensOnPlanet={aliensOnPlanet}
-        />
-        <AlienSelectorDialog
-          isShowing={isAlienSelectionView}
-          setIsAlienSelectionView={setIsAlienSelectionView}
-          launchAlien={launchAlien}
-        />
+        {!isLaunching && (
+          <>
+            <AlienCards
+              isShowing={isAlienDetailView}
+              aliensOnPlanet={aliensOnPlanet}
+            />
+            <AlienSelectorDialog
+              isShowing={isAlienSelectionView}
+              setIsAlienSelectionView={setIsAlienSelectionView}
+              launchAlien={beginLaunch}
+            />
+          </>
+        )}
+        {isLaunching && (
+          <Spaceship
+            cameraPosition={cameraPosition}
+            setIsLaunching={setIsLaunching}
+          />
+        )}
       </Canvas>
     </Suspense>
   );

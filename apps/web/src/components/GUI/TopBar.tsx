@@ -118,7 +118,10 @@ export default function TopBar({
             <>
               <ProfileButton
                 user={user}
-                onClick={() => setShowMenu(!showMenu)}
+                onClick={() => {
+                  setIsAlienSelectionView(false);
+                  setShowMenu(!showMenu);
+                }}
               />
             </>
           </>

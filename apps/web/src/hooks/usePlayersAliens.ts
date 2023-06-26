@@ -10,16 +10,20 @@ import {
 import { getAlienDetailsForId } from '~/utils';
 import { AlienDetails } from '~/utils/getAlienDetailsForId';
 
+export interface PlayersAlienDetails extends AlienDetails {
+  strength: string;
+}
+
 export const usePlayersAliens = () => {
   const { chain } = useNetwork();
   const { address } = useAccount();
-  const [aliens, setAliens] = useState<AlienDetails[]>([]);
+  const [aliens, setAliens] = useState<PlayersAlienDetails[]>([]);
 
   const aliensAddress = useMemo(() => {
     return ADDRESSES[chain?.id || IDS.POLYGON]!.ALIENS;
   }, [chain]);
 
-  const { data: balanceOf } = useContractRead({
+  const { data: balanceOf, isLoading: isBalanceLoading } = useContractRead({
     address: aliensAddress,
     abi: aliensArtifacts.abi,
     functionName: 'balanceOf',
@@ -27,7 +31,7 @@ export const usePlayersAliens = () => {
     enabled: !!address,
   });
 
-  const contractReads = useMemo(() => {
+  const tokenOfOwnerByIndexData = useMemo(() => {
     const length = Number(balanceOf);
     if (length > 0) {
       return Array.from({ length }, (v, index) => {
@@ -42,21 +46,47 @@ export const usePlayersAliens = () => {
     return [];
   }, [balanceOf]);
 
-  const { data: tokenIds } = useContractReads({
-    contracts: contractReads,
+  const { data: tokenIds, isLoading: isTokenOwnerLoading } = useContractReads({
+    contracts: tokenOfOwnerByIndexData,
   });
+
+  const getStrengthData = useMemo(() => {
+    const numberOfAliens = (tokenIds as bigint[])?.length;
+    if (tokenIds && numberOfAliens > 0) {
+      return Array.from({ length: numberOfAliens }, (v, index) => {
+        return {
+          address: aliensAddress,
+          abi: aliensArtifacts.abi,
+          functionName: 'getAlienStrength',
+          args: [String(tokenIds[index])],
+        };
+      });
+    }
+    return [];
+  }, [tokenIds]);
+
+  const { data: strengthData, isLoading: isStrengthDataLoading } =
+    useContractReads({
+      contracts: getStrengthData,
+    });
 
   useEffect(() => {
     const fetchAndSetAliens = async () => {
-      const alienDetails = tokenIds!.map((tokenId) => {
-        return getAlienDetailsForId(Number(tokenId));
+      const alienDetails = tokenIds!.map((tokenId, index) => {
+        return {
+          ...getAlienDetailsForId(Number(tokenId)),
+          strength: String(strengthData?.[index] || 0),
+        };
       });
       setAliens(alienDetails);
     };
-    if (tokenIds?.length) {
+    if (strengthData?.length && tokenIds?.length) {
       fetchAndSetAliens();
     }
-  }, [tokenIds]);
+  }, [tokenIds, strengthData]);
 
-  return aliens;
+  return {
+    aliens,
+    isLoading: isBalanceLoading || isTokenOwnerLoading || isStrengthDataLoading,
+  };
 };
