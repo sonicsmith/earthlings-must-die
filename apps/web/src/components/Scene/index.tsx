@@ -3,7 +3,7 @@ import { OrbitControls, Environment } from '@react-three/drei';
 import SkyBox from '../Skybox';
 import Earth from '../Earth';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import { Suspense, useEffect, useMemo, useRef, useState } from 'react';
+import { Suspense, use, useEffect, useMemo, useRef, useState } from 'react';
 import THREE, { Color, Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
@@ -13,21 +13,6 @@ import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
 import { useLaunchAliens } from '~/hooks/useLaunchAliens';
 import Spaceship from '../Spaceship';
-
-const Camera = (props: { position: Vector3 }) => {
-  const ref = useRef();
-  const set = useThree((state) => state.set);
-  useEffect(() => {
-    set({ camera: ref!.current! });
-  }, []);
-  useFrame(() => {
-    const camera = ref.current as any;
-    if (camera) {
-      camera.updateMatrixWorld();
-    }
-  });
-  return <perspectiveCamera ref={ref as any} {...props} fov={50} />;
-};
 
 export default function Scene() {
   const { width } = useWindowSize();
@@ -40,7 +25,7 @@ export default function Scene() {
 
   const [isLaunching, setIsLaunching] = useState(false);
 
-  const cameraPosition = useMemo(() => {
+  const initialCameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
     return new Vector3(x, 0, 0);
   }, [width, isLaunching]);
@@ -55,12 +40,15 @@ export default function Scene() {
     setIsLaunching(true);
   };
 
+  const [currentCameraPosition, setCurrentCameraPosition] = useState(
+    initialCameraPosition
+  );
+
+  const testRef = useRef();
+
   return (
     <Suspense fallback={<Loading />}>
-      <Canvas
-      // camera={{ position: cameraPosition, fov: 50 }}
-      >
-        <Camera position={cameraPosition} />
+      <Canvas camera={{ position: initialCameraPosition, fov: 50 }}>
         <GUI
           showMenu={showMenu}
           setShowMenu={setShowMenu}
@@ -73,12 +61,19 @@ export default function Scene() {
         />
         <AlienSatellites aliensOnPlanet={aliensOnPlanet} />
         <ambientLight intensity={0.005} />
+        {/* SUN */}
         <pointLight position={sunPosition} intensity={1} />
         <OrbitControls
           enableZoom={false}
           enableRotate={!isLaunching}
-          autoRotate={!isLaunching}
-          autoRotateSpeed={0.3}
+          // autoRotate={!isLaunching}
+          // autoRotateSpeed={0.3}
+          onEnd={(o) => {
+            const target = o?.target;
+            console.log(target);
+            target.saveState();
+            setCurrentCameraPosition(target.position0);
+          }}
         />
         <SkyBox
           onClick={() => {
@@ -105,7 +100,7 @@ export default function Scene() {
         )}
         {isLaunching && (
           <Spaceship
-            cameraPosition={cameraPosition}
+            cameraPosition={currentCameraPosition}
             setIsLaunching={setIsLaunching}
           />
         )}

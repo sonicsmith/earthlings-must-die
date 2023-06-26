@@ -2,9 +2,11 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useGLTF } from '@react-three/drei';
 import { useFrame } from '@react-three/fiber';
 import { Vector3 } from 'three';
+import * as THREE from 'three';
 
 const DESTINATION = new Vector3(0, 0, 0);
-const SPEED = 0.0002;
+const SPEED = 0.5; //0.0002;
+const RED = new THREE.Color(0x55ff55);
 
 export default function Spaceship({
   cameraPosition,
@@ -18,8 +20,13 @@ export default function Spaceship({
   const shipRef = useRef();
   const lightRef = useRef();
 
+  const [hasBeenPositioned, setHasBeenPositioned] = useState(false);
+  const [startDistance, setStartDistance] = useState(0);
+
   useEffect(() => {
+    console.log('cameraPosition', cameraPosition);
     if (shipRef.current) {
+      console.log('Setting spaceship position');
       // Spaceship
       const current = shipRef.current as any;
       current.position.x = cameraPosition.x;
@@ -27,30 +34,42 @@ export default function Spaceship({
       current.position.z = cameraPosition.z - 0.03;
       // rotate
       current.rotation.z = 0.05;
+      setHasBeenPositioned(true);
+      setStartDistance(cameraPosition.distanceTo(DESTINATION));
     }
   }, []);
 
   useFrame(() => {
     if (shipRef.current) {
       const current = shipRef.current as any;
+      const distanceLeft = current.position.distanceTo(DESTINATION) - 1;
+      //
+      const normalisedTraveled = startDistance / distanceLeft;
+
       current.rotation.y += 0.015;
       current.rotation.z += 0.00001;
-      const speedUp = Math.abs(cameraPosition.x - current.position.x) / 1000;
-      current.position.lerp(DESTINATION, SPEED + speedUp);
-      current.position.y -= speedUp;
-      current.position.z += speedUp;
-      // Light
-      (lightRef.current as any).position.set(current.position);
-      (lightRef.current as any).position.y += 2;
-      if (current.position.x < 1) {
+
+      const SLOW_DOWN = distanceLeft * 100;
+      current.position.lerp(DESTINATION, SPEED / SLOW_DOWN);
+      // current.position.y -= speedUp;
+      // current.position.z += speedUp;
+      if (distanceLeft < 1 && hasBeenPositioned) {
         setIsLaunching(false);
+      }
+      if (lightRef.current) {
+        (lightRef.current as any).intensity = (1 / normalisedTraveled) * 0.6;
       }
     }
   });
 
   return (
     <>
-      <pointLight ref={lightRef as any} intensity={1} />
+      <pointLight
+        position={cameraPosition}
+        intensity={0.5}
+        color={RED}
+        ref={lightRef as any}
+      />
       <group dispose={null} scale={0.01} ref={shipRef as any}>
         <group position={[0, -0.004, 0]} scale={1.125}>
           <mesh
