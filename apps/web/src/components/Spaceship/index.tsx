@@ -5,7 +5,7 @@ import { Vector3 } from 'three';
 import * as THREE from 'three';
 
 const DESTINATION = new Vector3(0, 0, 0);
-const SPEED = 0.5; //0.0002;
+const SPEED = 0.2;
 const RED = new THREE.Color(0x55ff55);
 
 export default function Spaceship({
@@ -51,13 +51,12 @@ export default function Spaceship({
 
       const SLOW_DOWN = distanceLeft * 100;
       current.position.lerp(DESTINATION, SPEED / SLOW_DOWN);
-      // current.position.y -= speedUp;
-      // current.position.z += speedUp;
+      current.position.z += normalisedTraveled * 0.0001;
       if (distanceLeft < 1 && hasBeenPositioned) {
         setIsLaunching(false);
       }
       if (lightRef.current) {
-        (lightRef.current as any).intensity = (1 / normalisedTraveled) * 0.6;
+        (lightRef.current as any).intensity = 1 / (normalisedTraveled * 1.5);
       }
     }
   });
