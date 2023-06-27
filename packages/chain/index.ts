@@ -1,5 +1,6 @@
-import battlefieldArtifacts from './artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
-import aliensArtifacts from './artifacts/contracts/Aliens.sol/Aliens.json';
+// // ts-ignore
+// import battlefieldArtifacts from './artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
+// import aliensArtifacts from './artifacts/contracts/Aliens.sol/Aliens.json';
 
 export const IDS = {
   POLYGON: 137,
@@ -25,4 +26,4 @@ const ADDRESSES: {
   },
 };
 
-export { battlefieldArtifacts, aliensArtifacts, ADDRESSES };
+export { ADDRESSES };

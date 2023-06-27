@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { battlefieldArtifacts } from 'chain';
+import * as battlefieldArtifacts from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
 import { ADDRESSES, IDS } from 'chain';
 import { useContractRead, useNetwork } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
