@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import * as battlefieldArtifacts from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
+import { useEffect, useMemo, useState } from 'react';
+import battlefieldArtifacts from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
 import { ADDRESSES, IDS } from 'chain';
 import { useContractRead, useNetwork } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
@@ -24,8 +24,12 @@ export const useAliensOnPlanet = () => {
   const { chain } = useNetwork();
   const [aliens, setAliens] = useState<AlienOnPlanet[]>([]);
 
+  const battlefieldAddress = useMemo(() => {
+    return ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD;
+  }, [chain]);
+
   const { data } = useContractRead({
-    address: ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD,
+    address: battlefieldAddress,
     abi: battlefieldArtifacts.abi,
     functionName: 'getAliens',
   });

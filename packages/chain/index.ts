@@ -1,7 +1,3 @@
-// // ts-ignore
-// import battlefieldArtifacts from './artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
-// import aliensArtifacts from './artifacts/contracts/Aliens.sol/Aliens.json';
-
 export const IDS = {
   POLYGON: 137,
   MUMBAI: 80001,

@@ -30,12 +30,12 @@ export default function Scene() {
     return new Vector3(x, 0, 0);
   }, [width, isLaunching]);
 
-  // TODO: Make this actually accurate to real life
   const sunPosition = useMemo(() => {
     return new Vector3(10, 0, 0);
   }, []);
 
-  const beginLaunch = () => {
+  const beginLaunch = (tokenId: number) => {
+    launchAlien(tokenId);
     setIsAlienSelectionView(false);
     setIsLaunching(true);
   };
@@ -43,8 +43,6 @@ export default function Scene() {
   const [currentCameraPosition, setCurrentCameraPosition] = useState(
     initialCameraPosition
   );
-
-  const testRef = useRef();
 
   return (
     <Suspense fallback={<Loading />}>
@@ -66,11 +64,8 @@ export default function Scene() {
         <OrbitControls
           enableZoom={false}
           enableRotate={!isLaunching}
-          // autoRotate={!isLaunching}
-          // autoRotateSpeed={0.3}
           onEnd={(o) => {
             const target = o?.target;
-            console.log(target);
             target.saveState();
             setCurrentCameraPosition(target.position0);
           }}

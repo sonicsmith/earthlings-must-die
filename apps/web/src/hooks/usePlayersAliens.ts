@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import * as aliensArtifacts from 'chain/artifacts/contracts/Aliens.sol/Aliens.json';
+import aliensArtifacts from 'chain/artifacts/contracts/Aliens.sol/Aliens.json';
 import { IDS, ADDRESSES } from 'chain';
 import {
   useContractReads,

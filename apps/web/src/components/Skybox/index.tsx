@@ -8,7 +8,7 @@ const Skybox = ({ onClick }: { onClick: () => void }) => {
   return (
     <Suspense fallback={null}>
       <mesh onClick={onClick}>
-        <sphereBufferGeometry args={[500, 60, 40]} />
+        <sphereGeometry args={[500, 60, 40]} />
         <meshBasicMaterial map={texture} side={1} />
       </mesh>
     </Suspense>

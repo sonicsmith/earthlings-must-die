@@ -13,22 +13,20 @@ import Loading from '../Loading';
 
 const Alien = ({
   width,
-  index,
   alienData,
   numberOfAliens,
   selectedAlien,
   setSelectedAlien,
 }: {
   width: number | undefined;
-  index: number;
   alienData: PlayersAlienDetails;
   numberOfAliens: number;
   selectedAlien: number;
-  setSelectedAlien: (index: number) => void;
+  setSelectedAlien: (tokenId: number) => void;
 }) => {
-  const { name, image, strength, color } = alienData;
+  const { name, image, strength, color, tokenId } = alienData;
   const selectedStyle =
-    index === selectedAlien ? 'border-teal-500' : 'border-black';
+    tokenId === selectedAlien ? 'border-teal-500' : 'border-black';
 
   const isSingle = numberOfAliens === 1;
   const isMobile = Number(width) < 640;
@@ -36,9 +34,9 @@ const Alien = ({
 
   return (
     <div
-      key={`alien${index}`}
+      key={`alien${tokenId}`}
       onClick={() => {
-        setSelectedAlien(index);
+        setSelectedAlien(tokenId);
       }}
       className={`flex-none rounded-lg border-4 hover:cursor-pointer ${selectedStyle} ${singleStyle}`}
     >
@@ -98,7 +96,6 @@ export default function AlienSelectorDialog({
                     key={`alien${index}`}
                     width={width}
                     alienData={alienData}
-                    index={index}
                     numberOfAliens={playersAliens.length}
                     setSelectedAlien={setSelectedAlien}
                     selectedAlien={selectedAlien}
