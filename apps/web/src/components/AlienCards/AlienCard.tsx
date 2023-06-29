@@ -28,7 +28,7 @@ export default function AlienCard({
       <div className="absolute left-1 top-32 p-5 pt-2 text-xs text-white">
         <div>{name}</div>
         <div className="text-gray-300">Strength: {strength}</div>
-        <div className="text-gray-300">Reaped: {rewardsGiven}kg</div>
+        <div className="text-gray-300">Harvested: {rewardsGiven}kg</div>
       </div>
     </div>
   );

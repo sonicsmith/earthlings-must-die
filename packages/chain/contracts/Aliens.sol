@@ -11,10 +11,11 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
   using Counters for Counters.Counter;
   Counters.Counter private idCounter;
 
-  uint256 private mintCost = 1; //10 ether;
-  uint256 private gasBack = 0; //0.01 ether;
+  uint256 private mintCost = 1; // 10 ether;
+  uint256 private gasBack = 0; // 0.01 ether;
   uint256 private maxStrength = 10;
   string private baseUri = '';
+  address private battlefieldEarthAddress;
 
   struct AlienRace {
     uint256 strength;
@@ -29,6 +30,10 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
       alienRaces[idCounter.current()] = AlienRace(1, block.number);
       idCounter.increment();
     }
+  }
+
+  function setBattlefieldEarthAddress(address newAddress) public onlyOwner {
+    battlefieldEarthAddress = newAddress;
   }
 
   function getMintCost() public view returns (uint256) {
@@ -67,14 +72,23 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     require(gasSent, 'Aliens: Failed to reimburse');
   }
 
+  /**
+   * @dev See {IERC721-setBaseUri}.
+   */
   function setBaseUri(string memory _baseUri) public onlyOwner {
     baseUri = _baseUri;
   }
 
+  /**
+   * @dev See {IERC721-baseTokenURI}.
+   */
   function baseTokenURI() public view returns (string memory) {
     return baseUri;
   }
 
+  /**
+   * @dev See {IERC721-_beforeTokenTransfer}.
+   */
   function _beforeTokenTransfer(
     address from,
     address to,
@@ -84,6 +98,22 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     super._beforeTokenTransfer(from, to, tokenId, batchSize);
   }
 
+  /**
+   * @dev See {IERC721-isApprovedForAll}.
+   */
+  function isApprovedForAll(
+    address owner,
+    address operator
+  ) public view virtual override returns (bool) {
+    if (operator == battlefieldEarthAddress) {
+      return true;
+    }
+    return super.isApprovedForAll(owner, operator);
+  }
+
+  /**
+   * @dev See {IERC165-supportsInterface}.
+   */
   function supportsInterface(
     bytes4 interfaceId
   ) public view override(ERC721, ERC721Enumerable) returns (bool) {

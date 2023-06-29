@@ -21,14 +21,14 @@ export const useLaunchAliens = () => {
     return ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD;
   }, [chain]);
 
-  const { config } = usePrepareContractWrite({
-    address: aliensAddress,
-    abi: aliensArtifacts.abi,
-    functionName: 'setApprovalForAll',
-    args: [battlefieldAddress, true],
-  });
+  // const { config } = usePrepareContractWrite({
+  //   address: aliensAddress,
+  //   abi: aliensArtifacts.abi,
+  //   functionName: 'setApprovalForAll',
+  //   args: [battlefieldAddress, true],
+  // });
 
-  const { data, isLoading } = useContractWrite(config);
+  // const { data, isLoading } = useContractWrite(config);
 
   const launchAlien = async (tokenId: number) => {
     console.log('launchAlien', tokenId);

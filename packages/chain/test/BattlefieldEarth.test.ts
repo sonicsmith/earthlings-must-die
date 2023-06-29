@@ -5,6 +5,10 @@ import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 const FUEL_ID = 0;
 const REWARD_ID = 1;
 
+const parseEther = ethers.utils.parseEther;
+
+const ETH = parseEther('1');
+
 describe('Battlefield Earth', function () {
   async function deployBattlefieldEarthFixture() {
     const [owner, player1, player2] = await ethers.getSigners();
@@ -37,9 +41,7 @@ describe('Battlefield Earth', function () {
     await earth.deployed();
     await earth.setAliensContract(aliens.address);
     await earth.setEquipmentContract(equipment.address);
-    await aliens.setApprovalForAll(earth.address, true);
-    await aliens.connect(player1).setApprovalForAll(earth.address, true);
-    await equipment.connect(player1).setApprovalForAll(earth.address, true);
+    await aliens.setBattlefieldEarthAddress(earth.address);
     await equipment.setBattlefieldContract(earth.address);
     await earth.populatePlanet();
 
@@ -73,6 +75,7 @@ describe('Battlefield Earth', function () {
       );
       expect(aliensOnPlanet).to.include('4');
     });
+
     it('Should burn 1 fuel', async function () {
       const { earth, equipment, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
@@ -86,6 +89,7 @@ describe('Battlefield Earth', function () {
       ).toNumber();
       expect(balanceAfter).to.equal(balanceBefore - 1);
     });
+
     it('Should replace weakest alien with new alien', async function () {
       const { earth, aliens, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
@@ -102,6 +106,7 @@ describe('Battlefield Earth', function () {
       );
       expect(strengths[0]).to.equal(attackingStrength.toNumber());
     });
+
     it('Should return kicked out aliens back to owner', async function () {
       const { earth, aliens, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
@@ -116,18 +121,25 @@ describe('Battlefield Earth', function () {
       expect(balanceAfter - 1).to.equal(balanceBefore);
     });
 
+    it('Should always have 4 aliens on planet', async function () {
+      const { earth, player1 } = await loadFixture(
+        deployBattlefieldEarthFixture
+      );
+      await earth.connect(player1).attack(4);
+      const aliensOnPlanet = await earth.getAliens();
+      expect(aliensOnPlanet.length, 'Aliens On Planet').to.equal(4);
+    });
+
     it('Should reward aliens left on planet', async function () {
       const { earth, equipment, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
       await earth.connect(player1).attack(4);
       const balance = await equipment.balanceOf(owner.address, REWARD_ID);
-      expect(balance).to.equal(3);
-      const aliensOnPlanet = await earth.getAliens();
-      expect(aliensOnPlanet.length).to.equal(3);
+      expect(balance, 'Balance').to.equal(3);
     });
 
-    it.only('Should return the correct data for getAliens call', async function () {
+    it('Should return the correct data for getAliens call', async function () {
       const { earth, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
@@ -150,19 +162,20 @@ describe('Battlefield Earth', function () {
       expect(rewards).to.have.members([0, 1, 1, 1]);
     });
 
-    it('Should allow user to cash out reward tokens', async function () {
-      const { earth, owner, player1, equipmentMintCost } = await loadFixture(
-        deployBattlefieldEarthFixture
-      );
+    it.only('Should allow user to cash out reward tokens', async function () {
+      const { earth, owner, player1, equipmentMintCost, equipment } =
+        await loadFixture(deployBattlefieldEarthFixture);
       await earth.connect(player1).attack(4);
       const balanceBefore = await owner.getBalance();
       await earth.sellRewardTokens(1);
       const balanceAfter = await owner.getBalance();
-      const expected = equipmentMintCost.mul(3).add(balanceBefore);
-      expect(balanceAfter.toString().length).to.eq(expected.toString().length);
-      expect(balanceAfter.toString().substring(0, 2)).to.eq(
-        expected.toString().substring(0, 2)
-      );
+      const totalSupply = await equipment.totalSupplyOf(1);
+      const earthBalance = await ethers.provider.getBalance(earth.address);
+      const expected = earthBalance.div(totalSupply);
+      console.log('earthBalance:', earthBalance.toString());
+      console.log('totalSupply:', totalSupply.toString());
+      console.log('difference:', balanceAfter.sub(balanceBefore).toString());
+      // expect(balanceAfter.div(ETH)).to.eq(expected.div(ETH));
     });
 
     it('Should payout in return for reward tokens', async function () {

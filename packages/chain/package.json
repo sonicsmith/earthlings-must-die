@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "build": "hardhat compile",
-    "hardhat:test": "REPORT_GAS=true hardhat test",
+    "hardhat:test": "hardhat test",
+    "hardhat:test:gas": "REPORT_GAS=true hardhat test",
     "hardhat:compile": "hardhat compile",
     "deployContracts": "hardhat run --network mumbai scripts/deployContracts.ts",
     "deployAliens": "hardhat run --network mumbai scripts/deployAliens.ts",

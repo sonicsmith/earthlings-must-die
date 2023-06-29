@@ -10,9 +10,8 @@
     "hardhat:test": {},
     "hardhat:compile": {},
     "build": {
-      "cache": false,
       "dependsOn": ["^build"],
-      "outputs": [".next/**"],
+      "outputs": [".next/**", "artifacts/**"],
       "env": ["NEXT_PUBLIC_WEB3_AUTH_CLIENT_ID"]
     }
   }

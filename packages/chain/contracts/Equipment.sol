@@ -70,6 +70,19 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     return totalSupply[id];
   }
 
+  /**
+   * @dev See {IERC1155-isApprovedForAll}.
+   */
+  function isApprovedForAll(
+    address owner,
+    address operator
+  ) public view virtual override returns (bool) {
+    if (operator == battlefieldAddress) {
+      return true;
+    }
+    return super.isApprovedForAll(owner, operator);
+  }
+
   receive() external payable {
     (bool sent, ) = owner().call{value: msg.value}('');
     require(sent, 'Equipment: Failed to pass on value');

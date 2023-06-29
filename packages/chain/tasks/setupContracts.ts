@@ -24,8 +24,8 @@ task('setupContracts', 'Verifies deployed contracts on etherscan')
     console.log('setBattlefieldContract');
     tx = await equipment.setBattlefieldContract(BATTLEFIELD);
     tx.wait();
-    console.log('setApprovalForAll');
-    tx = await aliens.setApprovalForAll(BATTLEFIELD, true);
+    console.log('setBattlefieldContract');
+    tx = await aliens.setBattlefieldEarthAddress(BATTLEFIELD);
     tx.wait();
     console.log('populatePlanet');
     await battlefieldEarth.populatePlanet();
