@@ -31,7 +31,7 @@ export default function Scene() {
   }, [width, isLaunching]);
 
   const sunPosition = useMemo(() => {
-    return new Vector3(10, 0, 0);
+    return new Vector3(10, 1, 0);
   }, []);
 
   const beginLaunch = (tokenId: number) => {
@@ -63,7 +63,9 @@ export default function Scene() {
         <pointLight position={sunPosition} intensity={1} />
         <OrbitControls
           enableZoom={false}
-          enableRotate={!isLaunching}
+          enableRotate={
+            !isLaunching && !isAlienDetailView && !isAlienSelectionView
+          }
           onEnd={(o) => {
             const target = o?.target;
             target.saveState();

@@ -1,13 +1,15 @@
-import React, { useMemo, useRef } from 'react';
+import React, { useMemo } from 'react';
 import { useGLTF } from '@react-three/drei';
 
+const SECONDS_IN_DAY = 86400;
+const OFFSET = 1000 * 70;
+
 const getRadians = () => {
-  const currentDate = new Date();
-  const midnight = new Date();
-  midnight.setHours(0, 0, 0, 0);
-  const timeDiff = midnight.getTime() - currentDate.getTime();
-  const secondsDiff = timeDiff / 1000;
-  return (secondsDiff / 86400) * (2 * Math.PI);
+  const midnight = new Date().setHours(0, 0, 0, 0);
+  const currentTime = new Date().getTime();
+  const timeDiff = midnight - currentTime;
+  const secondsDiff = timeDiff / 1000 + OFFSET;
+  return (secondsDiff / SECONDS_IN_DAY) * (2 * Math.PI);
 };
 
 export default function Earth({ onClick }: any) {

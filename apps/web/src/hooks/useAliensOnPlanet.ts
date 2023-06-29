@@ -3,6 +3,7 @@ import battlefieldArtifacts from 'chain/artifacts/contracts/BattlefieldEarth.sol
 import { ADDRESSES, IDS } from 'chain';
 import { useContractRead, useNetwork } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
+import { Console } from 'console';
 
 export interface AlienOnPlanet {
   name: string;
@@ -35,6 +36,7 @@ export const useAliensOnPlanet = () => {
   });
 
   useEffect(() => {
+    console.log(data);
     const battleAliens = data as BattlefieldAliens[];
 
     if (battleAliens?.length) {

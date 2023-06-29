@@ -46,44 +46,46 @@ export const usePlayersAliens = () => {
     return [];
   }, [balanceOf]);
 
-  const { data: tokenIds, isLoading: isTokenOwnerLoading } = useContractReads({
-    contracts: tokenOfOwnerByIndexData,
-  });
+  const { data: tokenIdResults, isLoading: isTokenOwnerLoading } =
+    useContractReads({
+      contracts: tokenOfOwnerByIndexData as any[],
+    });
 
-  const getStrengthData = useMemo(() => {
-    const numberOfAliens = (tokenIds as bigint[])?.length;
-    if (tokenIds && numberOfAliens > 0) {
+  const allStrengthRequests = useMemo(() => {
+    const numberOfAliens = (tokenIdResults as any[])?.length;
+    if (tokenIdResults && numberOfAliens > 0) {
       return Array.from({ length: numberOfAliens }, (v, index) => {
+        const tokenId = String(tokenIdResults[index]?.result);
         return {
           address: aliensAddress,
           abi: aliensArtifacts.abi,
           functionName: 'getAlienStrength',
-          args: [String(tokenIds[index])],
+          args: [tokenId],
         };
       });
     }
     return [];
-  }, [tokenIds]);
+  }, [tokenIdResults]);
 
   const { data: strengthData, isLoading: isStrengthDataLoading } =
     useContractReads({
-      contracts: getStrengthData,
+      contracts: allStrengthRequests as any[],
     });
 
   useEffect(() => {
     const fetchAndSetAliens = async () => {
-      const alienDetails = tokenIds!.map((tokenId, index) => {
+      const alienDetails = tokenIdResults!.map((tokenId, index) => {
         return {
-          ...getAlienDetailsForId(Number(tokenId)),
-          strength: String(strengthData?.[index] || 0),
+          ...getAlienDetailsForId(Number(tokenId?.result)),
+          strength: String(strengthData?.[index]?.result || 0),
         };
       });
       setAliens(alienDetails);
     };
-    if (strengthData?.length && tokenIds?.length) {
+    if (strengthData?.length && tokenIdResults?.length) {
       fetchAndSetAliens();
     }
-  }, [tokenIds, strengthData]);
+  }, [tokenIdResults, strengthData]);
 
   return {
     aliens,

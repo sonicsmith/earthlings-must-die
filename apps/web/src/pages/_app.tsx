@@ -3,13 +3,13 @@ import { type AppType } from 'next/app';
 import { polygonMumbai } from 'wagmi/chains';
 import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector';
 import { Web3Auth } from '@web3auth/modal';
-import { createClient, WagmiConfig, configureChains } from 'wagmi';
+import { createConfig, WagmiConfig, configureChains } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
 import { publicProvider } from 'wagmi/providers/public';
 import { CHAIN_NAMESPACES } from '@web3auth/base';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
-const { chains, provider, webSocketProvider } = configureChains(
+const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
   [publicProvider()]
 );
@@ -30,7 +30,7 @@ const web3AuthInstance = new Web3Auth({
   },
 });
 
-const wagmiClient = createClient({
+const config = createConfig({
   autoConnect: true,
   connectors: [
     new Web3AuthConnector({
@@ -47,14 +47,14 @@ const wagmiClient = createClient({
       },
     }),
   ],
-  provider,
-  webSocketProvider,
+  publicClient,
+  webSocketPublicClient,
 });
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <Web3AuthContext.Provider value={web3AuthInstance}>
-      <WagmiConfig client={wagmiClient}>
+      <WagmiConfig config={config}>
         <Component {...pageProps} />
       </WagmiConfig>
     </Web3AuthContext.Provider>
