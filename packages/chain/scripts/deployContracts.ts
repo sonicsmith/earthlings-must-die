@@ -26,8 +26,8 @@ async function main() {
   await battlefieldEarth.setAliensContract(aliens.address);
   console.log('setEquipmentContract');
   await battlefieldEarth.setEquipmentContract(equipment.address);
-  console.log('setBattlefieldContract');
-  await equipment.setBattlefieldContract(battlefieldEarth.address);
+  console.log('setBattlefieldAddress');
+  await equipment.setBattlefieldAddress(battlefieldEarth.address);
   console.log('populatePlanet');
   await battlefieldEarth.populatePlanet();
 

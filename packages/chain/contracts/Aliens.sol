@@ -120,8 +120,7 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     return super.supportsInterface(interfaceId);
   }
 
-  receive() external payable {
-    (bool sent, ) = owner().call{value: msg.value}('');
-    require(sent, 'Aliens: Failed to pass on value');
-  }
+  receive() external payable {}
+
+  fallback() external payable {}
 }

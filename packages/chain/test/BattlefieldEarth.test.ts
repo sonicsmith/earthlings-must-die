@@ -1,6 +1,7 @@
 import { ethers, network } from 'hardhat';
 import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
+import { BigNumber } from 'ethers';
 
 const FUEL_ID = 0;
 const REWARD_ID = 1;
@@ -8,42 +9,52 @@ const REWARD_ID = 1;
 const parseEther = ethers.utils.parseEther;
 
 const ETH = parseEther('1');
+const ALIEN_ID = 4;
+
+type Alien = {
+  tokenId: BigNumber;
+  owner: string;
+  strength: BigNumber;
+  rewardsGiven: BigNumber;
+};
+
+const getDeployedContract = async (name: string) => {
+  const ContractFactory = await ethers.getContractFactory(name);
+  const deployedContract = await ContractFactory.deploy();
+  await deployedContract.deployed();
+  return deployedContract;
+};
 
 describe('Battlefield Earth', function () {
   async function deployBattlefieldEarthFixture() {
     const [owner, player1, player2] = await ethers.getSigners();
 
-    const BattlefieldEarth = await ethers.getContractFactory(
-      'BattlefieldEarth'
-    );
-    // Aliens
-    const Aliens = await ethers.getContractFactory('Aliens');
-    const aliens = await Aliens.deploy();
-    await aliens.deployed();
-    const alienMintCost = await aliens.getMintCost();
+    // Deploy contracts
+    const aliens = await getDeployedContract('Aliens');
+    const earth = await getDeployedContract('BattlefieldEarth');
+    const equipment = await getDeployedContract('Equipment');
+
+    // Setup
+    await earth.setAliensContract(aliens.address);
+    await earth.setEquipmentContract(equipment.address);
+    await aliens.setBattlefieldEarthAddress(earth.address);
+    await equipment.setBattlefieldAddress(earth.address);
+    await earth.populatePlanet();
+
     // Mint 3 aliens
+    const alienMintCost = (await aliens.getMintCost()) as BigNumber;
     for (let i = 0; i < 3; i++) {
       await aliens.mint(player1.address, { value: alienMintCost });
       await network.provider.send('evm_mine');
       await network.provider.send('evm_mine');
-      await aliens.setAlienStrength(4 + i);
+      await aliens.setAlienStrength(ALIEN_ID + i);
     }
-    // Equipment
-    const Equipment = await ethers.getContractFactory('Equipment');
-    const equipment = await Equipment.deploy();
-    await equipment.deployed();
-    const equipmentMintCost = await equipment.getMintCost();
+
+    // Mint 10 fuel
+    const equipmentMintCost = (await equipment.getMintCost()) as BigNumber;
     await equipment.mint(player1.address, FUEL_ID, 10, {
       value: equipmentMintCost,
     });
-
-    const earth = await BattlefieldEarth.deploy();
-    await earth.deployed();
-    await earth.setAliensContract(aliens.address);
-    await earth.setEquipmentContract(equipment.address);
-    await aliens.setBattlefieldEarthAddress(earth.address);
-    await equipment.setBattlefieldContract(earth.address);
-    await earth.populatePlanet();
 
     return {
       earth,
@@ -69,8 +80,8 @@ describe('Battlefield Earth', function () {
       const { earth, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      await earth.connect(player1).attack(4);
-      const aliensOnPlanet = (await earth.getAliens()).map((alien) =>
+      await earth.connect(player1).attack(ALIEN_ID);
+      const aliensOnPlanet = (await earth.getAliens()).map((alien: Alien) =>
         alien.tokenId.toString()
       );
       expect(aliensOnPlanet).to.include('4');
@@ -80,14 +91,10 @@ describe('Battlefield Earth', function () {
       const { earth, equipment, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      const balanceBefore = (
-        await equipment.balanceOf(player1.address, FUEL_ID)
-      ).toNumber();
-      await earth.connect(player1).attack(4);
-      const balanceAfter = (
-        await equipment.balanceOf(player1.address, FUEL_ID)
-      ).toNumber();
-      expect(balanceAfter).to.equal(balanceBefore - 1);
+      const balanceBefore = await equipment.balanceOf(player1.address, FUEL_ID);
+      await earth.connect(player1).attack(ALIEN_ID);
+      const balanceAfter = await equipment.balanceOf(player1.address, FUEL_ID);
+      expect(balanceAfter).to.equal(balanceBefore.sub(1));
     });
 
     it('Should replace weakest alien with new alien', async function () {
@@ -95,37 +102,31 @@ describe('Battlefield Earth', function () {
         deployBattlefieldEarthFixture
       );
       const attackingStrength = await aliens.getAlienStrength(4);
-      await earth.connect(player1).attack(4);
+      await earth.connect(player1).attack(ALIEN_ID);
       const aliensOnPlanet = await earth.getAliens();
       const strengths = await Promise.all(
-        aliensOnPlanet.map((alien) => {
-          return aliens
-            .getAlienStrength(alien.tokenId)
-            .then((s) => s.toNumber());
+        aliensOnPlanet.map((alien: any) => {
+          return aliens.getAlienStrength(alien.tokenId);
         })
       );
-      expect(strengths[0]).to.equal(attackingStrength.toNumber());
+      expect(strengths[0]).to.equal(attackingStrength);
     });
 
     it('Should return kicked out aliens back to owner', async function () {
       const { earth, aliens, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      const balanceBefore = await aliens
-        .balanceOf(owner.address)
-        .then((a) => a.toNumber());
-      await earth.connect(player1).attack(4);
-      const balanceAfter = await aliens
-        .balanceOf(owner.address)
-        .then((a) => a.toNumber());
-      expect(balanceAfter - 1).to.equal(balanceBefore);
+      const balanceBefore = await aliens.balanceOf(owner.address);
+      await earth.connect(player1).attack(ALIEN_ID);
+      const balanceAfter = await aliens.balanceOf(owner.address);
+      expect(balanceAfter.sub(1)).to.equal(balanceBefore);
     });
 
     it('Should always have 4 aliens on planet', async function () {
       const { earth, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      await earth.connect(player1).attack(4);
+      await earth.connect(player1).attack(ALIEN_ID);
       const aliensOnPlanet = await earth.getAliens();
       expect(aliensOnPlanet.length, 'Aliens On Planet').to.equal(4);
     });
@@ -134,7 +135,7 @@ describe('Battlefield Earth', function () {
       const { earth, equipment, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      await earth.connect(player1).attack(4);
+      await earth.connect(player1).attack(ALIEN_ID);
       const balance = await equipment.balanceOf(owner.address, REWARD_ID);
       expect(balance, 'Balance').to.equal(3);
     });
@@ -143,14 +144,20 @@ describe('Battlefield Earth', function () {
       const { earth, owner, player1 } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      await earth.connect(player1).attack(4);
+      await earth.connect(player1).attack(ALIEN_ID);
       const aliensOnPlanet = await earth.getAliens();
       expect(aliensOnPlanet.length).to.equal(4);
-      const tokenIds = aliensOnPlanet.map((alien) => Number(alien.tokenId));
-      const owners = aliensOnPlanet.map((alien) => alien.owner);
-      const strengths = aliensOnPlanet.map((alien) => Number(alien.strength));
-      const rewards = aliensOnPlanet.map((alien) => Number(alien.rewardsGiven));
-      expect(tokenIds).to.have.members([1, 2, 3, 4]);
+      const tokenIds = aliensOnPlanet.map((alien: Alien) =>
+        Number(alien.tokenId)
+      );
+      const owners = aliensOnPlanet.map((alien: Alien) => alien.owner);
+      const strengths = aliensOnPlanet.map((alien: Alien) =>
+        Number(alien.strength)
+      );
+      const rewards = aliensOnPlanet.map((alien: Alien) =>
+        Number(alien.rewardsGiven)
+      );
+      expect(tokenIds).to.have.members([1, 2, 3, ALIEN_ID]);
       expect(owners).to.have.members([
         owner.address,
         owner.address,
@@ -162,27 +169,26 @@ describe('Battlefield Earth', function () {
       expect(rewards).to.have.members([0, 1, 1, 1]);
     });
 
-    it.only('Should allow user to cash out reward tokens', async function () {
-      const { earth, owner, player1, equipmentMintCost, equipment } =
+    it('Should allow user to cash out reward tokens', async function () {
+      const { earth, player1, equipmentMintCost, equipment } =
         await loadFixture(deployBattlefieldEarthFixture);
-      await earth.connect(player1).attack(4);
-      const balanceBefore = await owner.getBalance();
-      await earth.sellRewardTokens(1);
-      const balanceAfter = await owner.getBalance();
-      const totalSupply = await equipment.totalSupplyOf(1);
-      const earthBalance = await ethers.provider.getBalance(earth.address);
-      const expected = earthBalance.div(totalSupply);
-      console.log('earthBalance:', earthBalance.toString());
-      console.log('totalSupply:', totalSupply.toString());
-      console.log('difference:', balanceAfter.sub(balanceBefore).toString());
-      // expect(balanceAfter.div(ETH)).to.eq(expected.div(ETH));
+      await earth.connect(player1).attack(ALIEN_ID);
+      const earthBalanceBefore = await ethers.provider.getBalance(
+        earth.address
+      );
+      await earth.sellRewardTokens(3);
+      const earthBalanceAfter = await ethers.provider.getBalance(earth.address);
+      const actual = earthBalanceBefore.sub(earthBalanceAfter);
+      const equipmentGasBack = (await equipment.getGasBack()) as BigNumber;
+      const expected = equipmentMintCost.sub(equipmentGasBack);
+      expect(actual).to.eq(expected);
     });
 
     it('Should payout in return for reward tokens', async function () {
       const { earth, player1, equipment } = await loadFixture(
         deployBattlefieldEarthFixture
       );
-      await earth.connect(player1).attack(4);
+      await earth.connect(player1).attack(ALIEN_ID);
       const balanceBefore = await equipment.totalSupplyOf(REWARD_ID);
       await earth.sellRewardTokens(1);
       const balanceAfter = await equipment.totalSupplyOf(REWARD_ID);

@@ -57,8 +57,9 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
 
   function sellRewardTokens(uint256 numberOfTokens) public {
     equipmentContract.burn(msg.sender, REWARD, numberOfTokens);
-    uint256 totalNumberOfTokens = equipmentContract.totalSupplyOf(REWARD);
-    uint256 rewardValue = address(this).balance / totalNumberOfTokens;
+    uint256 fuelCost = equipmentContract.getMintCost();
+    uint256 gasBack = equipmentContract.getGasBack();
+    uint256 rewardValue = numberOfTokens * ((fuelCost - gasBack) / 3);
     (bool sent, ) = msg.sender.call{value: rewardValue}('');
     require(sent, 'Battlefield: Failed to reimburse');
   }
@@ -103,8 +104,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
     return weakestAlienIndex;
   }
 
-  receive() external payable {
-    (bool sent, ) = owner().call{value: msg.value}('');
-    require(sent, 'Battlefield: Failed to pass on value');
-  }
+  receive() external payable {}
+
+  fallback() external payable {}
 }

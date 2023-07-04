@@ -8,13 +8,13 @@ import '@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol';
 contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   uint256 private mintCost = 10 ether;
   uint256 private gasBack = 0.01 ether;
-  address private battlefieldAddress;
+  address payable private battlefieldAddress;
   mapping(uint256 => uint256) private totalSupply;
 
   constructor() ERC1155('') {}
 
-  function setBattlefieldContract(
-    address _battlefieldAddress
+  function setBattlefieldAddress(
+    address payable _battlefieldAddress
   ) public onlyOwner {
     battlefieldAddress = _battlefieldAddress;
   }
@@ -27,6 +27,10 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     mintCost = newCost;
   }
 
+  function getGasBack() public view returns (uint256) {
+    return gasBack;
+  }
+
   function setGasBack(uint256 newGasBack) public onlyOwner {
     gasBack = newGasBack;
   }
@@ -35,7 +39,11 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     _setURI(newuri);
   }
 
-  function mint(address recipient, uint256 id, uint256 amount) public payable {
+  function mint(
+    address payable recipient,
+    uint256 id,
+    uint256 amount
+  ) public payable {
     require(msg.value == mintCost, 'Equipment: value must be mint cost');
     // Send money to battlefield contract
     uint256 battleAmount = mintCost - gasBack;
@@ -83,8 +91,7 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     return super.isApprovedForAll(owner, operator);
   }
 
-  receive() external payable {
-    (bool sent, ) = owner().call{value: msg.value}('');
-    require(sent, 'Equipment: Failed to pass on value');
-  }
+  receive() external payable {}
+
+  fallback() external payable {}
 }
