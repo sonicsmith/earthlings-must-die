@@ -53,7 +53,7 @@ describe('Battlefield Earth', function () {
     // Mint 10 fuel
     const equipmentMintCost = (await equipment.getMintCost()) as BigNumber;
     await equipment.mint(player1.address, FUEL_ID, 10, {
-      value: equipmentMintCost,
+      value: equipmentMintCost.mul(10),
     });
 
     return {

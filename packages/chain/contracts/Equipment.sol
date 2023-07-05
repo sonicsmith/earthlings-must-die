@@ -44,13 +44,15 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     uint256 id,
     uint256 amount
   ) public payable {
-    require(msg.value == mintCost, 'Equipment: value must be mint cost');
+    uint256 totalCost = mintCost * amount;
+    require(msg.value == totalCost, 'Equipment: value must be mint cost');
     // Send money to battlefield contract
-    uint256 battleAmount = mintCost - gasBack;
+    uint256 totalGasBack = gasBack * amount;
+    uint256 battleAmount = totalCost - totalGasBack;
     (bool sent, ) = battlefieldAddress.call{value: battleAmount}('');
     require(sent, 'Equipment: Failed to pass on value');
     // Give user money for gas
-    (bool gasSent, ) = recipient.call{value: gasBack}('');
+    (bool gasSent, ) = recipient.call{value: totalGasBack}('');
     require(gasSent, 'Equipment: Failed to reimburse');
     _mint(recipient, id, amount, '');
     totalSupply[id] += amount;

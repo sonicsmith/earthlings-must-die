@@ -28,7 +28,7 @@ describe('Equipment', function () {
       );
       await equipment
         .connect(owner!)
-        .mint(addr1.address, TOKEN_ID, 10, { value: mintCost.toString() });
+        .mint(addr1.address, TOKEN_ID, 10, { value: mintCost.mul(10) });
 
       const balance = await equipment.balanceOf(addr1.address, TOKEN_ID);
       const supply = await equipment.totalSupplyOf(TOKEN_ID);
@@ -44,7 +44,7 @@ describe('Equipment', function () {
       );
       await equipment
         .connect(owner)
-        .mint(addr1.address, 1, 10, { value: mintCost.toString() });
+        .mint(addr1.address, 1, 10, { value: mintCost.mul(10) });
       await equipment
         .connect(addr1)
         .safeTransferFrom(addr1.address, addr2.address, 1, 5, []);
@@ -62,7 +62,7 @@ describe('Equipment', function () {
 
       await equipment
         .connect(owner)
-        .mint(addr1.address, 1, 10, { value: mintCost.toString() });
+        .mint(addr1.address, 1, 10, { value: mintCost.mul(10) });
 
       await expect(
         equipment
