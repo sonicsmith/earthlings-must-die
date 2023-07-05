@@ -2,7 +2,7 @@ import { Html } from '@react-three/drei';
 import { getThreeDigitNumber } from '~/utils';
 import Image from 'next/image';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import { Suspense, useState } from 'react';
+import { Suspense, useMemo, useState } from 'react';
 import Button from '../Button';
 import {
   PlayersAlienDetails,
@@ -10,6 +10,7 @@ import {
 } from '~/hooks/usePlayersAliens';
 import Link from 'next/link';
 import Loading from '../Loading';
+import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
 
 const Alien = ({
   width,
@@ -53,6 +54,13 @@ const Alien = ({
   );
 };
 
+enum Display {
+  Loading,
+  NoAliens,
+  NoFuel,
+  Selector,
+}
+
 export default function AlienSelectorDialog({
   isShowing,
   setIsAlienSelectionView,
@@ -62,10 +70,24 @@ export default function AlienSelectorDialog({
   setIsAlienSelectionView: (isShowing: boolean) => void;
   launchAlien: (tokenId: number) => void;
 }) {
-  const { aliens: playersAliens, isLoading } = usePlayersAliens();
+  const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
+  const { fuelBalance, isLoading: isEquipmentLoading } = usePlayersEquipment();
   const [selectedAlien, setSelectedAlien] = useState(-1);
   const { width } = useWindowSize();
   const dialogWidth = Number(width) < 640 ? 'w-72' : 'w-[500px]';
+
+  const display = useMemo(() => {
+    if (isAliensLoading || isEquipmentLoading) {
+      return Display.Loading;
+    }
+    if (aliens.length === 0) {
+      return Display.NoAliens;
+    }
+    if (fuelBalance === 0) {
+      return Display.NoFuel;
+    }
+    return Display.Selector;
+  }, []);
 
   return (
     <Html center>
@@ -76,12 +98,13 @@ export default function AlienSelectorDialog({
           <div className="">SELECT ALIEN TO SEND</div>
           <div className="m-4 overflow-scroll">
             <div className="flex flex-nowrap gap-3">
-              {isLoading && (
+              {display === Display.Loading && (
                 <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
                   <Loading />
                 </div>
               )}
-              {!isLoading && playersAliens.length === 0 && (
+
+              {display === Display.NoAliens && (
                 <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
                   You have no aliens to send. Visit the{' '}
                   <Link href="/store" className="underline">
@@ -90,18 +113,30 @@ export default function AlienSelectorDialog({
                   to spawn a new species.
                 </div>
               )}
-              {playersAliens.map((alienData, index) => {
-                return (
-                  <Alien
-                    key={`alien${index}`}
-                    width={width}
-                    alienData={alienData}
-                    numberOfAliens={playersAliens.length}
-                    setSelectedAlien={setSelectedAlien}
-                    selectedAlien={selectedAlien}
-                  />
-                );
-              })}
+
+              {display === Display.NoFuel && (
+                <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
+                  You have no fuel. Visit the{' '}
+                  <Link href="/store" className="underline">
+                    store
+                  </Link>{' '}
+                  to buy a fuel cell.
+                </div>
+              )}
+
+              {display === Display.Selector &&
+                aliens.map((alienData, index) => {
+                  return (
+                    <Alien
+                      key={`alien${index}`}
+                      width={width}
+                      alienData={alienData}
+                      numberOfAliens={aliens.length}
+                      setSelectedAlien={setSelectedAlien}
+                      selectedAlien={selectedAlien}
+                    />
+                  );
+                })}
             </div>
           </div>
           <div className="flex justify-center gap-4">

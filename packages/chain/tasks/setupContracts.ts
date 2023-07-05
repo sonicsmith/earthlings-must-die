@@ -15,18 +15,18 @@ task('setupContracts', 'Verifies deployed contracts on etherscan')
 
     // Set up contracts
     let tx: any;
-    console.log('setAliensContract');
+    console.log('battlefieldEarth.setAliensContract');
     tx = await battlefieldEarth.setAliensContract(ALIENS);
-    tx.wait();
-    console.log('setEquipmentContract');
+    await tx.wait();
+    console.log('battlefieldEarth.setEquipmentContract');
     tx = await battlefieldEarth.setEquipmentContract(EQUIPMENT);
-    tx.wait();
-    console.log('setBattlefieldAddress');
+    await tx.wait();
+    console.log('equipment.setBattlefieldAddress');
     tx = await equipment.setBattlefieldAddress(BATTLEFIELD);
-    tx.wait();
-    console.log('setBattlefieldAddress');
+    await tx.wait();
+    console.log('aliens.setBattlefieldAddress');
     tx = await aliens.setBattlefieldEarthAddress(BATTLEFIELD);
-    tx.wait();
+    await tx.wait();
     console.log('populatePlanet');
     await battlefieldEarth.populatePlanet();
 

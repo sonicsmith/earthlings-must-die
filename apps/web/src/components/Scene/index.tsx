@@ -35,9 +35,9 @@ export default function Scene() {
   }, []);
 
   const beginLaunch = (tokenId: number) => {
-    launchAlien(tokenId);
     setIsAlienSelectionView(false);
     setIsLaunching(true);
+    launchAlien(tokenId);
   };
 
   const [currentCameraPosition, setCurrentCameraPosition] = useState(

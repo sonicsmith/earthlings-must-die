@@ -1,4 +1,4 @@
-import { ethers, run } from 'hardhat';
+import { ethers } from 'hardhat';
 
 async function main() {
   // Deploy BattlefieldEarth
@@ -7,13 +7,8 @@ async function main() {
   const battlefieldEarth = await BattlefieldEarth.deploy();
   await battlefieldEarth.deployed();
   console.log(`BattlefieldEarth deployed to: ${battlefieldEarth.address}`);
-
-  // Display
-  console.log(`Deployment Done`);
 }
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
 main().catch((error) => {
   console.error(error);
   process.exitCode = 1;

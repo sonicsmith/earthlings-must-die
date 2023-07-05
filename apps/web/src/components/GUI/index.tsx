@@ -15,9 +15,8 @@ export default function GUI({
 }) {
   const [user, setUser] = useState<Partial<UserInfo> | null>(null);
   const web3Auth = useContext(Web3AuthContext);
-
   const isConnected = web3Auth?.status === 'connected';
-  console.log('isConnected', isConnected);
+
   useEffect(() => {
     const setUserDetails = async () => {
       const user = (await web3Auth?.getUserInfo()) as any;

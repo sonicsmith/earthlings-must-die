@@ -11,6 +11,8 @@ import { Web3AuthContext } from '~/providers/Web3AuthContext';
 import { ethers } from 'ethers';
 import Button from '~/components/Button';
 import { useAccount } from 'wagmi';
+import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
+import Router from 'next/router';
 
 interface Wallet {
   chain: string;
@@ -21,7 +23,7 @@ const Store: NextPage = () => {
   const [fuelAmount, setFuelAmount] = useState(1);
 
   const { address, isConnected } = useAccount();
-  console.log(address, isConnected);
+  console.log({ address, isConnected });
   const numberOfAliens = 0;
   const numberOfFuel = 0;
   const numberOfRewards = 0;
@@ -34,8 +36,16 @@ const Store: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen bg-black">
-        <div className="flex w-full flex-row bg-slate-700 p-2 text-white">
+        <div className="flex w-full flex-row justify-between bg-slate-700 p-2 text-white">
           <HomeIcon />
+          <div className="p-1">
+            <ArrowUturnLeftIcon
+              className="m-auto h-6 w-6 text-white hover:cursor-pointer"
+              onClick={() => {
+                Router.push('/');
+              }}
+            />
+          </div>
         </div>
 
         <div className="p-4 text-lg text-white">
