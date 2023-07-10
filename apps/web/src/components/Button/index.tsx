@@ -1,5 +1,3 @@
-const disabledOpacity = 'opacity-10 cursor-not-allowed';
-
 export default function Button({ children, onClick, disabled }: any) {
   return (
     <button

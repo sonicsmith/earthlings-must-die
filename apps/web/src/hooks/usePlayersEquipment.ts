@@ -32,8 +32,8 @@ export const usePlayersEquipment = () => {
     }) as BalanceResult;
 
   return {
-    fuelBalance: Number(fuelBalance?.result),
-    rewardBalance: Number(rewardBalance?.result),
+    fuelBalance: Number(fuelBalance),
+    rewardBalance: Number(rewardBalance),
     isLoading: isFuelBalanceLoading || isRewardBalanceLoading,
   };
 };

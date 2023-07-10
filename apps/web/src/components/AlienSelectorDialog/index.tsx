@@ -87,7 +87,7 @@ export default function AlienSelectorDialog({
       return Display.NoFuel;
     }
     return Display.Selector;
-  }, []);
+  }, [isAliensLoading, isEquipmentLoading, aliens.length, fuelBalance]);
 
   return (
     <Html center>

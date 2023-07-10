@@ -59,16 +59,7 @@ const Store: NextPage = () => {
               <div className={'text-2xl'}>Alien Species</div>
             </div>
             <div>
-              <CrossmintPayButton
-                clientId="0b05de58-033d-4e62-9368-11b74cb5d8e7"
-                mintConfig={{
-                  type: 'erc-721',
-                  totalPrice: '0.005',
-                  quantity: '1',
-                }}
-                environment="staging"
-                className="buy-alien-btn"
-              />
+              <Button>Spawn New Race</Button>
             </div>
           </div>
 
@@ -82,16 +73,9 @@ const Store: NextPage = () => {
               <NumberInput amount={fuelAmount} setAmount={setFuelAmount} />)
             </div>
             <div className={'p-2'}>
-              <CrossmintPayButton
-                clientId="0b05de58-033d-4e62-9368-11b74cb5d8e7"
-                mintConfig={{
-                  type: 'erc-1155',
-                  totalPrice: '0.005',
-                  quantity: fuelAmount,
-                }}
-                environment="staging"
-                className="buy-equipment-btn"
-              />
+              <div>
+                <Button>Buy Fuel Cells</Button>
+              </div>
             </div>
           </div>
 
@@ -103,7 +87,7 @@ const Store: NextPage = () => {
               </div>
             </div>
             <div>
-              <Button disabled={numberOfRewards === 0}>Sell for Crypto</Button>
+              <Button disabled={numberOfRewards === 0}>Sell</Button>
             </div>
           </div>
         </div>

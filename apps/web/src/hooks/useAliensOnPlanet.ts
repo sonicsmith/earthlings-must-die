@@ -33,10 +33,10 @@ export const useAliensOnPlanet = () => {
     address: battlefieldAddress,
     abi: battlefieldArtifacts.abi,
     functionName: 'getAliens',
+    cacheOnBlock: true,
   });
 
   useEffect(() => {
-    console.log(data);
     const battleAliens = data as BattlefieldAliens[];
 
     if (battleAliens?.length) {
@@ -53,7 +53,7 @@ export const useAliensOnPlanet = () => {
           };
         }
       );
-      console.log(combinedAlienData);
+      console.log('Aliens on planet:', combinedAlienData.length);
       setAliens(combinedAlienData);
     }
   }, [data]);

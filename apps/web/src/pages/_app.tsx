@@ -5,13 +5,15 @@ import { Web3AuthConnector } from '@web3auth/web3auth-wagmi-connector';
 import { Web3Auth } from '@web3auth/modal';
 import { createConfig, WagmiConfig, configureChains } from 'wagmi';
 import { InjectedConnector } from 'wagmi/connectors/injected';
-import { publicProvider } from 'wagmi/providers/public';
+import { alchemyProvider } from '@wagmi/core/providers/alchemy';
 import { CHAIN_NAMESPACES } from '@web3auth/base';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
+const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || '';
+
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [polygonMumbai],
-  [publicProvider()]
+  [alchemyProvider({ apiKey: alchemyApiKey })]
 );
 
 const web3AuthInstance = new Web3Auth({

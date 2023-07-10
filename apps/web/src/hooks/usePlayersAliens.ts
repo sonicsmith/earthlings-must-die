@@ -49,6 +49,7 @@ export const usePlayersAliens = () => {
   const { data: tokenIdResults, isLoading: isTokenOwnerLoading } =
     useContractReads({
       contracts: tokenOfOwnerByIndexData as any[],
+      enabled: !!tokenOfOwnerByIndexData.length,
     });
 
   const allStrengthRequests = useMemo(() => {
@@ -70,6 +71,7 @@ export const usePlayersAliens = () => {
   const { data: strengthData, isLoading: isStrengthDataLoading } =
     useContractReads({
       contracts: allStrengthRequests as any[],
+      enabled: !!allStrengthRequests.length,
     });
 
   useEffect(() => {
@@ -82,10 +84,13 @@ export const usePlayersAliens = () => {
       });
       setAliens(alienDetails);
     };
+
     if (strengthData?.length && tokenIdResults?.length) {
       fetchAndSetAliens();
     }
   }, [tokenIdResults, strengthData]);
+
+  console.log('Players aliens:', aliens);
 
   return {
     aliens,
