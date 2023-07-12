@@ -1,10 +1,6 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import HomeIcon from '~/components/HomeButton';
-import {
-  CrossmintPayButton,
-  CrossmintNFTCollectionView,
-} from '@crossmint/client-sdk-react-ui';
 import NumberInput from '~/components/NumberInput';
 import { useContext, useEffect, useState } from 'react';
 import { Web3AuthContext } from '~/providers/Web3AuthContext';
@@ -13,6 +9,7 @@ import Button from '~/components/Button';
 import { useAccount } from 'wagmi';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
 import Router from 'next/router';
+import { renderPaperCheckoutLink } from '@paperxyz/js-client-sdk';
 
 interface Wallet {
   chain: string;
@@ -20,13 +17,33 @@ interface Wallet {
 }
 
 const Store: NextPage = () => {
+  const [aliensCheckoutLink, setAliensCheckoutLink] = useState('');
+
   const [fuelAmount, setFuelAmount] = useState(1);
 
-  const { address, isConnected } = useAccount();
-  console.log({ address, isConnected });
+  const { address } = useAccount();
+  console.log('address', address);
   const numberOfAliens = 0;
   const numberOfFuel = 0;
   const numberOfRewards = 0;
+
+  useEffect(() => {
+    if (address) {
+      fetch(`/api/checkout?type=aliens&address=${address}`, {
+        method: 'POST',
+      })
+        .then((res) => res.json())
+        .then(({ checkoutUrl }: { checkoutUrl: string }) => checkoutUrl)
+        .then(setAliensCheckoutLink);
+    }
+  }, [address]);
+
+  console.log('acl', aliensCheckoutLink);
+
+  const openAliensCheckout = () =>
+    renderPaperCheckoutLink({
+      checkoutLinkUrl: aliensCheckoutLink,
+    });
 
   return (
     <>
@@ -59,7 +76,7 @@ const Store: NextPage = () => {
               <div className={'text-2xl'}>Alien Species</div>
             </div>
             <div>
-              <Button>Spawn New Race</Button>
+              <Button onClick={openAliensCheckout}>Spawn New Race</Button>
             </div>
           </div>
 
