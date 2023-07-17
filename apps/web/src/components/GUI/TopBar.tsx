@@ -3,46 +3,25 @@ import Button from '../Button';
 import HomeIcon from '../HomeButton';
 import { ProfileButton } from './ProfileButton';
 import { Menu } from './Menu';
-import { AppState, useAppStore } from '~/store/appStore';
+import { useAppStore } from '~/store/appStore';
 
-export default function TopBar({
-  isConnected,
-  user,
-  logout,
-  showMenu,
-  setShowMenu,
-  setIsAlienSelectionView,
-}: {
-  isConnected: boolean;
-  user: any;
-  logout: () => void;
-  showMenu: boolean;
-  setShowMenu: (show: boolean) => void;
-  setIsAlienSelectionView: (show: boolean) => void;
-}) {
-  const connect = useAppStore().connect;
+export default function TopBar() {
+  const { address, connect, showMenu } = useAppStore();
 
   return (
     <div>
       <div className="flex w-full flex-row justify-between bg-slate-700 p-2 text-white">
-        {isConnected ? (
+        {!!address ? (
           <>
             <HomeIcon />
-            <>
-              <ProfileButton
-                user={user}
-                onClick={() => {
-                  setIsAlienSelectionView(false);
-                  setShowMenu(!showMenu);
-                }}
-              />
-            </>
+            <ProfileButton />
           </>
         ) : (
           <>
             <HomeIcon />
             <Button
               onClick={() => {
+                // TODO: Start spinner while logging in
                 connect();
               }}
             >
@@ -55,10 +34,7 @@ export default function TopBar({
       {showMenu && (
         <div className="flex justify-end">
           <div className="m-2">
-            <Menu
-              logout={logout}
-              setIsAlienSelectionView={setIsAlienSelectionView}
-            />
+            <Menu />
           </div>
         </div>
       )}

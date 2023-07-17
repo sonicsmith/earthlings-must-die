@@ -3,17 +3,14 @@ import {
   RocketLaunchIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/solid';
+import { useAppStore } from '~/store/appStore';
 
 const MENU_ITEM_CLASS =
   'hover:bg-slate-500 p-2 hover:cursor-pointer px-6 rounded-lg';
 
-export const Menu = ({
-  logout,
-  setIsAlienSelectionView,
-}: {
-  logout: () => void;
-  setIsAlienSelectionView: (show: boolean) => void;
-}) => {
+export const Menu = () => {
+  const { setIsAlienSelectionView, paperSdk } = useAppStore();
+
   return (
     <div className="w-fit rounded-xl bg-slate-700 py-2 text-white">
       <ul>
@@ -51,7 +48,12 @@ export const Menu = ({
         >
           <div className="flex">Lite paper</div>
         </li>
-        <li className={MENU_ITEM_CLASS} onClick={logout}>
+        <li
+          className={MENU_ITEM_CLASS}
+          onClick={() => {
+            paperSdk?.auth.logout().then(console.log);
+          }}
+        >
           <div className="flex">
             Logout
             <ArrowRightOnRectangleIcon className="ml-2 h-5 w-5 text-white" />

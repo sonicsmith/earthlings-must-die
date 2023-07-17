@@ -1,10 +1,10 @@
-import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrbitControls, Environment } from '@react-three/drei';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls } from '@react-three/drei';
 import SkyBox from '../Skybox';
 import Earth from '../Earth';
 import { useWindowSize } from '~/hooks/useWindowSize';
-import { Suspense, use, useEffect, useMemo, useRef, useState } from 'react';
-import THREE, { Color, Vector3 } from 'three';
+import { Suspense, useMemo, useState } from 'react';
+import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
 import GUI from '../GUI';
@@ -13,17 +13,21 @@ import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
 import { useLaunchAliens } from '~/hooks/useLaunchAliens';
 import Spaceship from '../Spaceship';
+import { useAppStore } from '~/store/appStore';
 
 export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
-  const [isAlienSelectionView, setIsAlienSelectionView] = useState(false);
-
-  const [showMenu, setShowMenu] = useState(false);
   const aliensOnPlanet = useAliensOnPlanet();
   const { launchAlien } = useLaunchAliens();
 
   const [isLaunching, setIsLaunching] = useState(false);
+  const {
+    showMenu,
+    setShowMenu,
+    setIsAlienSelectionView,
+    isAlienSelectionView,
+  } = useAppStore();
 
   const initialCameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
@@ -47,11 +51,7 @@ export default function Scene() {
   return (
     <Suspense fallback={<Loading />}>
       <Canvas camera={{ position: initialCameraPosition, fov: 50 }}>
-        <GUI
-          showMenu={showMenu}
-          setShowMenu={setShowMenu}
-          setIsAlienSelectionView={setIsAlienSelectionView}
-        />
+        <GUI />
         <Earth
           onClick={() => {
             setIsAlienDetailView(!isAlienDetailView);
