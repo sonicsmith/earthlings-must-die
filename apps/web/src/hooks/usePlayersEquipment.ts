@@ -2,12 +2,13 @@ import { useMemo } from 'react';
 import equipmentArtifacts from 'chain/artifacts/contracts/Equipment.sol/Equipment.json';
 import { IDS, ADDRESSES } from 'chain';
 import { useAccount, useContractRead, useNetwork } from 'wagmi';
+import { useAppStore } from '~/store/appStore';
 
 type BalanceResult = { data: { result: bigint }; isLoading: boolean };
 
 export const usePlayersEquipment = () => {
   const { chain } = useNetwork();
-  const { address } = useAccount();
+  const address = useAppStore().address;
 
   const equipmentAddress = useMemo(() => {
     return ADDRESSES[chain?.id || IDS.POLYGON]!.EQUIPMENT;

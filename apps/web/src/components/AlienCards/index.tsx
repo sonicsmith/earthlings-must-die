@@ -3,6 +3,7 @@ import AlienCard from './AlienCard';
 import { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
 import { useAccount } from 'wagmi';
+import { useAppStore } from '~/store/appStore';
 
 const GROUP_POSITIONS = [
   '',
@@ -40,7 +41,7 @@ export default function AlienCards({
   aliensOnPlanet: AlienOnPlanet[];
   isShowing: boolean;
 }) {
-  const { address } = useAccount();
+  const address = useAppStore().address;
 
   const numberOwned = useMemo(() => {
     return aliensOnPlanet.reduce((acc, alien) => {

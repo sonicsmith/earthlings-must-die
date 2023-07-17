@@ -18,9 +18,5 @@
     "prettier": "^2.5.1",
     "turbo": "^1.10.7"
   },
-  "packageManager": "npm@9.5.0",
-  "dependencies": {
-    "@paperxyz/js-client-sdk": "^0.2.5",
-    "api": "^6.0.0"
-  }
+  "packageManager": "npm@9.5.0"
 }

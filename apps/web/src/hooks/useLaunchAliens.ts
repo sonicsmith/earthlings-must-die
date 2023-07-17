@@ -12,16 +12,16 @@ export const useLaunchAliens = () => {
   }, [chain]);
 
   const launchAlien = async (tokenId: number) => {
-    console.log('launchAlien', tokenId);
-    const { request } = await prepareWriteContract({
-      address: battlefieldAddress,
-      abi: battlefieldArtifacts.abi,
-      functionName: 'attack',
-      args: [tokenId],
-    });
-    const { hash } = await writeContract(request);
-    console.log('launchAlien hash', hash);
-    return hash;
+    // console.log('launchAlien', tokenId);
+    // const { request } = await prepareWriteContract({
+    //   address: battlefieldAddress,
+    //   abi: battlefieldArtifacts.abi,
+    //   functionName: 'attack',
+    //   args: [tokenId],
+    // });
+    // const { hash } = await writeContract(request);
+    // console.log('launchAlien hash', hash);
+    // return hash;
   };
 
   return { launchAlien };

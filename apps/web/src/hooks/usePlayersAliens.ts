@@ -9,6 +9,7 @@ import {
 } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
 import { AlienDetails } from '~/utils/getAlienDetailsForId';
+import { useAppStore } from '~/store/appStore';
 
 export interface PlayersAlienDetails extends AlienDetails {
   strength: string;
@@ -16,7 +17,7 @@ export interface PlayersAlienDetails extends AlienDetails {
 
 export const usePlayersAliens = () => {
   const { chain } = useNetwork();
-  const { address } = useAccount();
+  const address = useAppStore().address;
   const [aliens, setAliens] = useState<PlayersAlienDetails[]>([]);
 
   const aliensAddress = useMemo(() => {

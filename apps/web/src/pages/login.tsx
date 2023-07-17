@@ -1,24 +1,16 @@
-import { Loader } from '@react-three/drei';
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import Router from 'next/router';
-import { useContext, useEffect } from 'react';
-import { useConnect } from 'wagmi';
-import Button from '~/components/Button';
+import { useEffect } from 'react';
 import Loading from '~/components/Loading';
-import { Web3AuthContext } from '~/providers/Web3AuthContext';
 
 const Login: NextPage = () => {
-  const web3Auth = useContext(Web3AuthContext);
-  const { connect, connectors } = useConnect();
-
   useEffect(() => {
-    if (web3Auth?.status === 'connected') {
-      Router.push('/');
-    } else {
-      connect({ connector: connectors[0] });
-    }
-  }, [web3Auth?.status]);
+    // if (isConnected) {
+    //   Router.push('/');
+    // } else {
+    // }
+  }, []);
 
   return (
     <>

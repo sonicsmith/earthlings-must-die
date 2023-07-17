@@ -2,26 +2,20 @@ import { type NextPage } from 'next';
 import Head from 'next/head';
 import HomeIcon from '~/components/HomeButton';
 import NumberInput from '~/components/NumberInput';
-import { useContext, useEffect, useState } from 'react';
-import { Web3AuthContext } from '~/providers/Web3AuthContext';
-import { ethers } from 'ethers';
+import { useEffect, useState } from 'react';
 import Button from '~/components/Button';
 import { useAccount } from 'wagmi';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
 import Router from 'next/router';
-import { renderPaperCheckoutLink } from '@paperxyz/js-client-sdk';
-
-interface Wallet {
-  chain: string;
-  publicKey: string;
-}
+import { useAppStore } from '~/store/appStore';
+// import { renderPaperCheckoutLink } from '@paperxyz/js-client-sdk';
 
 const Store: NextPage = () => {
   const [aliensCheckoutLink, setAliensCheckoutLink] = useState('');
 
   const [fuelAmount, setFuelAmount] = useState(1);
 
-  const { address } = useAccount();
+  const address = useAppStore().address;
   console.log('address', address);
   const numberOfAliens = 0;
   const numberOfFuel = 0;
@@ -40,10 +34,10 @@ const Store: NextPage = () => {
 
   console.log('acl', aliensCheckoutLink);
 
-  const openAliensCheckout = () =>
-    renderPaperCheckoutLink({
-      checkoutLinkUrl: aliensCheckoutLink,
-    });
+  const openAliensCheckout = () => {};
+  // renderPaperCheckoutLink({
+  //   checkoutLinkUrl: aliensCheckoutLink,
+  // });
 
   return (
     <>
@@ -86,7 +80,7 @@ const Store: NextPage = () => {
               <div className={'text-2xl'}>Fuel tanks</div>
             </div>
             <div className="flex p-1">
-              <div className="mr-3">(Quantity:</div>
+              <div className="mr-3">Quantity:</div>
               <NumberInput amount={fuelAmount} setAmount={setFuelAmount} />)
             </div>
             <div className={'p-2'}>
@@ -108,10 +102,6 @@ const Store: NextPage = () => {
             </div>
           </div>
         </div>
-
-        {!!address && (
-          <div className={'m-auto h-96 w-1/2'}>Todo, show all things</div>
-        )}
       </main>
     </>
   );
