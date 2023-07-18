@@ -1,7 +1,10 @@
 import { useAppStore } from '~/store/appStore';
 
 export const ProfileButton = () => {
-  const { setIsAlienSelectionView, showMenu, setShowMenu } = useAppStore();
+  const { setIsAlienSelectionView, showMenu, setShowMenu, email } =
+    useAppStore();
+
+  const [display] = email?.split('@') || ['MENU'];
 
   return (
     <div
@@ -9,9 +12,9 @@ export const ProfileButton = () => {
         setIsAlienSelectionView(false);
         setShowMenu(!showMenu);
       }}
-      className={'h-8 w-8 rounded-full bg-slate-500 hover:cursor-pointer'}
+      className={'bg-slate-500 hover:cursor-pointer'}
     >
-      <div className={'p-1 text-white'}>?</div>
+      <div className={'p-1 text-white'}>{display}</div>
     </div>
   );
 };

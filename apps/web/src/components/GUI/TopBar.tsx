@@ -4,9 +4,21 @@ import HomeIcon from '../HomeButton';
 import { ProfileButton } from './ProfileButton';
 import { Menu } from './Menu';
 import { useAppStore } from '~/store/appStore';
+import { useState } from 'react';
 
 export default function TopBar() {
   const { address, connect, showMenu } = useAppStore();
+  const [loading, setLoading] = useState(false);
+
+  const login = async () => {
+    setLoading(true);
+    try {
+      await connect();
+    } catch (e) {
+      console.log(e);
+    }
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -19,13 +31,8 @@ export default function TopBar() {
         ) : (
           <>
             <HomeIcon />
-            <Button
-              onClick={() => {
-                // TODO: Start spinner while logging in
-                connect();
-              }}
-            >
-              Connect
+            <Button onClick={login}>
+              <div className="flex">{loading ? 'Connecting..' : 'Login'}</div>
             </Button>
           </>
         )}

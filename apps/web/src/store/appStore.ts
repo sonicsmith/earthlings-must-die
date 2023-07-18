@@ -2,11 +2,13 @@ import { create, useStore } from 'zustand';
 import {
   PaperEmbeddedWalletSdk,
   RecoveryShareManagement,
+  UserStatus,
 } from '@paperxyz/embedded-wallet-service-sdk';
 
 export type EVMAddress = `0x${string}` | null;
 
 export interface AppState {
+  email: string | null;
   address: EVMAddress;
   paperSdk: PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED> | null;
   showMenu: boolean;
@@ -20,6 +22,7 @@ export interface AppState {
 const paperClientId = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID || '';
 
 const store = create<AppState>()((set, get) => ({
+  email: null,
   address: null,
   paperSdk: null,
   showMenu: false,
@@ -35,9 +38,15 @@ const store = create<AppState>()((set, get) => ({
     }
   },
   connect: async () => {
-    const res = await get().paperSdk?.auth.loginWithPaperModal();
-    const address = res?.user.walletAddress as EVMAddress;
-    set({ address });
+    const user = await get().paperSdk?.getUser();
+    if (user?.status === UserStatus.LOGGED_IN_WALLET_INITIALIZED) {
+      const address = user.walletAddress as EVMAddress;
+      set({ address, email: user.authDetails.email });
+    } else {
+      const res = await get().paperSdk?.auth.loginWithPaperModal();
+      const address = res?.user.walletAddress as EVMAddress;
+      set({ address, email: res?.user.authDetails.email });
+    }
   },
   setShowMenu: (showMenu) => set({ showMenu }),
   setIsAlienSelectionView: (isAlienSelectionView) =>
