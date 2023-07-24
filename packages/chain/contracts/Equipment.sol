@@ -6,8 +6,7 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol';
 
 contract Equipment is ERC1155, Ownable, ERC1155Burnable {
-  uint256 private mintCost = 10 ether;
-  uint256 private gasBack = 0.01 ether;
+  uint256 private mintCost = 9 ether; // Needs to be evenly divisible by 3
   address payable private battlefieldAddress;
   mapping(uint256 => uint256) private totalSupply;
 
@@ -27,14 +26,6 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     mintCost = newCost;
   }
 
-  function getGasBack() public view returns (uint256) {
-    return gasBack;
-  }
-
-  function setGasBack(uint256 newGasBack) public onlyOwner {
-    gasBack = newGasBack;
-  }
-
   function setURI(string memory newuri) public onlyOwner {
     _setURI(newuri);
   }
@@ -47,13 +38,9 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     uint256 totalCost = mintCost * amount;
     require(msg.value == totalCost, 'Equipment: value must be mint cost');
     // Send money to battlefield contract
-    uint256 totalGasBack = gasBack * amount;
-    uint256 battleAmount = totalCost - totalGasBack;
+    uint256 battleAmount = totalCost;
     (bool sent, ) = battlefieldAddress.call{value: battleAmount}('');
     require(sent, 'Equipment: Failed to pass on value');
-    // Give user money for gas
-    (bool gasSent, ) = recipient.call{value: totalGasBack}('');
-    require(gasSent, 'Equipment: Failed to reimburse');
     _mint(recipient, id, amount, '');
     totalSupply[id] += amount;
   }

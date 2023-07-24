@@ -58,8 +58,7 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
   function sellRewardTokens(uint256 numberOfTokens) public {
     equipmentContract.burn(msg.sender, REWARD, numberOfTokens);
     uint256 fuelCost = equipmentContract.getMintCost();
-    uint256 gasBack = equipmentContract.getGasBack();
-    uint256 rewardValue = numberOfTokens * ((fuelCost - gasBack) / 3);
+    uint256 rewardValue = numberOfTokens * (fuelCost / 3);
     (bool sent, ) = msg.sender.call{value: rewardValue}('');
     require(sent, 'Battlefield: Failed to reimburse');
   }

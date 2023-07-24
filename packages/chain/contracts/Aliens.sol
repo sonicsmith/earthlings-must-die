@@ -12,7 +12,6 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
   Counters.Counter private idCounter;
 
   uint256 private mintCost = 1; // 10 ether;
-  uint256 private gasBack = 0; // 0.01 ether;
   uint256 private maxStrength = 10;
   string private baseUri = '';
   address private battlefieldEarthAddress;
@@ -40,10 +39,6 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     return mintCost;
   }
 
-  function setGasBack(uint256 newGasBack) public onlyOwner {
-    gasBack = newGasBack;
-  }
-
   function setMintCost(uint256 newCost) public onlyOwner {
     mintCost = newCost;
   }
@@ -67,9 +62,10 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     alienRaces[idCounter.current()] = AlienRace(0, block.number);
     alienRaces[idCounter.current()].createdAtBlock = block.number;
     idCounter.increment();
-    // Give user money for gas
-    (bool gasSent, ) = recipient.call{value: gasBack}('');
-    require(gasSent, 'Aliens: Failed to reimburse');
+  }
+
+  function claimFunds(address payable recipient) public onlyOwner {
+    recipient.transfer(address(this).balance);
   }
 
   /**

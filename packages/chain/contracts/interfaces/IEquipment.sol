@@ -13,8 +13,6 @@ interface IEquipment {
 
   function getMintCost() external view returns (uint256);
 
-  function getGasBack() external view returns (uint256);
-
   function mint(address account, uint256 id, uint256 amount) external payable;
 
   function reward(address account, uint256 id, uint256 amount) external;

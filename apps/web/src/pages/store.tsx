@@ -55,7 +55,7 @@ const Store: NextPage = () => {
             />
           </div>
         </div>
-        {!!address && (
+        {!!address ? (
           <div className="p-4 text-lg text-white">
             <div className="flex flex-col items-center justify-center p-4">
               <div className={'text-2xl'}>Inventory</div>
@@ -111,15 +111,13 @@ const Store: NextPage = () => {
               <Button disabled={rewardBalance === 0}>Sell Rewards</Button>
             </div>
           </div>
-        )}
-
-        {/* {!!address && ( */}
-        <div className="flex justify-center">
-          <div className="mt-32 text-lg text-white">
-            Please login to continue
+        ) : (
+          <div className="flex justify-center">
+            <div className="mt-32 text-lg text-white">
+              Please login to continue
+            </div>
           </div>
-        </div>
-        {/* )} */}
+        )}
       </main>
     </>
   );

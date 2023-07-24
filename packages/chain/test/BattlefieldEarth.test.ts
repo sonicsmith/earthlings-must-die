@@ -170,8 +170,9 @@ describe('Battlefield Earth', function () {
     });
 
     it('Should allow user to cash out reward tokens', async function () {
-      const { earth, player1, equipmentMintCost, equipment } =
-        await loadFixture(deployBattlefieldEarthFixture);
+      const { earth, player1, equipmentMintCost } = await loadFixture(
+        deployBattlefieldEarthFixture
+      );
       await earth.connect(player1).attack(ALIEN_ID);
       const earthBalanceBefore = await ethers.provider.getBalance(
         earth.address
@@ -179,9 +180,7 @@ describe('Battlefield Earth', function () {
       await earth.sellRewardTokens(3);
       const earthBalanceAfter = await ethers.provider.getBalance(earth.address);
       const actual = earthBalanceBefore.sub(earthBalanceAfter);
-      const equipmentGasBack = (await equipment.getGasBack()) as BigNumber;
-      const expected = equipmentMintCost.sub(equipmentGasBack);
-      expect(actual).to.eq(expected);
+      expect(actual).to.eq(equipmentMintCost);
     });
 
     it('Should payout in return for reward tokens', async function () {
