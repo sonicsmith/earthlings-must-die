@@ -6,11 +6,14 @@
     "build": "next build",
     "dev": "next dev",
     "lint": "next lint",
-    "start": "next start"
+    "start": "next start",
+    "clean": "rm -rf .next .turbo node_modules"
   },
   "dependencies": {
     "@heroicons/react": "^2.0.18",
     "@paperxyz/embedded-wallet-service-sdk": "^1.1.3",
+    "@paperxyz/js-client-sdk": "^0.2.5",
+    "@paperxyz/react-client-sdk": "^1.1.3",
     "@react-three/drei": "^9.66.1",
     "@react-three/fiber": "^8.13.0",
     "@wagmi/core": "^1.3.7",

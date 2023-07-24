@@ -1,28 +1,25 @@
 import { ADDRESSES, IDS } from 'chain';
-import { useMemo } from 'react';
+import { useCallback } from 'react';
 import { useNetwork } from 'wagmi';
-import battlefieldArtifacts from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
-import { prepareWriteContract, writeContract } from 'wagmi/actions';
+import { useAppStore } from '~/store/appStore';
 
 export const useLaunchAliens = () => {
+  const wallet = useAppStore().wallet;
   const { chain } = useNetwork();
 
-  const battlefieldAddress = useMemo(() => {
-    return ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD;
-  }, [chain]);
-
-  const launchAlien = async (tokenId: number) => {
-    // console.log('launchAlien', tokenId);
-    // const { request } = await prepareWriteContract({
-    //   address: battlefieldAddress,
-    //   abi: battlefieldArtifacts.abi,
-    //   functionName: 'attack',
-    //   args: [tokenId],
-    // });
-    // const { hash } = await writeContract(request);
-    // console.log('launchAlien hash', hash);
-    // return hash;
-  };
+  const launchAlien = useCallback(
+    async (tokenId: number) => {
+      const chainId = chain?.id || IDS.POLYGON;
+      const contractAddress = ADDRESSES[chainId]?.BATTLEFIELD as string;
+      const result = await wallet?.gasless.callContract({
+        contractAddress,
+        methodInterface: 'function attack(uint256 _tokenId) public',
+        methodArgs: [tokenId],
+      });
+      return result?.transactionHash;
+    },
+    [wallet, chain]
+  );
 
   return { launchAlien };
 };

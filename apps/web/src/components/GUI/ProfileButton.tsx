@@ -12,9 +12,9 @@ export const ProfileButton = () => {
         setIsAlienSelectionView(false);
         setShowMenu(!showMenu);
       }}
-      className={'bg-slate-500 hover:cursor-pointer'}
+      className={'rounded bg-teal-500 hover:cursor-pointer'}
     >
-      <div className={'p-1 text-white'}>{display}</div>
+      <div className={'mx-2 p-1 text-black'}>{display}</div>
     </div>
   );
 };

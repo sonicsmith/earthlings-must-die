@@ -12,11 +12,15 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "test": "turbo run hardhat:test --scope=chain",
-    "compile": "turbo run hardhat:compile --scope=chain"
+    "compile": "turbo run hardhat:compile --scope=chain",
+    "clean": "rm -rf node_modules && turbo run clean"
   },
   "devDependencies": {
     "prettier": "^2.5.1",
     "turbo": "^1.10.7"
   },
-  "packageManager": "npm@9.5.0"
+  "packageManager": "npm@9.5.0",
+  "dependencies": {
+    "framer-motion": "^10.13.0"
+  }
 }

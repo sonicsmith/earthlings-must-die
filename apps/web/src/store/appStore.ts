@@ -1,5 +1,6 @@
 import { create, useStore } from 'zustand';
 import {
+  CallContractReturnType,
   PaperEmbeddedWalletSdk,
   RecoveryShareManagement,
   UserStatus,
@@ -7,10 +8,21 @@ import {
 
 export type EVMAddress = `0x${string}` | null;
 
+export type EmbeddedWallet = {
+  gasless: {
+    callContract: (args: {
+      contractAddress: string;
+      methodInterface: `function ${string}(${string})${string}` | string;
+      methodArgs: Array<unknown>;
+    }) => Promise<CallContractReturnType>;
+  };
+};
+
 export interface AppState {
   email: string | null;
   address: EVMAddress;
   paperSdk: PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED> | null;
+  wallet: EmbeddedWallet | undefined;
   showMenu: boolean;
   isAlienSelectionView: boolean;
   initPaper: () => void;
@@ -25,6 +37,7 @@ const store = create<AppState>()((set, get) => ({
   email: null,
   address: null,
   paperSdk: null,
+  wallet: undefined,
   showMenu: false,
   isAlienSelectionView: false,
   initPaper: () => {
@@ -38,15 +51,16 @@ const store = create<AppState>()((set, get) => ({
     }
   },
   connect: async () => {
-    const user = await get().paperSdk?.getUser();
-    if (user?.status === UserStatus.LOGGED_IN_WALLET_INITIALIZED) {
-      const address = user.walletAddress as EVMAddress;
-      set({ address, email: user.authDetails.email });
-    } else {
+    let user = await get().paperSdk?.getUser();
+    if (user?.status !== UserStatus.LOGGED_IN_WALLET_INITIALIZED) {
       const res = await get().paperSdk?.auth.loginWithPaperModal();
-      const address = res?.user.walletAddress as EVMAddress;
-      set({ address, email: res?.user.authDetails.email });
+      user = res?.user;
     }
+    set({
+      address: user?.walletAddress as EVMAddress,
+      email: user?.authDetails.email,
+      wallet: user?.wallet,
+    });
   },
   setShowMenu: (showMenu) => set({ showMenu }),
   setIsAlienSelectionView: (isAlienSelectionView) =>

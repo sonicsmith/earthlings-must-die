@@ -1,43 +1,40 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import HomeIcon from '~/components/HomeButton';
-import NumberInput from '~/components/NumberInput';
-import { useEffect, useState } from 'react';
 import Button from '~/components/Button';
-import { useAccount } from 'wagmi';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
 import Router from 'next/router';
 import { useAppStore } from '~/store/appStore';
-// import { renderPaperCheckoutLink } from '@paperxyz/js-client-sdk';
+import { renderPaperCheckoutLink } from '@paperxyz/js-client-sdk';
+import { usePlayersAliens } from '~/hooks/usePlayersAliens';
+import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
+import { AlienSelection } from '~/components/AlienSelection';
+import Image from 'next/image';
+import { useWindowSize } from '~/hooks/useWindowSize';
+
+const CHECKOUT_URL = `https://withpaper.com/checkout`;
+const ALIENS_CHECKOUT_ID = `c262271d-2ecc-44dd-81fd-092c3107859b`;
+const FUEL_CHECKOUT_ID = `9bd365d6-c8ae-4221-86cf-dea221aa4fef`;
 
 const Store: NextPage = () => {
-  const [aliensCheckoutLink, setAliensCheckoutLink] = useState('');
-
-  const [fuelAmount, setFuelAmount] = useState(1);
-
   const address = useAppStore().address;
-  console.log('address', address);
-  const numberOfAliens = 0;
-  const numberOfFuel = 0;
-  const numberOfRewards = 0;
 
-  useEffect(() => {
-    if (address) {
-      fetch(`/api/checkout?type=aliens&address=${address}`, {
-        method: 'POST',
-      })
-        .then((res) => res.json())
-        .then(({ checkoutUrl }: { checkoutUrl: string }) => checkoutUrl)
-        .then(setAliensCheckoutLink);
-    }
-  }, [address]);
+  const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
 
-  console.log('acl', aliensCheckoutLink);
+  const {
+    fuelBalance,
+    rewardBalance,
+    isLoading: isEquipmentLoading,
+  } = usePlayersEquipment();
 
-  const openAliensCheckout = () => {};
-  // renderPaperCheckoutLink({
-  //   checkoutLinkUrl: aliensCheckoutLink,
-  // });
+  const { width } = useWindowSize();
+  const offset = Number(width) < 640 ? '' : '-ml-12';
+
+  const openCheckout = (id: string) => {
+    renderPaperCheckoutLink({
+      checkoutLinkUrl: `${CHECKOUT_URL}/${id}`,
+    });
+  };
 
   return (
     <>
@@ -51,57 +48,78 @@ const Store: NextPage = () => {
           <HomeIcon />
           <div className="p-1">
             <ArrowUturnLeftIcon
-              className="m-auto h-6 w-6 text-white hover:cursor-pointer"
+              className="m-auto h-6 w-6 text-teal-500 hover:cursor-pointer"
               onClick={() => {
                 Router.push('/');
               }}
             />
           </div>
         </div>
-
-        <div className="p-4 text-lg text-white">
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className={'text-2xl'}>TODO</div>
-          </div>
-
-          {/* Alien Species */}
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className="p-2">
-              <div className={'text-2xl'}>Alien Species</div>
+        {!!address && (
+          <div className="p-4 text-lg text-white">
+            <div className="flex flex-col items-center justify-center p-4">
+              <div className={'text-2xl'}>Inventory</div>
             </div>
-            <div>
-              <Button onClick={openAliensCheckout}>Spawn New Race</Button>
-            </div>
-          </div>
-
-          {/* Fuel Tanks */}
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className="p-1">
-              <div className={'text-2xl'}>Fuel tanks</div>
-            </div>
-            <div className="flex p-1">
-              <div className="mr-3">Quantity:</div>
-              <NumberInput amount={fuelAmount} setAmount={setFuelAmount} />)
-            </div>
-            <div className={'p-2'}>
-              <div>
-                <Button>Buy Fuel Cells</Button>
+            <div className="m-auto w-96">
+              <div className="m-4 overflow-scroll">
+                <div className={`flex flex-nowrap gap-3 ${offset}`}>
+                  {aliens.length ? (
+                    aliens.map((alienData, index) => {
+                      return (
+                        <AlienSelection
+                          key={`alien${index}`}
+                          width={width}
+                          alienData={alienData}
+                          numberOfAliens={aliens.length}
+                        />
+                      );
+                    })
+                  ) : (
+                    <div className="m-auto w-32 text-center">
+                      You have no aliens in your inventory.
+                    </div>
+                  )}
+                </div>
+                <div className="flex justify-center p-2">
+                  <Button
+                    onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}
+                    className={'m-auto'}
+                  >
+                    Buy Aliens
+                  </Button>
+                </div>
+              </div>
+              <div className="relative">
+                <div className={'absolute left-[245px] m-auto text-red-500'}>
+                  x{fuelBalance}
+                </div>
+                <Image
+                  src={'/images/fuel-cell.jpeg'}
+                  width={160}
+                  height={160}
+                  alt={'Fuel Cell'}
+                  className={'m-auto'}
+                />
+              </div>
+              <div className="flex justify-center p-2">
+                <Button onClick={() => openCheckout(FUEL_CHECKOUT_ID)}>
+                  Buy Fuel Cells
+                </Button>
               </div>
             </div>
+            <div className="flex justify-center p-2">
+              <Button disabled={rewardBalance === 0}>Sell Rewards</Button>
+            </div>
           </div>
+        )}
 
-          {/* Reward */}
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className="p-2">
-              <div className={'text-2xl'}>
-                Soylent Green (Owned: {numberOfRewards})
-              </div>
-            </div>
-            <div>
-              <Button disabled={numberOfRewards === 0}>Sell</Button>
-            </div>
+        {/* {!!address && ( */}
+        <div className="flex justify-center">
+          <div className="mt-32 text-lg text-white">
+            Please login to continue
           </div>
         </div>
+        {/* )} */}
       </main>
     </>
   );

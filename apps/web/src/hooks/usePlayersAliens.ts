@@ -18,6 +18,7 @@ export interface PlayersAlienDetails extends AlienDetails {
 export const usePlayersAliens = () => {
   const { chain } = useNetwork();
   const address = useAppStore().address;
+  console.log('address', address);
   const [aliens, setAliens] = useState<PlayersAlienDetails[]>([]);
 
   const aliensAddress = useMemo(() => {

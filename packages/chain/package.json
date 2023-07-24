@@ -12,7 +12,8 @@
     "deployEquipment": "hardhat run --network mumbai scripts/deployEquipment.ts",
     "deployBattlefield": "hardhat run --network mumbai scripts/deployBattlefield.ts",
     "task:verifyContracts": "hardhat --network mumbai verifyContracts 80001",
-    "task:setupContracts": "hardhat --network mumbai setupContracts 80001"
+    "task:setupContracts": "hardhat --network mumbai setupContracts 80001",
+    "clean": "rm -rf .turbo cache artifacts typechain node_modules"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",

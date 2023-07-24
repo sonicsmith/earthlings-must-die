@@ -15,6 +15,8 @@ import { useLaunchAliens } from '~/hooks/useLaunchAliens';
 import Spaceship from '../Spaceship';
 import { useAppStore } from '~/store/appStore';
 
+const SUN_POSITION = new Vector3(10, 1, 0);
+
 export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
@@ -34,14 +36,10 @@ export default function Scene() {
     return new Vector3(x, 0, 0);
   }, [width, isLaunching]);
 
-  const sunPosition = useMemo(() => {
-    return new Vector3(10, 1, 0);
-  }, []);
-
-  const beginLaunch = (tokenId: number) => {
+  const beginLaunch = async (tokenId: number) => {
     setIsAlienSelectionView(false);
     setIsLaunching(true);
-    launchAlien(tokenId);
+    const transactionHash = await launchAlien(tokenId);
   };
 
   const [currentCameraPosition, setCurrentCameraPosition] = useState(
@@ -49,7 +47,15 @@ export default function Scene() {
   );
 
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense
+      fallback={
+        <div className="h-full bg-black">
+          <div className="pt-48">
+            <Loading />
+          </div>
+        </div>
+      }
+    >
       <Canvas camera={{ position: initialCameraPosition, fov: 50 }}>
         <GUI />
         <Earth
@@ -60,14 +66,14 @@ export default function Scene() {
         <AlienSatellites aliensOnPlanet={aliensOnPlanet} />
         <ambientLight intensity={0.005} />
         {/* SUN */}
-        <pointLight position={sunPosition} intensity={1} />
+        <pointLight position={SUN_POSITION} intensity={1} />
         <OrbitControls
           enableZoom={false}
           enableRotate={
             !isLaunching && !isAlienDetailView && !isAlienSelectionView
           }
-          onEnd={(o) => {
-            const target = o?.target;
+          onEnd={(event) => {
+            const target = event?.target;
             target.saveState();
             setCurrentCameraPosition(target.position0);
           }}
@@ -91,7 +97,7 @@ export default function Scene() {
             <AlienSelectorDialog
               isShowing={isAlienSelectionView}
               setIsAlienSelectionView={setIsAlienSelectionView}
-              launchAlien={beginLaunch}
+              beginLaunch={beginLaunch}
             />
           </>
         )}

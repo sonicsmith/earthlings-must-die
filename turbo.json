@@ -9,6 +9,7 @@
     "lint:fix": {},
     "hardhat:test": {},
     "hardhat:compile": {},
+    "clean": { "cache": false },
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "artifacts/**"],
