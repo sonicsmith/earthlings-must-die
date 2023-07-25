@@ -21,9 +21,6 @@ export const AlienSelection = ({
   const isSingle = numberOfAliens === 1;
   const isMobile = Number(width) < 640;
   const singleStyle = isSingle && !isMobile ? 'ml-24' : '';
-  console.log('isSingle', isSingle);
-  console.log('isMobile', isMobile);
-  console.log('singleStyle', singleStyle);
 
   return (
     <div

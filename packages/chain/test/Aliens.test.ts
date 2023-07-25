@@ -73,5 +73,16 @@ describe('Aliens', function () {
       const strength = await aliens.getAlienStrength(4);
       expect(strength).to.be.gt(0);
     });
+
+    it('should allow funds to be claimed', async function () {
+      const { aliens, owner, addr1, mintCost } = await loadFixture(
+        deployAliensFixture
+      );
+      await aliens.mint(addr1.address, { value: mintCost });
+      const balanceBefore = await ethers.provider.getBalance(addr1.address);
+      await aliens.connect(owner).claimFunds(addr1.address);
+      const balanceAfter = await ethers.provider.getBalance(addr1.address);
+      expect(balanceAfter.sub(balanceBefore)).to.equal(mintCost);
+    });
   });
 });

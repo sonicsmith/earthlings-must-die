@@ -3,12 +3,8 @@ import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 import { BigNumber } from 'ethers';
 
-const FUEL_ID = 0;
-const REWARD_ID = 1;
-
-const parseEther = ethers.utils.parseEther;
-
-const ETH = parseEther('1');
+const FUEL_ID = 1;
+const REWARD_ID = 100;
 const ALIEN_ID = 4;
 
 type Alien = {

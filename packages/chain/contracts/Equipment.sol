@@ -6,7 +6,10 @@ import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol';
 
 contract Equipment is ERC1155, Ownable, ERC1155Burnable {
-  uint256 private mintCost = 9 ether; // Needs to be evenly divisible by 3
+  uint8 private constant FUEL = 1;
+  uint8 private constant REWARD = 100;
+
+  uint256 private mintCost = 3 ether; // Needs to be evenly divisible by 3
   address payable private battlefieldAddress;
   mapping(uint256 => uint256) private totalSupply;
 
@@ -35,6 +38,7 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
     uint256 id,
     uint256 amount
   ) public payable {
+    require(id < REWARD, 'Equipment: Cannot buy rewards');
     uint256 totalCost = mintCost * amount;
     require(msg.value == totalCost, 'Equipment: value must be mint cost');
     // Send money to battlefield contract

@@ -11,8 +11,8 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
   IAliens private aliensContract;
   IEquipment private equipmentContract;
 
-  uint8 private constant FUEL = 0;
-  uint8 private constant REWARD = 1;
+  uint8 private constant FUEL = 1;
+  uint8 private constant REWARD = 100;
 
   struct AlienOnPlanet {
     uint256 tokenId;

@@ -28,7 +28,12 @@ const Store: NextPage = () => {
   } = usePlayersEquipment();
 
   const { width } = useWindowSize();
-  const offset = Number(width) < 640 ? '' : '-ml-12';
+  const isMultiple = aliens.length > 1;
+  const isMobile = Number(width) < 640;
+  let offset = isMobile ? 'ml-12' : '-ml-12';
+  if (isMultiple) {
+    offset = '';
+  }
 
   const openCheckout = (id: string) => {
     renderPaperCheckoutLink({
@@ -44,7 +49,7 @@ const Store: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className="h-screen bg-black">
-        <div className="flex w-full flex-row justify-between bg-slate-700 p-2 text-white">
+        <nav className="fixed z-20 flex w-full flex-row justify-between bg-slate-700 p-2 text-white">
           <HomeIcon />
           <div className="p-1">
             <ArrowUturnLeftIcon
@@ -54,12 +59,13 @@ const Store: NextPage = () => {
               }}
             />
           </div>
-        </div>
+        </nav>
         {!!address ? (
-          <div className="p-4 text-lg text-white">
+          <div className="p-4 pt-16 text-lg text-white">
             <div className="flex flex-col items-center justify-center p-4">
               <div className={'text-2xl'}>Inventory</div>
             </div>
+            {/* ALIENS */}
             <div className="m-auto w-96">
               <div className="m-4 overflow-scroll">
                 <div className={`flex flex-nowrap gap-3 ${offset}`}>
@@ -80,15 +86,16 @@ const Store: NextPage = () => {
                     </div>
                   )}
                 </div>
-                <div className="flex justify-center p-2">
-                  <Button
-                    onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}
-                    className={'m-auto'}
-                  >
-                    Buy Aliens
-                  </Button>
-                </div>
               </div>
+              <div className="m-2 flex justify-center p-2">
+                <Button
+                  onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}
+                  className={'m-auto'}
+                >
+                  Buy Aliens
+                </Button>
+              </div>
+
               <div className="relative">
                 <div className={'absolute left-[245px] m-auto text-red-500'}>
                   x{fuelBalance}
@@ -101,14 +108,27 @@ const Store: NextPage = () => {
                   className={'m-auto'}
                 />
               </div>
-              <div className="flex justify-center p-2">
+              <div className="m-2 flex justify-center p-2">
                 <Button onClick={() => openCheckout(FUEL_CHECKOUT_ID)}>
                   Buy Fuel Cells
                 </Button>
               </div>
-            </div>
-            <div className="flex justify-center p-2">
-              <Button disabled={rewardBalance === 0}>Sell Rewards</Button>
+
+              <div className="relative">
+                <div className={'absolute left-[245px] m-auto text-red-500'}>
+                  x{rewardBalance}
+                </div>
+                <Image
+                  src={'/images/human-meat.jpg'}
+                  width={160}
+                  height={160}
+                  alt={'Human Meat'}
+                  className={'m-auto'}
+                />
+              </div>
+              <div className="m-2 flex justify-center p-2">
+                <Button disabled={rewardBalance === 0}>Sell Humans</Button>
+              </div>
             </div>
           </div>
         ) : (

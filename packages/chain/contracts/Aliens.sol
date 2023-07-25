@@ -11,7 +11,7 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
   using Counters for Counters.Counter;
   Counters.Counter private idCounter;
 
-  uint256 private mintCost = 1; // 10 ether;
+  uint256 private mintCost = 1 gwei;
   uint256 private maxStrength = 10;
   string private baseUri = '';
   address private battlefieldEarthAddress;

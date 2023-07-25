@@ -2,7 +2,7 @@ import { ethers } from 'hardhat';
 import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
 
-const TOKEN_ID = 0;
+const FUEL_ID = 1;
 
 describe('Equipment', function () {
   async function deployEquipmentFixture() {
@@ -28,10 +28,10 @@ describe('Equipment', function () {
       );
       await equipment
         .connect(owner!)
-        .mint(addr1.address, TOKEN_ID, 10, { value: mintCost.mul(10) });
+        .mint(addr1.address, FUEL_ID, 10, { value: mintCost.mul(10) });
 
-      const balance = await equipment.balanceOf(addr1.address, TOKEN_ID);
-      const supply = await equipment.totalSupplyOf(TOKEN_ID);
+      const balance = await equipment.balanceOf(addr1.address, FUEL_ID);
+      const supply = await equipment.totalSupplyOf(FUEL_ID);
       expect(balance).to.equal(10);
       expect(supply).to.equal(10);
     });
