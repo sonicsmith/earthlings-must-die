@@ -20,6 +20,7 @@ export const usePlayersAliens = () => {
   const address = useAppStore().address;
   console.log('address', address);
   const [aliens, setAliens] = useState<PlayersAlienDetails[]>([]);
+  const [zeroStrengthAliens, setZeroStrengthAliens] = useState<number[]>([]);
 
   const aliensAddress = useMemo(() => {
     return ADDRESSES[chain?.id || IDS.POLYGON]!.ALIENS;
@@ -78,13 +79,19 @@ export const usePlayersAliens = () => {
 
   useEffect(() => {
     const fetchAndSetAliens = async () => {
+      const zeroAliens: number[] = [];
       const alienDetails = tokenIdResults!.map((tokenId, index) => {
+        const strength = String(strengthData?.[index]?.result || 0);
+        if (!strength) {
+          zeroAliens.push(Number(tokenId?.result));
+        }
         return {
           ...getAlienDetailsForId(Number(tokenId?.result)),
-          strength: String(strengthData?.[index]?.result || 0),
+          strength,
         };
       });
       setAliens(alienDetails);
+      setZeroStrengthAliens(zeroAliens);
     };
 
     if (strengthData?.length && tokenIdResults?.length) {
@@ -96,6 +103,7 @@ export const usePlayersAliens = () => {
 
   return {
     aliens,
+    zeroStrengthAliens,
     isLoading: isBalanceLoading || isTokenOwnerLoading || isStrengthDataLoading,
   };
 };

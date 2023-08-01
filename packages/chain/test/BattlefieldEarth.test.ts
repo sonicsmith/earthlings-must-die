@@ -1,7 +1,8 @@
 import { ethers, network } from 'hardhat';
 import { expect } from 'chai';
 import { loadFixture } from '@nomicfoundation/hardhat-network-helpers';
-import { BigNumber } from 'ethers';
+import { BigNumber, BigNumberish } from 'ethers';
+import { PromiseOrValue } from '../typechain/common';
 
 const FUEL_ID = 1;
 const REWARD_ID = 100;
@@ -13,6 +14,10 @@ type Alien = {
   strength: BigNumber;
   rewardsGiven: BigNumber;
 };
+
+// Needed for Chainlink mocks
+const keyHash =
+  '0xd89b2bf150e3b9e13446986e571fb9cab24b13cea0a43ea20a6049a85cc807cc';
 
 const getDeployedContract = async (name: string) => {
   const ContractFactory = await ethers.getContractFactory(name);
@@ -26,7 +31,71 @@ describe('Battlefield Earth', function () {
     const [owner, player1, player2] = await ethers.getSigners();
 
     // Deploy contracts
-    const aliens = await getDeployedContract('Aliens');
+    const coordinatorFactory = await ethers.getContractFactory(
+      'VRFCoordinatorV2Mock',
+      owner
+    );
+    const coordinator = await coordinatorFactory.deploy(
+      ethers.BigNumber.from('100000000000000000'), // 0.1,
+      1e9 // 0.000000001 LINK per gas
+    );
+
+    const linkEthFeedFactory = await ethers.getContractFactory(
+      'MockV3Aggregator',
+      owner
+    );
+    const linkEthFeed = await linkEthFeedFactory.deploy(
+      18,
+      ethers.BigNumber.from('3000000000000000') // 0.003); // 1 LINK = 0.003 ETH
+    );
+
+    const linkFactory = await ethers.getContractFactory('LinkToken', owner);
+    const link = await linkFactory.deploy();
+
+    const wrapperFactory = await ethers.getContractFactory(
+      'VRFV2Wrapper',
+      owner
+    );
+    const wrapper = await wrapperFactory.deploy(
+      link.address,
+      linkEthFeed.address,
+      coordinator.address
+    );
+
+    // Actual contract
+    const Aliens = await ethers.getContractFactory('Aliens');
+    const aliens = await Aliens.deploy(link.address, wrapper.address);
+    await aliens.deployed();
+
+    link.transfer(aliens.address, ethers.utils.parseEther('10'));
+    await wrapper.setConfig(
+      ethers.BigNumber.from(60_000), // wrapperGasOverhead,
+      ethers.BigNumber.from(52_000), // coordinatorGasOverhead,
+      10, // wrapperPremiumPercentage,
+      keyHash,
+      10 // maxNumWords
+    );
+
+    // fund subscription. The Wrapper's subscription id is 1
+    await coordinator.connect(owner).fundSubscription(
+      1,
+      ethers.BigNumber.from('100000000000000000000') // 100 LINK
+    );
+
+    const fakeRandomCallback = (
+      id: number,
+      random: PromiseOrValue<BigNumberish>[]
+    ) => {
+      return coordinator.fulfillRandomWordsWithOverride(
+        id,
+        wrapper.address,
+        random,
+        {
+          gasLimit: 1_000_000,
+        }
+      );
+    };
+
     const earth = await getDeployedContract('BattlefieldEarth');
     const equipment = await getDeployedContract('Equipment');
 
@@ -37,14 +106,10 @@ describe('Battlefield Earth', function () {
     await equipment.setBattlefieldAddress(earth.address);
     await earth.populatePlanet();
 
-    // Mint 3 aliens
+    // Mint 1 alien
     const alienMintCost = (await aliens.getMintCost()) as BigNumber;
-    for (let i = 0; i < 3; i++) {
-      await aliens.mint(player1.address, { value: alienMintCost });
-      await network.provider.send('evm_mine');
-      await network.provider.send('evm_mine');
-      await aliens.setAlienStrength(ALIEN_ID + i);
-    }
+    await aliens.mint(player1.address, { value: alienMintCost });
+    await fakeRandomCallback(1, [1]);
 
     // Mint 10 fuel
     const equipmentMintCost = (await equipment.getMintCost()) as BigNumber;

@@ -11,6 +11,8 @@ import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
 import { AlienSelection } from '~/components/AlienSelection';
 import Image from 'next/image';
 import { useWindowSize } from '~/hooks/useWindowSize';
+import Loading from '~/components/Loading';
+import { useEffect } from 'react';
 
 const CHECKOUT_URL = `https://withpaper.com/checkout`;
 const ALIENS_CHECKOUT_ID = `c262271d-2ecc-44dd-81fd-092c3107859b`;
@@ -19,7 +21,11 @@ const FUEL_CHECKOUT_ID = `9bd365d6-c8ae-4221-86cf-dea221aa4fef`;
 const Store: NextPage = () => {
   const address = useAppStore().address;
 
-  const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
+  const {
+    aliens,
+    zeroStrengthAliens,
+    isLoading: isAliensLoading,
+  } = usePlayersAliens();
 
   const {
     fuelBalance,
@@ -67,26 +73,30 @@ const Store: NextPage = () => {
             </div>
             {/* ALIENS */}
             <div className="m-auto w-96">
-              <div className="m-4 overflow-scroll">
-                <div className={`flex flex-nowrap gap-3 ${offset}`}>
-                  {aliens.length ? (
-                    aliens.map((alienData, index) => {
-                      return (
-                        <AlienSelection
-                          key={`alien${index}`}
-                          width={width}
-                          alienData={alienData}
-                          numberOfAliens={aliens.length}
-                        />
-                      );
-                    })
-                  ) : (
-                    <div className="m-auto w-32 text-center">
-                      You have no aliens in your inventory.
-                    </div>
-                  )}
+              {!isAliensLoading ? (
+                <div className="m-4 overflow-scroll">
+                  <div className={`flex flex-nowrap gap-3 ${offset}`}>
+                    {aliens.length ? (
+                      aliens.map((alienData, index) => {
+                        return (
+                          <AlienSelection
+                            key={`alien${index}`}
+                            width={width}
+                            alienData={alienData}
+                            numberOfAliens={aliens.length}
+                          />
+                        );
+                      })
+                    ) : (
+                      <div className="m-auto w-32 text-center">
+                        You have no aliens in your inventory.
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <Loading />
+              )}
               <div className="m-2 flex justify-center p-2">
                 <Button
                   onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}
@@ -96,18 +106,22 @@ const Store: NextPage = () => {
                 </Button>
               </div>
 
-              <div className="relative">
-                <div className={'absolute left-[245px] m-auto text-red-500'}>
-                  x{fuelBalance}
+              {!isEquipmentLoading ? (
+                <div className="relative">
+                  <div className={'absolute left-[245px] m-auto text-red-500'}>
+                    x{fuelBalance}
+                  </div>
+                  <Image
+                    src={'/images/fuel-cell.jpeg'}
+                    width={160}
+                    height={160}
+                    alt={'Fuel Cell'}
+                    className={'m-auto'}
+                  />
                 </div>
-                <Image
-                  src={'/images/fuel-cell.jpeg'}
-                  width={160}
-                  height={160}
-                  alt={'Fuel Cell'}
-                  className={'m-auto'}
-                />
-              </div>
+              ) : (
+                <Loading />
+              )}
               <div className="m-2 flex justify-center p-2">
                 <Button onClick={() => openCheckout(FUEL_CHECKOUT_ID)}>
                   Buy Fuel Cells

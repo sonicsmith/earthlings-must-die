@@ -1,6 +1,6 @@
 {
   "prettier.configPath": ".prettierrc",
-  "solidity.compileUsingRemoteVersion": "v0.8.9+commit.e5eed63a",
+  "solidity.compileUsingRemoteVersion": "latest",
   "solidity.defaultCompiler": "remote",
   "solidity.packageDefaultDependenciesDirectory": "node_modules"
 }

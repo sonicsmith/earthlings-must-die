@@ -6,29 +6,40 @@ import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol';
 import '@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import '@openzeppelin/contracts/utils/Counters.sol';
+import '@chainlink/contracts/src/v0.8/VRFV2WrapperConsumerBase.sol';
 
-contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
+contract Aliens is
+  ERC721,
+  ERC721Enumerable,
+  ERC721Burnable,
+  Ownable,
+  VRFV2WrapperConsumerBase
+{
   using Counters for Counters.Counter;
   Counters.Counter private idCounter;
 
   uint256 private mintCost = 1 gwei;
-  uint256 private maxStrength = 10;
   string private baseUri = '';
   address private battlefieldEarthAddress;
+  address private linkAddress;
 
-  struct AlienRace {
-    uint256 strength;
-    uint256 createdAtBlock;
-  }
-  mapping(uint256 => AlienRace) public alienRaces;
+  mapping(uint256 => uint256) public vrfRequests;
+  mapping(uint256 => uint256) public alienStrengths;
 
-  constructor() ERC721('Aliens', 'ALN') {
+  constructor(
+    address _linkAddress,
+    address _wrapperAddress
+  )
+    ERC721('Aliens', 'ALN')
+    VRFV2WrapperConsumerBase(_linkAddress, _wrapperAddress)
+  {
     // Premint 4 to aliens to creator
     for (uint256 i = 0; i < 4; i++) {
       _safeMint(msg.sender, idCounter.current());
-      alienRaces[idCounter.current()] = AlienRace(1, block.number);
+      alienStrengths[idCounter.current()] = 1;
       idCounter.increment();
     }
+    linkAddress = _linkAddress;
   }
 
   function setBattlefieldEarthAddress(address newAddress) public onlyOwner {
@@ -43,29 +54,56 @@ contract Aliens is ERC721, ERC721Enumerable, ERC721Burnable, Ownable {
     mintCost = newCost;
   }
 
-  function setAlienStrength(uint256 tokenId) public {
-    // Only allow strength to be set once
-    require(alienRaces[tokenId].strength == 0, 'Aliens: strength already set');
-    uint256 nextBlockNumber = alienRaces[tokenId].createdAtBlock + 1;
-    bytes32 nextBlockhash = blockhash(nextBlockNumber);
-    uint256 randomStrength = uint256(nextBlockhash) % maxStrength;
-    alienRaces[tokenId].strength = randomStrength;
+  function fulfillRandomWords(
+    uint256 _requestId,
+    uint256[] memory _randomWords
+  ) internal override {
+    require(vrfRequests[_requestId] > 0, 'Aliens: VRF Request not found');
+    require(
+      alienStrengths[vrfRequests[_requestId]] == 0,
+      'Aliens: strength already set'
+    );
+
+    // Strength of aliens increases over time
+    uint256 maxStrength = 9 + idCounter.current() / 10;
+    uint256 randomStrength = _randomWords[0] % maxStrength;
+    alienStrengths[vrfRequests[_requestId]] = randomStrength + 1;
   }
 
   function getAlienStrength(uint256 tokenId) public view returns (uint256) {
-    return alienRaces[tokenId].strength;
+    return alienStrengths[tokenId];
   }
 
   function mint(address payable recipient) public payable {
     require(msg.value == mintCost, 'Aliens: value must be mint cost');
     _safeMint(recipient, idCounter.current());
-    alienRaces[idCounter.current()] = AlienRace(0, block.number);
-    alienRaces[idCounter.current()].createdAtBlock = block.number;
+    alienStrengths[idCounter.current()] = 0;
+    //
+    uint256 requestId = requestRandomness(
+      100000, // callbackGasLimit,
+      3, // requestConfirmations,
+      1 // numWords
+    );
+    vrfRequests[requestId] = idCounter.current();
     idCounter.increment();
   }
 
+  /**
+   * @dev Allow withdraw of Link tokens from the contract
+   */
   function claimFunds(address payable recipient) public onlyOwner {
     recipient.transfer(address(this).balance);
+  }
+
+  /**
+   * @dev Allow withdraw of Link tokens from the contract
+   */
+  function withdrawLink() public onlyOwner {
+    LinkTokenInterface link = LinkTokenInterface(linkAddress);
+    require(
+      link.transfer(msg.sender, link.balanceOf(address(this))),
+      'Unable to transfer'
+    );
   }
 
   /**

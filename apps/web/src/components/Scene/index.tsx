@@ -11,7 +11,7 @@ import GUI from '../GUI';
 import Loading from '../Loading';
 import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
-import { useLaunchAliens } from '~/hooks/useLaunchAliens';
+import { useTransactions } from '~/hooks/useTransactions';
 import Spaceship from '../Spaceship';
 import { useAppStore } from '~/store/appStore';
 
@@ -21,7 +21,7 @@ export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
   const aliensOnPlanet = useAliensOnPlanet();
-  const { launchAlien } = useLaunchAliens();
+  const { launchAlien } = useTransactions();
 
   const [isLaunching, setIsLaunching] = useState(false);
   const {
@@ -40,6 +40,7 @@ export default function Scene() {
     setIsAlienSelectionView(false);
     setIsLaunching(true);
     const transactionHash = await launchAlien(tokenId);
+    console.log('transactionHash', transactionHash);
   };
 
   const [currentCameraPosition, setCurrentCameraPosition] = useState(

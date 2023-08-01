@@ -9,7 +9,19 @@ import './tasks/setupContracts';
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: '0.8.9',
+  solidity: {
+    compilers: [
+      {
+        version: '0.8.9',
+      },
+      {
+        version: '0.6.0',
+      },
+      {
+        version: '0.4.24',
+      },
+    ],
+  },
   networks: {
     mumbai: {
       url: 'https://rpc.ankr.com/polygon_mumbai',
