@@ -23,7 +23,7 @@ const config = createConfig({
 const MyApp: AppType = ({ Component, pageProps }) => {
   const { initPaper } = usePersistentStore<AppState, any>(
     useAppStore,
-    (state) => state
+    (state) => state.initPaper
   );
 
   useEffect(() => {
