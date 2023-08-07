@@ -1,8 +1,17 @@
-import { useAppStore } from '~/store/appStore';
+import { usePersistentStore } from '~/hooks/usePersistentStore';
+import { AppState, useAppStore } from '~/store/appStore';
 
 export const ProfileButton = () => {
   const { setIsAlienSelectionView, showMenu, setShowMenu, email } =
-    useAppStore();
+    usePersistentStore<AppState, any>(
+      useAppStore,
+      ({ setIsAlienSelectionView, showMenu, setShowMenu, email }) => ({
+        setIsAlienSelectionView,
+        showMenu,
+        setShowMenu,
+        email,
+      })
+    );
 
   const [display] = email?.split('@') || ['MENU'];
 

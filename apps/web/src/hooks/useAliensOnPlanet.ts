@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import battlefieldArtifacts from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
-import { ADDRESSES, IDS } from 'chain';
-import { useContractRead, useNetwork } from 'wagmi';
+import { ADDRESSES } from 'chain';
+import { useContractRead } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
-import { Console } from 'console';
 
 export interface AlienOnPlanet {
   name: string;
@@ -21,15 +20,14 @@ type BattlefieldAliens = {
   rewardsGiven: number;
 };
 
+const chain = process.env.NEXT_PUBLIC_CHAIN!;
+
 export const useAliensOnPlanet = () => {
-  const { chain } = useNetwork();
   const [aliens, setAliens] = useState<AlienOnPlanet[]>([]);
 
-  const battlefieldAddress = useMemo(() => {
-    return ADDRESSES[chain?.id || IDS.POLYGON]!.BATTLEFIELD;
-  }, [chain]);
+  const battlefieldAddress = ADDRESSES[chain]!.BATTLEFIELD;
 
-  const { data } = useContractRead({
+  const { data, refetch } = useContractRead({
     address: battlefieldAddress,
     abi: battlefieldArtifacts.abi,
     functionName: 'getAliens',
@@ -53,10 +51,11 @@ export const useAliensOnPlanet = () => {
           };
         }
       );
-      console.log('Aliens on planet:', combinedAlienData.length);
       setAliens(combinedAlienData);
     }
   }, [data]);
 
-  return aliens;
+  console.log('Aliens on planet:', aliens);
+
+  return { aliens, refetch };
 };

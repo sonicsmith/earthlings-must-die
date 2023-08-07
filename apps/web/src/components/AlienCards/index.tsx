@@ -2,8 +2,8 @@ import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
 import { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
-import { useAccount } from 'wagmi';
-import { useAppStore } from '~/store/appStore';
+import { AppState, useAppStore } from '~/store/appStore';
+import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 const GROUP_POSITIONS = [
   '',
@@ -41,7 +41,10 @@ export default function AlienCards({
   aliensOnPlanet: AlienOnPlanet[];
   isShowing: boolean;
 }) {
-  const address = useAppStore().address;
+  const { address } = usePersistentStore<AppState, any>(
+    useAppStore,
+    (state) => state.address
+  );
 
   const numberOwned = useMemo(() => {
     return aliensOnPlanet.reduce((acc, alien) => {

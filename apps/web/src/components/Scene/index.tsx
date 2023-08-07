@@ -13,14 +13,15 @@ import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
 import { useTransactions } from '~/hooks/useTransactions';
 import Spaceship from '../Spaceship';
-import { useAppStore } from '~/store/appStore';
+import { AppState, useAppStore } from '~/store/appStore';
+import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 const SUN_POSITION = new Vector3(10, 1, 0);
 
 export default function Scene() {
   const { width } = useWindowSize();
   const [isAlienDetailView, setIsAlienDetailView] = useState(false);
-  const aliensOnPlanet = useAliensOnPlanet();
+  const { aliens, refetch: refetchAliens } = useAliensOnPlanet();
   const { launchAlien } = useTransactions();
 
   const [isLaunching, setIsLaunching] = useState(false);
@@ -29,7 +30,20 @@ export default function Scene() {
     setShowMenu,
     setIsAlienSelectionView,
     isAlienSelectionView,
-  } = useAppStore();
+  } = usePersistentStore<AppState, any>(
+    useAppStore,
+    ({
+      showMenu,
+      setShowMenu,
+      setIsAlienSelectionView,
+      isAlienSelectionView,
+    }) => ({
+      showMenu,
+      setShowMenu,
+      setIsAlienSelectionView,
+      isAlienSelectionView,
+    })
+  );
 
   const initialCameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
@@ -41,6 +55,7 @@ export default function Scene() {
     setIsLaunching(true);
     const transactionHash = await launchAlien(tokenId);
     console.log('transactionHash', transactionHash);
+    refetchAliens();
   };
 
   const [currentCameraPosition, setCurrentCameraPosition] = useState(
@@ -64,7 +79,7 @@ export default function Scene() {
             setIsAlienDetailView(!isAlienDetailView);
           }}
         />
-        <AlienSatellites aliensOnPlanet={aliensOnPlanet} />
+        <AlienSatellites aliensOnPlanet={aliens} />
         <ambientLight intensity={0.005} />
         {/* SUN */}
         <pointLight position={SUN_POSITION} intensity={1} />
@@ -91,10 +106,7 @@ export default function Scene() {
         />
         {!isLaunching && (
           <>
-            <AlienCards
-              isShowing={isAlienDetailView}
-              aliensOnPlanet={aliensOnPlanet}
-            />
+            <AlienCards isShowing={isAlienDetailView} aliensOnPlanet={aliens} />
             <AlienSelectorDialog
               isShowing={isAlienSelectionView}
               setIsAlienSelectionView={setIsAlienSelectionView}

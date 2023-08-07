@@ -1,18 +1,20 @@
-import { useMemo } from 'react';
 import equipmentArtifacts from 'chain/artifacts/contracts/Equipment.sol/Equipment.json';
-import { IDS, ADDRESSES } from 'chain';
-import { useAccount, useContractRead, useNetwork } from 'wagmi';
-import { useAppStore } from '~/store/appStore';
+import { ADDRESSES } from 'chain';
+import { useContractRead } from 'wagmi';
+import { AppState, useAppStore } from '~/store/appStore';
+import { usePersistentStore } from './usePersistentStore';
 
 type BalanceResult = { data: { result: bigint }; isLoading: boolean };
 
-export const usePlayersEquipment = () => {
-  const { chain } = useNetwork();
-  const address = useAppStore().address;
+const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
-  const equipmentAddress = useMemo(() => {
-    return ADDRESSES[chain?.id || IDS.POLYGON]!.EQUIPMENT;
-  }, [chain]);
+export const usePlayersEquipment = () => {
+  const { address } = usePersistentStore<AppState, any>(
+    useAppStore,
+    (state) => state.address
+  );
+
+  const equipmentAddress = ADDRESSES[chain]!.EQUIPMENT;
 
   const { data: fuelBalance, isLoading: isFuelBalanceLoading } =
     useContractRead({

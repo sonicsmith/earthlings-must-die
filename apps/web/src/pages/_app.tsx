@@ -3,8 +3,9 @@ import { type AppType } from 'next/app';
 import { polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from '@wagmi/core/providers/alchemy';
 import { WagmiConfig, createConfig, configureChains } from 'wagmi';
-import { useAppStore } from '~/store/appStore';
+import { AppState, useAppStore } from '~/store/appStore';
 import { useEffect } from 'react';
+import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || '';
 
@@ -20,7 +21,10 @@ const config = createConfig({
 });
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const initPaper = useAppStore().initPaper;
+  const { initPaper } = usePersistentStore<AppState, any>(
+    useAppStore,
+    (state) => state
+  );
 
   useEffect(() => {
     initPaper();

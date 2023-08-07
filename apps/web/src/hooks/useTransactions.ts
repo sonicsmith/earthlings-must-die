@@ -1,18 +1,20 @@
-import { ADDRESSES, IDS } from 'chain';
+import { ADDRESSES } from 'chain';
 import { useCallback } from 'react';
-import { useNetwork } from 'wagmi';
-import { useAppStore } from '~/store/appStore';
+import { AppState, useAppStore } from '~/store/appStore';
+import { usePersistentStore } from './usePersistentStore';
+
+const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
 export const useTransactions = () => {
-  const wallet = useAppStore().wallet;
-  const { chain } = useNetwork();
+  const wallet = usePersistentStore<AppState, any>(
+    useAppStore,
+    (state) => state.wallet
+  );
 
   const launchAlien = useCallback(
     async (tokenId: number) => {
-      const chainId = chain?.id || IDS.POLYGON;
-      const contractAddress = ADDRESSES[chainId]?.BATTLEFIELD as string;
       const result = await wallet?.gasless.callContract({
-        contractAddress,
+        contractAddress: ADDRESSES[chain]!.BATTLEFIELD,
         methodInterface: 'function attack(uint256 _tokenId) public',
         methodArgs: [tokenId],
       });
@@ -21,19 +23,5 @@ export const useTransactions = () => {
     [wallet, chain]
   );
 
-  const assignStrength = useCallback(
-    async (tokenId: number) => {
-      const chainId = chain?.id || IDS.POLYGON;
-      const contractAddress = ADDRESSES[chainId]?.ALIENS as string;
-      const result = await wallet?.gasless.callContract({
-        contractAddress,
-        methodInterface: 'function setAlienStrength(uint256 _tokenId) public',
-        methodArgs: [tokenId],
-      });
-      return result?.transactionHash;
-    },
-    [wallet, chain]
-  );
-
-  return { launchAlien, assignStrength };
+  return { launchAlien };
 };

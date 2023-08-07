@@ -40,7 +40,7 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   ) public payable {
     require(id < REWARD, 'Equipment: Cannot buy rewards');
     uint256 totalCost = mintCost * amount;
-    require(msg.value == totalCost, 'Equipment: value must be mint cost');
+    require(msg.value >= totalCost, 'Equipment: value must be mint cost');
     // Send money to battlefield contract
     uint256 battleAmount = totalCost;
     (bool sent, ) = battlefieldAddress.call{value: battleAmount}('');

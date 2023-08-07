@@ -75,7 +75,7 @@ contract Aliens is
   }
 
   function mint(address payable recipient) public payable {
-    require(msg.value == mintCost, 'Aliens: value must be mint cost');
+    require(msg.value >= mintCost, 'Aliens: value must be mint cost');
     _safeMint(recipient, idCounter.current());
     alienStrengths[idCounter.current()] = 0;
     //

@@ -1,30 +1,28 @@
 import { useEffect, useMemo, useState } from 'react';
 import aliensArtifacts from 'chain/artifacts/contracts/Aliens.sol/Aliens.json';
-import { IDS, ADDRESSES } from 'chain';
-import {
-  useContractReads,
-  useAccount,
-  useContractRead,
-  useNetwork,
-} from 'wagmi';
+import { ADDRESSES } from 'chain';
+import { useContractReads, useContractRead } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
 import { AlienDetails } from '~/utils/getAlienDetailsForId';
-import { useAppStore } from '~/store/appStore';
+import { AppState, useAppStore } from '~/store/appStore';
+import { usePersistentStore } from './usePersistentStore';
 
 export interface PlayersAlienDetails extends AlienDetails {
   strength: string;
 }
 
+const chain = process.env.NEXT_PUBLIC_CHAIN!;
+
 export const usePlayersAliens = () => {
-  const { chain } = useNetwork();
-  const address = useAppStore().address;
+  const { address } = usePersistentStore<AppState, any>(
+    useAppStore,
+    (state) => state.address
+  );
   console.log('address', address);
   const [aliens, setAliens] = useState<PlayersAlienDetails[]>([]);
   const [zeroStrengthAliens, setZeroStrengthAliens] = useState<number[]>([]);
 
-  const aliensAddress = useMemo(() => {
-    return ADDRESSES[chain?.id || IDS.POLYGON]!.ALIENS;
-  }, [chain]);
+  const aliensAddress = ADDRESSES[chain]!.ALIENS;
 
   const { data: balanceOf, isLoading: isBalanceLoading } = useContractRead({
     address: aliensAddress,

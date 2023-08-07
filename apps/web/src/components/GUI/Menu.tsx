@@ -3,13 +3,20 @@ import {
   RocketLaunchIcon,
   ArrowRightOnRectangleIcon,
 } from '@heroicons/react/24/solid';
-import { useAppStore } from '~/store/appStore';
+import { AppState, useAppStore } from '~/store/appStore';
+import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 const MENU_ITEM_CLASS =
   'hover:bg-slate-500 p-2 hover:cursor-pointer px-6 rounded-lg';
 
 export const Menu = () => {
-  const { setIsAlienSelectionView, paperSdk } = useAppStore();
+  const { setIsAlienSelectionView, paperSdk } = usePersistentStore<
+    AppState,
+    any
+  >(useAppStore, ({ setIsAlienSelectionView, paperSdk }) => ({
+    setIsAlienSelectionView,
+    paperSdk,
+  }));
 
   return (
     <div className="w-fit rounded-xl bg-slate-700 py-2 text-white">

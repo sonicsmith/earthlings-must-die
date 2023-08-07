@@ -4,7 +4,7 @@ import HomeIcon from '~/components/HomeButton';
 import Button from '~/components/Button';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
 import Router from 'next/router';
-import { useAppStore } from '~/store/appStore';
+import { AppState, useAppStore } from '~/store/appStore';
 import { renderPaperCheckoutLink } from '@paperxyz/js-client-sdk';
 import { usePlayersAliens } from '~/hooks/usePlayersAliens';
 import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
@@ -13,19 +13,22 @@ import Image from 'next/image';
 import { useWindowSize } from '~/hooks/useWindowSize';
 import Loading from '~/components/Loading';
 import { useEffect } from 'react';
+import { usePersistentStore } from '~/hooks/usePersistentStore';
+import { formatWalletAddress } from '~/utils';
 
 const CHECKOUT_URL = `https://withpaper.com/checkout`;
 const ALIENS_CHECKOUT_ID = `c262271d-2ecc-44dd-81fd-092c3107859b`;
 const FUEL_CHECKOUT_ID = `9bd365d6-c8ae-4221-86cf-dea221aa4fef`;
 
-const Store: NextPage = () => {
-  const address = useAppStore().address;
+const blockExplorerUrl = process.env.NEXT_PUBLIC_BLOCK_EXPLORER || '';
 
-  const {
-    aliens,
-    zeroStrengthAliens,
-    isLoading: isAliensLoading,
-  } = usePlayersAliens();
+const Store: NextPage = () => {
+  const { address } = usePersistentStore<AppState, any>(
+    useAppStore,
+    (state) => state.address
+  );
+
+  const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
 
   const {
     fuelBalance,
@@ -46,6 +49,13 @@ const Store: NextPage = () => {
       checkoutLinkUrl: `${CHECKOUT_URL}/${id}`,
     });
   };
+
+  // TODO: Auto login
+  useEffect(() => {
+    if (!address) {
+      console.log('no address');
+    }
+  }, [address]);
 
   return (
     <>
@@ -69,34 +79,32 @@ const Store: NextPage = () => {
         {!!address ? (
           <div className="p-4 pt-16 text-lg text-white">
             <div className="flex flex-col items-center justify-center p-4">
-              <div className={'text-2xl'}>Inventory</div>
+              <a href={`${blockExplorerUrl}/${address}`} className="underline">
+                Your address: {formatWalletAddress(address)}
+              </a>
             </div>
             {/* ALIENS */}
             <div className="m-auto w-96">
-              {!isAliensLoading ? (
-                <div className="m-4 overflow-scroll">
-                  <div className={`flex flex-nowrap gap-3 ${offset}`}>
-                    {aliens.length ? (
-                      aliens.map((alienData, index) => {
-                        return (
-                          <AlienSelection
-                            key={`alien${index}`}
-                            width={width}
-                            alienData={alienData}
-                            numberOfAliens={aliens.length}
-                          />
-                        );
-                      })
-                    ) : (
-                      <div className="m-auto w-32 text-center">
-                        You have no aliens in your inventory.
-                      </div>
-                    )}
-                  </div>
+              {isAliensLoading && <Loading />}
+              {aliens.length === 0 && (
+                <div className="m-auto w-32 bg-red-600 text-center">
+                  You have no aliens in your inventory.
                 </div>
-              ) : (
-                <Loading />
               )}
+              <div className="m-4 overflow-scroll">
+                <div className={`flex flex-nowrap gap-3 ${offset} bg-blue-400`}>
+                  {aliens.map((alienData, index) => {
+                    return (
+                      <AlienSelection
+                        key={`alien${index}`}
+                        width={width}
+                        alienData={alienData}
+                        numberOfAliens={aliens.length}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
               <div className="m-2 flex justify-center p-2">
                 <Button
                   onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}
