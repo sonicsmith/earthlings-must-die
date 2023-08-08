@@ -23,7 +23,7 @@ export const Dialog = ({ children, isShowing, setIsShowing }: DialogProps) => {
           exit={{ opacity: 0 }}
         >
           <div
-            className={`z-200 absolute -top-48 m-auto h-96 rounded-lg bg-slate-700 pt-3 text-center text-lg text-white ${dialogWidth}`}
+            className={`z-200 absolute top-32 m-auto h-96 rounded-lg bg-slate-700 pt-3 text-center text-lg text-white ${dialogWidth}`}
           >
             {children}
           </div>

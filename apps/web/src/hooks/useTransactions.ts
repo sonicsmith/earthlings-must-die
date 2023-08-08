@@ -22,6 +22,19 @@ export const useTransactions = () => {
     },
     [wallet, chain]
   );
+  // sellRewardTokens
+  const sellRewardTokens = useCallback(
+    async (amount: number) => {
+      const result = await wallet?.gasless.callContract({
+        contractAddress: ADDRESSES[chain]!.BATTLEFIELD,
+        methodInterface:
+          'function sellRewardTokens(uint256 numberOfTokens) public',
+        methodArgs: [amount],
+      });
+      return result?.transactionHash;
+    },
+    [wallet, chain]
+  );
 
-  return { launchAlien };
+  return { launchAlien, sellRewardTokens };
 };

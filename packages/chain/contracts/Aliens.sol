@@ -18,7 +18,7 @@ contract Aliens is
   using Counters for Counters.Counter;
   Counters.Counter private idCounter;
 
-  uint256 private mintCost = 1 gwei;
+  uint256 private mintCost = 100_000_000 gwei;
   string private baseUri = '';
   address private battlefieldEarthAddress;
   address private linkAddress;

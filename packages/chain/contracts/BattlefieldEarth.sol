@@ -45,10 +45,10 @@ contract BattlefieldEarth is ERC721Holder, ERC1155Holder, Ownable {
     equipmentContract = IEquipment(_equipmentContract);
   }
 
-  function rewardCurrentInvaders(uint256 excludeToken) internal {
+  function rewardCurrentInvaders(uint256 excludeId) internal {
     // Reward existing aliens with fuel
     for (uint256 i = 0; i < aliensOnPlanet.length; i++) {
-      if (aliensOnPlanet[i].tokenId != excludeToken) {
+      if (aliensOnPlanet[i].tokenId != excludeId) {
         equipmentContract.reward(aliensOnPlanet[i].owner, REWARD, 1);
         aliensOnPlanet[i].rewardsGiven += 1;
       }

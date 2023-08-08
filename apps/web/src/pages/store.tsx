@@ -15,6 +15,8 @@ import Loading from '~/components/Loading';
 import { useEffect } from 'react';
 import { usePersistentStore } from '~/hooks/usePersistentStore';
 import { formatWalletAddress } from '~/utils';
+import { useTransactions } from '~/hooks/useTransactions';
+import { Dialog } from '~/components/Dialog';
 
 const CHECKOUT_URL = `https://withpaper.com/checkout`;
 const ALIENS_CHECKOUT_ID = `c262271d-2ecc-44dd-81fd-092c3107859b`;
@@ -36,6 +38,14 @@ const Store: NextPage = () => {
     isLoading: isEquipmentLoading,
   } = usePlayersEquipment();
 
+  const { sellRewardTokens } = useTransactions();
+
+  const sellHumans = async () => {
+    if (rewardBalance > 0) {
+      const transactionHash = await sellRewardTokens(rewardBalance);
+    }
+  };
+
   const { width } = useWindowSize();
   const isMultiple = aliens.length > 1;
   const isMobile = Number(width) < 640;
@@ -49,13 +59,6 @@ const Store: NextPage = () => {
       checkoutLinkUrl: `${CHECKOUT_URL}/${id}`,
     });
   };
-
-  // TODO: Auto login
-  useEffect(() => {
-    if (!address) {
-      console.log('no address');
-    }
-  }, [address]);
 
   return (
     <>
@@ -149,7 +152,9 @@ const Store: NextPage = () => {
                 />
               </div>
               <div className="m-2 flex justify-center p-2">
-                <Button disabled={rewardBalance === 0}>Sell Humans</Button>
+                <Button disabled={rewardBalance === 0} onClick={sellHumans}>
+                  Sell Humans
+                </Button>
               </div>
             </div>
           </div>
@@ -161,6 +166,9 @@ const Store: NextPage = () => {
           </div>
         )}
       </main>
+      <Dialog isShowing={true} setIsShowing={() => {}}>
+        <div className="text-white">test</div>
+      </Dialog>
     </>
   );
 };

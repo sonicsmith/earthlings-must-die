@@ -9,7 +9,7 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   uint8 private constant FUEL = 1;
   uint8 private constant REWARD = 100;
 
-  uint256 private mintCost = 3 ether; // Needs to be evenly divisible by 3
+  uint256 public mintCost = 120_000_000 gwei; // Needs to multiple of 3
   address payable private battlefieldAddress;
   mapping(uint256 => uint256) private totalSupply;
 
