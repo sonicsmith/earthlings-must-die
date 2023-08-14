@@ -1,6 +1,14 @@
-const teal = '#81E6D9';
+import React from 'react';
 
-export default function Button({ children, onClick, disabled }: any) {
+export default function Button({
+  children,
+  onClick,
+  disabled,
+}: {
+  children: React.ReactNode;
+  onClick: () => void;
+  disabled?: boolean;
+}) {
   return (
     <button
       disabled={disabled}

@@ -12,11 +12,18 @@ import { AlienSelection } from '~/components/AlienSelection';
 import Image from 'next/image';
 import { useWindowSize } from '~/hooks/useWindowSize';
 import Loading from '~/components/Loading';
-import { useEffect } from 'react';
 import { usePersistentStore } from '~/hooks/usePersistentStore';
 import { formatWalletAddress } from '~/utils';
 import { useTransactions } from '~/hooks/useTransactions';
-import { Dialog } from '~/components/Dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '~/components/Dialog';
+import { useState } from 'react';
 
 const CHECKOUT_URL = `https://withpaper.com/checkout`;
 const ALIENS_CHECKOUT_ID = `c262271d-2ecc-44dd-81fd-092c3107859b`;
@@ -40,9 +47,13 @@ const Store: NextPage = () => {
 
   const { sellRewardTokens } = useTransactions();
 
+  const [showRewardSuccess, setShowRewardSuccess] = useState(false);
+
   const sellHumans = async () => {
     if (rewardBalance > 0) {
       const transactionHash = await sellRewardTokens(rewardBalance);
+      console.log('transactionHash', transactionHash);
+      setShowRewardSuccess(true);
     }
   };
 
@@ -53,6 +64,7 @@ const Store: NextPage = () => {
   if (isMultiple) {
     offset = '';
   }
+  const dialogWidth = Number(width) < 640 ? 'w-72' : 'w-[500px]';
 
   const openCheckout = (id: string) => {
     renderPaperCheckoutLink({
@@ -109,10 +121,7 @@ const Store: NextPage = () => {
                 </div>
               </div>
               <div className="m-2 flex justify-center p-2">
-                <Button
-                  onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}
-                  className={'m-auto'}
-                >
+                <Button onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}>
                   Buy Aliens
                 </Button>
               </div>
@@ -166,8 +175,22 @@ const Store: NextPage = () => {
           </div>
         )}
       </main>
-      <Dialog isShowing={true} setIsShowing={() => {}}>
-        <div className="text-white">test</div>
+
+      <Dialog open={showRewardSuccess} onOpenChange={setShowRewardSuccess}>
+        <DialogContent className={dialogWidth}>
+          <DialogHeader>
+            <DialogTitle className={'m-auto'}>SUCCESS</DialogTitle>
+          </DialogHeader>
+          <div className={'m-auto'}>
+            Your rewards have been traded for crypto.
+          </div>
+          <div className={'m-auto'}>
+            They will be available in your account soon.
+          </div>
+          <div className={'m-auto'}>
+            <Button onClick={() => setShowRewardSuccess(false)}>OK</Button>
+          </div>
+        </DialogContent>
       </Dialog>
     </>
   );

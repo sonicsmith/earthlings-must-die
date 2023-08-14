@@ -6,8 +6,8 @@ import { usePlayersAliens } from '~/hooks/usePlayersAliens';
 import Link from 'next/link';
 import Loading from '../Loading';
 import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
-import { AnimatePresence, motion } from 'framer-motion';
 import { AlienSelection } from '../AlienSelection';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../Dialog';
 
 enum Display {
   Loading,
@@ -25,6 +25,10 @@ export default function AlienSelectorDialog({
   setIsAlienSelectionView: (isShowing: boolean) => void;
   beginLaunch: (tokenId: number) => void;
 }) {
+  const [dialogContainer, setDialogContainer] = useState<HTMLDivElement | null>(
+    null
+  );
+
   const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
 
   const { fuelBalance, isLoading: isEquipmentLoading } = usePlayersEquipment();
@@ -47,82 +51,77 @@ export default function AlienSelectorDialog({
 
   return (
     <Html center>
-      <AnimatePresence>
-        {isShowing && (
-          <motion.div
-            initial={{ opacity: 0, y: -100 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
-          >
-            <div
-              className={`z-200 h-96 rounded-lg bg-slate-700 pt-3 text-center text-lg text-white ${dialogWidth}`}
-            >
-              <div className="">SELECT ALIEN TO SEND</div>
+      {isShowing && <div ref={setDialogContainer} className="h-96 w-96" />}
+      <Dialog open={isShowing} onOpenChange={setIsAlienSelectionView}>
+        <DialogContent className={dialogWidth} container={dialogContainer}>
+          <DialogHeader>
+            <DialogTitle className={'m-auto'}>SELECT ALIEN TO SEND</DialogTitle>
+          </DialogHeader>
 
-              {display === Display.Loading && (
-                <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
-                  <Loading />
-                </div>
-              )}
-
-              {display === Display.NoAliens && (
-                <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
-                  You have no aliens to send. Visit the{' '}
-                  <Link href="/store" className="underline">
-                    store
-                  </Link>{' '}
-                  to spawn a new species.
-                </div>
-              )}
-
-              {display === Display.NoFuel && (
-                <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
-                  You have no fuel. Visit the{' '}
-                  <Link href="/store" className="underline">
-                    store
-                  </Link>{' '}
-                  to buy a fuel cell.
-                </div>
-              )}
-              <div className="m-4 overflow-scroll">
-                <div className="flex flex-nowrap gap-3">
-                  {display === Display.Selector &&
-                    aliens.map((alienData, index) => {
-                      return (
-                        <AlienSelection
-                          key={`alien${index}`}
-                          width={width}
-                          alienData={alienData}
-                          numberOfAliens={aliens.length}
-                          setSelectedAlien={setSelectedAlien}
-                          selectedAlien={selectedAlien}
-                        />
-                      );
-                    })}
-                </div>
-              </div>
-              <div className="flex justify-center gap-4">
-                <Button
-                  onClick={() => {
-                    beginLaunch(selectedAlien);
-                    setIsAlienSelectionView(false);
-                  }}
-                  disabled={selectedAlien === -1}
-                >
-                  Launch
-                </Button>
-                <Button
-                  onClick={() => {
-                    setIsAlienSelectionView(false);
-                  }}
-                >
-                  Cancel
-                </Button>
-              </div>
+          {display === Display.Loading && (
+            <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
+              <Loading />
             </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+
+          {display === Display.NoAliens && (
+            <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
+              You have no aliens to send. Visit the{' '}
+              <Link href="/store" className="underline">
+                store
+              </Link>{' '}
+              to spawn a new species.
+            </div>
+          )}
+
+          {display === Display.NoFuel && (
+            <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
+              You have no fuel. Visit the{' '}
+              <Link href="/store" className="underline">
+                store
+              </Link>{' '}
+              to buy a fuel cell.
+            </div>
+          )}
+
+          <div className="m-4 overflow-scroll">
+            <div className="flex flex-nowrap gap-3">
+              {display === Display.Selector &&
+                aliens.map((alienData, index) => {
+                  return (
+                    <AlienSelection
+                      key={`alien${index}`}
+                      width={width}
+                      alienData={alienData}
+                      numberOfAliens={aliens.length}
+                      setSelectedAlien={setSelectedAlien}
+                      selectedAlien={selectedAlien}
+                    />
+                  );
+                })}
+            </div>
+          </div>
+
+          <div className="flex justify-center gap-4">
+            <Button
+              onClick={() => {
+                beginLaunch(selectedAlien);
+                setIsAlienSelectionView(false);
+              }}
+              disabled={selectedAlien === -1}
+            >
+              Launch
+            </Button>
+            <Button
+              onClick={() => {
+                setIsAlienSelectionView(false);
+              }}
+            >
+              Cancel
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </Html>
   );
 }
