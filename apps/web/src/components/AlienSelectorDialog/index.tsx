@@ -1,13 +1,18 @@
 import { Html } from '@react-three/drei';
 import { useWindowSize } from '~/hooks/useWindowSize';
 import { useMemo, useState } from 'react';
-import Button from '../Button';
+import Button from '../../ui/Button';
 import { usePlayersAliens } from '~/hooks/usePlayersAliens';
 import Link from 'next/link';
 import Loading from '../Loading';
 import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
 import { AlienSelection } from '../AlienSelection';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '../Dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '../../ui/Dialog';
 
 enum Display {
   Loading,

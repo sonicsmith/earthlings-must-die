@@ -36,8 +36,23 @@ Change into `chain` directory:
 
 ```
 npm run deployAliens
+```
+
+Copy the deployed address into chain/index/ADDRESSES/mumbai/ALIENS
+
+```
 npm run deployEquipment
+```
+
+Copy the deployed address into chain/index/ADDRESSES/mumbai/EQUIPMENT
+
+```
 npm run deployBattlefield
+```
+
+Copy the deployed address into chain/index/ADDRESSES/mumbai/BATTLEFIELD
+
+```
 npm run task:setupContracts
 npm run task:verifyContracts
 ```

@@ -1,7 +1,7 @@
 import { type NextPage } from 'next';
 import Head from 'next/head';
 import HomeIcon from '~/components/HomeButton';
-import Button from '~/components/Button';
+import Button from '~/ui/Button';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
 import Router from 'next/router';
 import { AppState, useAppStore } from '~/store/appStore';
@@ -15,15 +15,9 @@ import Loading from '~/components/Loading';
 import { usePersistentStore } from '~/hooks/usePersistentStore';
 import { formatWalletAddress } from '~/utils';
 import { useTransactions } from '~/hooks/useTransactions';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '~/components/Dialog';
 import { useState } from 'react';
+import { PurchaseAlienDialog } from '~/components/PurchaseDialog';
+import { MessageDialog } from '~/components/MessageDialog';
 
 const CHECKOUT_URL = `https://withpaper.com/checkout`;
 const ALIENS_CHECKOUT_ID = `c262271d-2ecc-44dd-81fd-092c3107859b`;
@@ -48,6 +42,8 @@ const Store: NextPage = () => {
   const { sellRewardTokens } = useTransactions();
 
   const [showRewardSuccess, setShowRewardSuccess] = useState(false);
+  const [isPurchaseAlienOpen, setIsPurchaseAlienOpen] = useState(false);
+  const [isPurchaseEquipmentOpen, setIsPurchaseEquipmentOpen] = useState(false);
 
   const sellHumans = async () => {
     if (rewardBalance > 0) {
@@ -64,13 +60,6 @@ const Store: NextPage = () => {
   if (isMultiple) {
     offset = '';
   }
-  const dialogWidth = Number(width) < 640 ? 'w-72' : 'w-[500px]';
-
-  const openCheckout = (id: string) => {
-    renderPaperCheckoutLink({
-      checkoutLinkUrl: `${CHECKOUT_URL}/${id}`,
-    });
-  };
 
   return (
     <>
@@ -121,7 +110,7 @@ const Store: NextPage = () => {
                 </div>
               </div>
               <div className="m-2 flex justify-center p-2">
-                <Button onClick={() => openCheckout(ALIENS_CHECKOUT_ID)}>
+                <Button onClick={() => setIsPurchaseAlienOpen(true)}>
                   Buy Aliens
                 </Button>
               </div>
@@ -143,7 +132,7 @@ const Store: NextPage = () => {
                 <Loading />
               )}
               <div className="m-2 flex justify-center p-2">
-                <Button onClick={() => openCheckout(FUEL_CHECKOUT_ID)}>
+                <Button onClick={() => setIsPurchaseEquipmentOpen(true)}>
                   Buy Fuel Cells
                 </Button>
               </div>
@@ -176,22 +165,20 @@ const Store: NextPage = () => {
         )}
       </main>
 
-      <Dialog open={showRewardSuccess} onOpenChange={setShowRewardSuccess}>
-        <DialogContent className={dialogWidth}>
-          <DialogHeader>
-            <DialogTitle className={'m-auto'}>SUCCESS</DialogTitle>
-          </DialogHeader>
-          <div className={'m-auto'}>
-            Your rewards have been traded for crypto.
-          </div>
-          <div className={'m-auto'}>
-            They will be available in your account soon.
-          </div>
-          <div className={'m-auto'}>
-            <Button onClick={() => setShowRewardSuccess(false)}>OK</Button>
-          </div>
-        </DialogContent>
-      </Dialog>
+      <MessageDialog
+        isOpen={showRewardSuccess}
+        setIsOpen={setShowRewardSuccess}
+        message={
+          'Your rewards have been traded for crypto.\n' +
+          'They will be available in your account soon.'
+        }
+      />
+
+      <PurchaseAlienDialog
+        isOpen={isPurchaseAlienOpen}
+        setIsOpen={setIsPurchaseAlienOpen}
+        walletAddress={address}
+      />
     </>
   );
 };

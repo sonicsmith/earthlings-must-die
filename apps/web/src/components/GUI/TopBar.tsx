@@ -1,4 +1,4 @@
-import Button from '../Button';
+import Button from '../../ui/Button';
 
 import HomeIcon from '../HomeButton';
 import { ProfileButton } from './ProfileButton';
