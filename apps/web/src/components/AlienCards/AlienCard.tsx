@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
+import type { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 
 export default function AlienCard({
   alienDetails,
