@@ -1,8 +1,8 @@
 import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
-import { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
+import type { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
-import { AppState, useAppStore } from '~/store/appStore';
+import { type AppState, useAppStore } from '~/store/appStore';
 import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 const GROUP_POSITIONS = [
@@ -53,7 +53,7 @@ export default function AlienCards({
       }
       return acc;
     }, 0);
-  }, [aliensOnPlanet]);
+  }, [aliensOnPlanet, address]);
 
   const xPos = GROUP_POSITIONS[aliensOnPlanet.length];
 
