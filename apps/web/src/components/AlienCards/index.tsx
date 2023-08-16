@@ -55,7 +55,7 @@ export default function AlienCards({
     }, 0);
   }, [aliensOnPlanet, address]);
 
-  const xPos = GROUP_POSITIONS[aliensOnPlanet.length];
+  const xPos = GROUP_POSITIONS[aliensOnPlanet.length] || '';
 
   return (
     <Html center>
@@ -63,12 +63,13 @@ export default function AlienCards({
         className={`relative transition duration-700 ease-in-out ${
           isShowing ? 'scale-100' : 'scale-0'
         }`}
-      >
+        >
         <AlienStatus numberOwned={numberOwned} />
         <div className={`absolute bottom-40 ${xPos}`}>
           <div className="flex flex-row">
             {aliensOnPlanet.map((alienDetails, index) => {
-              const className = `absolute ${CARD_POSITION[index]}`;
+              const cardPosClass = CARD_POSITION[index] || '';
+              const className = `absolute ${cardPosClass}`;
               return (
                 <div
                   className={className}
