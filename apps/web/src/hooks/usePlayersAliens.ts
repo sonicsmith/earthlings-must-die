@@ -26,7 +26,11 @@ export const usePlayersAliens = () => {
 
   const aliensAddress = ADDRESSES[chain]!.ALIENS;
 
-  const { data: balanceOf, isLoading: isBalanceLoading } = useContractRead({
+  const {
+    data: balanceOf,
+    isLoading: isBalanceLoading,
+    refetch,
+  } = useContractRead({
     address: aliensAddress,
     abi: aliensArtifacts.abi,
     functionName: 'balanceOf',
@@ -102,6 +106,7 @@ export const usePlayersAliens = () => {
   console.log('Players aliens:', aliens);
 
   return {
+    refetch,
     aliens,
     zeroStrengthAliens,
     isLoading: isBalanceLoading || isTokenOwnerLoading || isStrengthDataLoading,

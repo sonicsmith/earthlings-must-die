@@ -4,8 +4,6 @@ import { useContractRead } from 'wagmi';
 import { AppState, useAppStore } from '~/store/appStore';
 import { usePersistentStore } from './usePersistentStore';
 
-type BalanceResult = { data: { result: bigint }; isLoading: boolean };
-
 const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
 export const usePlayersEquipment = () => {
@@ -18,14 +16,17 @@ export const usePlayersEquipment = () => {
 
   const equipmentAddress = ADDRESSES[chain]!.EQUIPMENT;
 
-  const { data: fuelBalance, isLoading: isFuelBalanceLoading } =
-    useContractRead({
-      address: equipmentAddress,
-      abi: equipmentArtifacts.abi,
-      functionName: 'balanceOf',
-      args: [address, 1],
-      enabled: !!address,
-    }) as BalanceResult;
+  const {
+    data: fuelBalance,
+    isLoading: isFuelBalanceLoading,
+    refetch,
+  } = useContractRead({
+    address: equipmentAddress,
+    abi: equipmentArtifacts.abi,
+    functionName: 'balanceOf',
+    args: [address, 1],
+    enabled: !!address,
+  });
 
   const { data: rewardBalance, isLoading: isRewardBalanceLoading } =
     useContractRead({
@@ -34,9 +35,10 @@ export const usePlayersEquipment = () => {
       functionName: 'balanceOf',
       args: [address, 100],
       enabled: !!address,
-    }) as BalanceResult;
+    });
 
   return {
+    refetch,
     fuelBalance: Number(fuelBalance),
     rewardBalance: Number(rewardBalance),
     isLoading: isFuelBalanceLoading || isRewardBalanceLoading,

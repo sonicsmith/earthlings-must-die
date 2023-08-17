@@ -5,7 +5,6 @@ import Button from '~/ui/Button';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
 import Router from 'next/router';
 import { AppState, useAppStore } from '~/store/appStore';
-import { renderPaperCheckoutLink } from '@paperxyz/js-client-sdk';
 import { usePlayersAliens } from '~/hooks/usePlayersAliens';
 import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
 import { AlienSelection } from '~/components/AlienSelection';
@@ -40,12 +39,17 @@ const Store: NextPage = () => {
     ({ address, email }) => ({ address, email })
   );
 
-  const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
+  const {
+    aliens,
+    isLoading: isAliensLoading,
+    refetch: refetchAliens,
+  } = usePlayersAliens();
 
   const {
     fuelBalance,
     rewardBalance,
     isLoading: isEquipmentLoading,
+    refetch: refetchEquipment,
   } = usePlayersEquipment();
 
   const { sellRewardTokens } = useTransactions();
@@ -171,7 +175,7 @@ const Store: NextPage = () => {
                     </SelectTrigger>
                     <SelectContent className="bg-black text-white">
                       <SelectGroup>
-                        {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                        {[1, 2, 3, 4, 5].map((item) => (
                           <SelectItem value={`${item}`}>
                             {item} fuel cell{item > 1 && 's'}
                           </SelectItem>
@@ -224,6 +228,7 @@ const Store: NextPage = () => {
           setDialogMessage(
             'Your alien egg is on its way. It will be available in your inventory soon.'
           );
+          refetchAliens();
         }}
       />
 
@@ -236,6 +241,7 @@ const Store: NextPage = () => {
           setDialogMessage(
             'Your fuel is on its way. It will be available in your inventory soon.'
           );
+          refetchEquipment();
         }}
       />
     </>
