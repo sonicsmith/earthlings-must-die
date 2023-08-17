@@ -36,7 +36,7 @@ export default function TopBar() {
           <>
             <HomeIcon />
             <Button onClick={login}>
-              <div className="flex">{loading ? 'Connecting..' : 'Login'}</div>
+              {loading ? 'Connecting..' : 'Login'}
             </Button>
           </>
         )}

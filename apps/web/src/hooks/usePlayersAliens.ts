@@ -16,7 +16,9 @@ const chain = process.env.NEXT_PUBLIC_CHAIN!;
 export const usePlayersAliens = () => {
   const { address } = usePersistentStore<AppState, any>(
     useAppStore,
-    (state) => state.address
+    ({ address }) => {
+      address;
+    }
   );
   console.log('address', address);
   const [aliens, setAliens] = useState<PlayersAlienDetails[]>([]);

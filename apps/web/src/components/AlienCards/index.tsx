@@ -43,7 +43,9 @@ export default function AlienCards({
 }) {
   const { address } = usePersistentStore<AppState, any>(
     useAppStore,
-    (state) => state.address
+    ({ address }) => {
+      address;
+    }
   );
 
   const numberOwned = useMemo(() => {

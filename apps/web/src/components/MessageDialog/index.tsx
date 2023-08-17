@@ -2,25 +2,23 @@ import Button from '~/ui/Button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/ui/Dialog';
 
 type MessageDialogProps = {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
+  setDialogMessage: (message: string) => void;
   message: string;
 };
 
 export const MessageDialog = ({
-  isOpen,
-  setIsOpen,
+  setDialogMessage,
   message,
 }: MessageDialogProps) => {
   return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
+    <Dialog open={!!message} onOpenChange={() => setDialogMessage('')}>
       <DialogContent className={'w-72'}>
         <DialogHeader>
-          <DialogTitle className={'m-auto'}>SUCCESS</DialogTitle>
+          <DialogTitle className={'m-auto'}>INFO</DialogTitle>
         </DialogHeader>
         <div className={'m-auto'}>{message}</div>
         <div className={'m-auto'}>
-          <Button onClick={() => setIsOpen(false)}>OK</Button>
+          <Button onClick={() => setDialogMessage('')}>OK</Button>
         </div>
       </DialogContent>
     </Dialog>

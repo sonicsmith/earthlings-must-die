@@ -15,20 +15,29 @@ import Loading from '~/components/Loading';
 import { usePersistentStore } from '~/hooks/usePersistentStore';
 import { formatWalletAddress } from '~/utils';
 import { useTransactions } from '~/hooks/useTransactions';
-import { useState } from 'react';
-import { PurchaseAlienDialog } from '~/components/PurchaseDialog';
+import { useEffect, useState } from 'react';
+import {
+  PurchaseAlienDialog,
+  PurchaseFuelDialog,
+} from '~/components/PurchaseDialog';
 import { MessageDialog } from '~/components/MessageDialog';
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/ui/Select';
 
-const CHECKOUT_URL = `https://withpaper.com/checkout`;
-const ALIENS_CHECKOUT_ID = `c262271d-2ecc-44dd-81fd-092c3107859b`;
-const FUEL_CHECKOUT_ID = `9bd365d6-c8ae-4221-86cf-dea221aa4fef`;
+const FX_URL = 'https://api.coinbase.com/v2/exchange-rates?currency=MATIC';
 
 const blockExplorerUrl = process.env.NEXT_PUBLIC_BLOCK_EXPLORER || '';
 
 const Store: NextPage = () => {
-  const { address } = usePersistentStore<AppState, any>(
+  const { address, email } = usePersistentStore<AppState, any>(
     useAppStore,
-    (state) => state.address
+    ({ address, email }) => ({ address, email })
   );
 
   const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
@@ -41,15 +50,20 @@ const Store: NextPage = () => {
 
   const { sellRewardTokens } = useTransactions();
 
-  const [showRewardSuccess, setShowRewardSuccess] = useState(false);
+  const [dialogMessage, setDialogMessage] = useState('');
   const [isPurchaseAlienOpen, setIsPurchaseAlienOpen] = useState(false);
-  const [isPurchaseEquipmentOpen, setIsPurchaseEquipmentOpen] = useState(false);
+  const [isPurchaseFuelOpen, setIsPurchaseFuelOpen] = useState(false);
+  const [fuelToBuy, setFuelToBuy] = useState('1');
+  const [conversionRate, setConversionRate] = useState(0);
 
   const sellHumans = async () => {
     if (rewardBalance > 0) {
       const transactionHash = await sellRewardTokens(rewardBalance);
       console.log('transactionHash', transactionHash);
-      setShowRewardSuccess(true);
+      setDialogMessage(
+        'Your rewards have been traded for crypto.\n' +
+          'They will be available in your account soon.'
+      );
     }
   };
 
@@ -60,6 +74,21 @@ const Store: NextPage = () => {
   if (isMultiple) {
     offset = '';
   }
+
+  useEffect(() => {
+    fetch(FX_URL)
+      .then((res) => res.json())
+      .then(({ data }) => {
+        setConversionRate(data.rates.USD);
+      });
+  }, []);
+
+  // Prices in MATIC
+  const alienPrice = 10;
+  const fuelPrice = 6;
+
+  const alienPriceInUSD = alienPrice * conversionRate;
+  const fuelPriceInUSD = fuelPrice * Number(fuelToBuy) * conversionRate;
 
   return (
     <>
@@ -96,7 +125,7 @@ const Store: NextPage = () => {
                 </div>
               )}
               <div className="m-4 overflow-scroll">
-                <div className={`flex flex-nowrap gap-3 ${offset} bg-blue-400`}>
+                <div className={`flex flex-nowrap gap-3 ${offset}`}>
                   {aliens.map((alienData, index) => {
                     return (
                       <AlienSelection
@@ -111,7 +140,7 @@ const Store: NextPage = () => {
               </div>
               <div className="m-2 flex justify-center p-2">
                 <Button onClick={() => setIsPurchaseAlienOpen(true)}>
-                  Buy Aliens
+                  Buy Alien Egg (${alienPriceInUSD.toFixed(2)} USD)
                 </Button>
               </div>
 
@@ -131,10 +160,26 @@ const Store: NextPage = () => {
               ) : (
                 <Loading />
               )}
-              <div className="m-2 flex justify-center p-2">
-                <Button onClick={() => setIsPurchaseEquipmentOpen(true)}>
-                  Buy Fuel Cells
-                </Button>
+              <div className="m-2 flex flex-col justify-center p-2">
+                <div className="m-auto w-fit">
+                  <Button onClick={() => setIsPurchaseFuelOpen(true)}>
+                    Buy Fuel Cells (${fuelPriceInUSD.toFixed(2)} USD)
+                  </Button>
+                  <Select value={fuelToBuy} onValueChange={setFuelToBuy}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Fuel amount" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-black text-white">
+                      <SelectGroup>
+                        {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                          <SelectItem value={`${item}`}>
+                            {item} fuel cell{item > 1 && 's'}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
 
               <div className="relative">
@@ -166,18 +211,32 @@ const Store: NextPage = () => {
       </main>
 
       <MessageDialog
-        isOpen={showRewardSuccess}
-        setIsOpen={setShowRewardSuccess}
-        message={
-          'Your rewards have been traded for crypto.\n' +
-          'They will be available in your account soon.'
-        }
+        setDialogMessage={setDialogMessage}
+        message={dialogMessage}
       />
 
       <PurchaseAlienDialog
         isOpen={isPurchaseAlienOpen}
         setIsOpen={setIsPurchaseAlienOpen}
         walletAddress={address}
+        email={email}
+        onSuccess={() => {
+          setDialogMessage(
+            'Your alien egg is on its way. It will be available in your inventory soon.'
+          );
+        }}
+      />
+
+      <PurchaseFuelDialog
+        isOpen={isPurchaseFuelOpen}
+        setIsOpen={setIsPurchaseFuelOpen}
+        walletAddress={address}
+        email={email}
+        onSuccess={() => {
+          setDialogMessage(
+            'Your fuel is on its way. It will be available in your inventory soon.'
+          );
+        }}
       />
     </>
   );

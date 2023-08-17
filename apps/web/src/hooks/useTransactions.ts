@@ -6,9 +6,11 @@ import { usePersistentStore } from './usePersistentStore';
 const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
 export const useTransactions = () => {
-  const wallet = usePersistentStore<AppState, any>(
+  const { wallet } = usePersistentStore<AppState, any>(
     useAppStore,
-    (state) => state.wallet
+    ({ wallet }) => {
+      wallet;
+    }
   );
 
   const launchAlien = useCallback(
@@ -22,7 +24,7 @@ export const useTransactions = () => {
     },
     [wallet, chain]
   );
-  // sellRewardTokens
+
   const sellRewardTokens = useCallback(
     async (amount: number) => {
       const result = await wallet?.gasless.callContract({

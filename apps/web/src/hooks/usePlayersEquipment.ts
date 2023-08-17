@@ -11,7 +11,9 @@ const chain = process.env.NEXT_PUBLIC_CHAIN!;
 export const usePlayersEquipment = () => {
   const { address } = usePersistentStore<AppState, any>(
     useAppStore,
-    (state) => state.address
+    ({ address }) => {
+      address;
+    }
   );
 
   const equipmentAddress = ADDRESSES[chain]!.EQUIPMENT;
@@ -21,7 +23,7 @@ export const usePlayersEquipment = () => {
       address: equipmentAddress,
       abi: equipmentArtifacts.abi,
       functionName: 'balanceOf',
-      args: [address, 0],
+      args: [address, 1],
       enabled: !!address,
     }) as BalanceResult;
 
@@ -30,7 +32,7 @@ export const usePlayersEquipment = () => {
       address: equipmentAddress,
       abi: equipmentArtifacts.abi,
       functionName: 'balanceOf',
-      args: [address, 1],
+      args: [address, 100],
       enabled: !!address,
     }) as BalanceResult;
 

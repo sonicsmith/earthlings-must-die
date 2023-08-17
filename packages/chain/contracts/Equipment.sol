@@ -9,11 +9,11 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   uint8 private constant FUEL = 1;
   uint8 private constant REWARD = 100;
 
-  uint256 public mintCost = 120_000_000 gwei; // Needs to multiple of 3
+  uint256 public mintCost = 1_200_000 gwei; // Needs to multiple of 3
   address payable private battlefieldAddress;
   mapping(uint256 => uint256) private totalSupply;
 
-  constructor() ERC1155('') {}
+  constructor() ERC1155('Equipment') {}
 
   function setBattlefieldAddress(
     address payable _battlefieldAddress

@@ -21,9 +21,11 @@ export const ProfileButton = () => {
         setIsAlienSelectionView(false);
         setShowMenu(!showMenu);
       }}
-      className={'rounded bg-teal-500 hover:cursor-pointer'}
+      className={
+        'mx-2 rounded bg-teal-500 px-3 py-1 text-black hover:cursor-pointer'
+      }
     >
-      <div className={'mx-2 p-1 text-black'}>{display}</div>
+      {display}
     </div>
   );
 };
