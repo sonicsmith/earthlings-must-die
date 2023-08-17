@@ -1,8 +1,8 @@
 import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
-import { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
+import type { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
-import { AppState, useAppStore } from '~/store/appStore';
+import { type AppState, useAppStore } from '~/store/appStore';
 import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 const GROUP_POSITIONS = [
@@ -55,9 +55,9 @@ export default function AlienCards({
       }
       return acc;
     }, 0);
-  }, [aliensOnPlanet]);
+  }, [aliensOnPlanet, address]);
 
-  const xPos = GROUP_POSITIONS[aliensOnPlanet.length];
+  const xPos = GROUP_POSITIONS[aliensOnPlanet.length] || '';
 
   return (
     <Html center>
@@ -65,12 +65,13 @@ export default function AlienCards({
         className={`relative transition duration-700 ease-in-out ${
           isShowing ? 'scale-100' : 'scale-0'
         }`}
-      >
+        >
         <AlienStatus numberOwned={numberOwned} />
         <div className={`absolute bottom-40 ${xPos}`}>
           <div className="flex flex-row">
             {aliensOnPlanet.map((alienDetails, index) => {
-              const className = `absolute ${CARD_POSITION[index]}`;
+              const cardPosClass = CARD_POSITION[index] || '';
+              const className = `absolute ${cardPosClass}`;
               return (
                 <div
                   className={className}
