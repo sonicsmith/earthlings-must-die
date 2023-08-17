@@ -1,5 +1,5 @@
 import { Canvas } from '@react-three/fiber';
-import { OrbitControls } from '@react-three/drei';
+import { Html, OrbitControls } from '@react-three/drei';
 import SkyBox from '../Skybox';
 import Earth from '../Earth';
 import { useWindowSize } from '~/hooks/useWindowSize';
@@ -15,16 +15,11 @@ import { useTransactions } from '~/hooks/useTransactions';
 import Spaceship from '../Spaceship';
 import { AppState, useAppStore } from '~/store/appStore';
 import { usePersistentStore } from '~/hooks/usePersistentStore';
+import { MessageDialog } from '../MessageDialog';
 
 const SUN_POSITION = new Vector3(10, 1, 0);
 
 export default function Scene() {
-  const { width } = useWindowSize();
-  const [isAlienDetailView, setIsAlienDetailView] = useState(false);
-  const { aliens, refetch: refetchAliens } = useAliensOnPlanet();
-  const { launchAlien } = useTransactions();
-
-  const [isLaunching, setIsLaunching] = useState(false);
   const {
     showMenu,
     setShowMenu,
@@ -44,6 +39,18 @@ export default function Scene() {
       isAlienSelectionView,
     })
   );
+
+  const { width } = useWindowSize();
+  const [isAlienDetailView, setIsAlienDetailView] = useState(false);
+  const { aliens, refetch: refetchAliens } = useAliensOnPlanet();
+  const { launchAlien } = useTransactions();
+
+  const [isLaunching, setIsLaunching] = useState(false);
+
+  const [dialogContainer, setDialogContainer] = useState<HTMLDivElement | null>(
+    null
+  );
+  const [sceneMessage, setSceneMessage] = useState('');
 
   const initialCameraPosition = useMemo(() => {
     const x = (width || 0) < 640 ? 6 : 5;
@@ -117,9 +124,23 @@ export default function Scene() {
         {isLaunching && (
           <Spaceship
             cameraPosition={currentCameraPosition}
-            setIsLaunching={setIsLaunching}
+            landedCallback={() => {
+              setSceneMessage('Your invasion has successfully landed on Earth');
+              setIsLaunching(false);
+            }}
           />
         )}
+        <Html center>
+          {sceneMessage && (
+            <>
+              <div ref={setDialogContainer} className="h-96 w-96" />
+              <MessageDialog
+                setDialogMessage={setSceneMessage}
+                message={sceneMessage}
+              />
+            </>
+          )}
+        </Html>
       </Canvas>
     </Suspense>
   );

@@ -10,10 +10,10 @@ const RED = new THREE.Color(0x55ff55);
 
 export default function Spaceship({
   cameraPosition,
-  setIsLaunching,
+  landedCallback,
 }: {
   cameraPosition: Vector3;
-  setIsLaunching: (isLaunching: boolean) => void;
+  landedCallback: () => void;
 }) {
   const { nodes, materials } = useGLTF('/models/spaceship.glb') as any;
 
@@ -24,9 +24,7 @@ export default function Spaceship({
   const [startDistance, setStartDistance] = useState(0);
 
   useEffect(() => {
-    console.log('cameraPosition', cameraPosition);
     if (shipRef.current) {
-      console.log('Setting spaceship position');
       // Spaceship
       const current = shipRef.current as any;
       current.position.x = cameraPosition.x;
@@ -53,7 +51,7 @@ export default function Spaceship({
       current.position.lerp(DESTINATION, SPEED / SLOW_DOWN);
       current.position.z += normalisedTraveled * 0.0001;
       if (distanceLeft < 1 && hasBeenPositioned) {
-        setIsLaunching(false);
+        landedCallback();
       }
       if (lightRef.current) {
         (lightRef.current as any).intensity = 1 / (normalisedTraveled * 1.5);
