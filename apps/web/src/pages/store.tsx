@@ -74,10 +74,7 @@ const Store: NextPage = () => {
   const { width } = useWindowSize();
   const isMultiple = aliens.length > 1;
   const isMobile = Number(width) < 640;
-  let offset = isMobile ? 'ml-12' : '-ml-12';
-  if (isMultiple) {
-    offset = '';
-  }
+  let offset = isMobile && !isMultiple ? 'ml-12' : '';
 
   useEffect(() => {
     fetch(FX_URL)

@@ -125,21 +125,23 @@ export default function Scene() {
           <Spaceship
             cameraPosition={currentCameraPosition}
             landedCallback={() => {
-              setSceneMessage('Your invasion has successfully landed on Earth');
+              setSceneMessage(
+                'Your invasion has successfully landed on Earth.\n\n' +
+                  "Your alien's card is now viewable on the card menu."
+              );
               setIsLaunching(false);
+              refetchAliens();
             }}
           />
         )}
         <Html center>
           {sceneMessage && (
-            <>
-              <div ref={setDialogContainer} className="h-96 w-96" />
-              <MessageDialog
-                setDialogMessage={setSceneMessage}
-                message={sceneMessage}
-              />
-            </>
+            <div ref={setDialogContainer} className="h-96 w-96" />
           )}
+          <MessageDialog
+            setDialogMessage={setSceneMessage}
+            message={sceneMessage}
+          />
         </Html>
       </Canvas>
     </Suspense>
