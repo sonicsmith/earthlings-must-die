@@ -5,7 +5,6 @@ import { alchemyProvider } from '@wagmi/core/providers/alchemy';
 import { WagmiConfig, createConfig, configureChains } from 'wagmi';
 import { AppState, useAppStore } from '~/store/appStore';
 import { useEffect } from 'react';
-import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 const alchemyApiKey = process.env.NEXT_PUBLIC_ALCHEMY_API_KEY || '';
 
@@ -21,12 +20,7 @@ const config = createConfig({
 });
 
 const MyApp: AppType = ({ Component, pageProps }) => {
-  const { initPaper } = usePersistentStore<AppState, any>(
-    useAppStore,
-    ({ initPaper }) => {
-      initPaper;
-    }
-  );
+  const initPaper = useAppStore().initPaper;
 
   useEffect(() => {
     initPaper();

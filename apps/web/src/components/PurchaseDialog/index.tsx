@@ -1,4 +1,5 @@
 import { CheckoutWithCard } from '@paperxyz/react-client-sdk';
+import { EVMAddress } from '~/store/appStore';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '~/ui/Dialog';
 
 const STYLING_OPTIONS = {
@@ -13,8 +14,8 @@ const STYLING_OPTIONS = {
 type PurchaseDialogProps = {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  walletAddress: string;
-  email: string;
+  walletAddress: EVMAddress;
+  email: string | null;
   onSuccess: () => void;
 };
 
@@ -37,8 +38,8 @@ export const PurchaseAlienDialog = ({
         <CheckoutWithCard
           configs={{
             contractId: alienContractId,
-            walletAddress,
-            email,
+            walletAddress: String(walletAddress),
+            email: email || undefined,
             mintMethod: {
               name: 'mint',
               args: {
@@ -78,8 +79,8 @@ export const PurchaseFuelDialog = ({
         <CheckoutWithCard
           configs={{
             contractId: equipmentContractId,
-            walletAddress,
-            email,
+            walletAddress: String(walletAddress),
+            email: email || undefined,
             mintMethod: {
               name: 'mint',
               args: {

@@ -1,17 +1,14 @@
-import { type NextPage } from 'next';
 import Head from 'next/head';
 import HomeIcon from '~/components/HomeButton';
 import Button from '~/ui/Button';
 import { ArrowUturnLeftIcon } from '@heroicons/react/24/solid';
-import Router from 'next/router';
-import { AppState, useAppStore } from '~/store/appStore';
+import { useAppStore } from '~/store/appStore';
 import { usePlayersAliens } from '~/hooks/usePlayersAliens';
 import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
 import { AlienSelection } from '~/components/AlienSelection';
 import Image from 'next/image';
 import { useWindowSize } from '~/hooks/useWindowSize';
 import Loading from '~/components/Loading';
-import { usePersistentStore } from '~/hooks/usePersistentStore';
 import { formatWalletAddress } from '~/utils';
 import { useTransactions } from '~/hooks/useTransactions';
 import { useEffect, useState } from 'react';
@@ -33,11 +30,8 @@ const FX_URL = 'https://api.coinbase.com/v2/exchange-rates?currency=MATIC';
 
 const blockExplorerUrl = process.env.NEXT_PUBLIC_BLOCK_EXPLORER || '';
 
-const Store: NextPage = () => {
-  const { address, email } = usePersistentStore<AppState, any>(
-    useAppStore,
-    ({ address, email }) => ({ address, email })
-  );
+export const StorePage = () => {
+  const { address, email, setAppView } = useAppStore();
 
   const {
     aliens,
@@ -54,7 +48,7 @@ const Store: NextPage = () => {
 
   const { sellRewardTokens } = useTransactions();
 
-  const [dialogMessage, setDialogMessage] = useState('');
+  const [dialogMessage, setDialogMessage] = useState<string[]>([]);
   const [isPurchaseAlienOpen, setIsPurchaseAlienOpen] = useState(false);
   const [isPurchaseFuelOpen, setIsPurchaseFuelOpen] = useState(false);
   const [fuelToBuy, setFuelToBuy] = useState('1');
@@ -64,10 +58,10 @@ const Store: NextPage = () => {
     if (rewardBalance > 0) {
       const transactionHash = await sellRewardTokens(rewardBalance);
       console.log('transactionHash', transactionHash);
-      setDialogMessage(
-        'Your rewards have been traded for crypto.\n' +
-          'They will be available in your account soon.'
-      );
+      setDialogMessage([
+        'Your rewards have been traded for crypto.',
+        'They will be available in your account soon.',
+      ]);
     }
   };
 
@@ -93,11 +87,6 @@ const Store: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Earthlings Must Die</title>
-        <meta name="description" content="" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <main className="h-screen bg-black">
         <nav className="fixed z-20 flex w-full flex-row justify-between bg-slate-700 p-2 text-white">
           <HomeIcon />
@@ -105,7 +94,7 @@ const Store: NextPage = () => {
             <ArrowUturnLeftIcon
               className="m-auto h-6 w-6 text-teal-500 hover:cursor-pointer"
               onClick={() => {
-                Router.push('/');
+                setAppView('home');
               }}
             />
           </div>
@@ -222,9 +211,9 @@ const Store: NextPage = () => {
         walletAddress={address}
         email={email}
         onSuccess={() => {
-          setDialogMessage(
-            'Your alien egg is on its way. It will be available in your inventory soon.'
-          );
+          setDialogMessage([
+            'Your alien egg is on its way. It will be available in your inventory soon.',
+          ]);
           refetchAliens();
         }}
       />
@@ -235,14 +224,12 @@ const Store: NextPage = () => {
         walletAddress={address}
         email={email}
         onSuccess={() => {
-          setDialogMessage(
-            'Your fuel is on its way. It will be available in your inventory soon.'
-          );
+          setDialogMessage([
+            'Your fuel is on its way. It will be available in your inventory soon.',
+          ]);
           refetchEquipment();
         }}
       />
     </>
   );
 };
-
-export default Store;

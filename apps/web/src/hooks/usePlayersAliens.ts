@@ -4,8 +4,7 @@ import { ADDRESSES } from 'chain';
 import { useContractReads, useContractRead } from 'wagmi';
 import { getAlienDetailsForId } from '~/utils';
 import { AlienDetails } from '~/utils/getAlienDetailsForId';
-import { AppState, useAppStore } from '~/store/appStore';
-import { usePersistentStore } from './usePersistentStore';
+import { useAppStore } from '~/store/appStore';
 
 export interface PlayersAlienDetails extends AlienDetails {
   strength: string;
@@ -14,13 +13,8 @@ export interface PlayersAlienDetails extends AlienDetails {
 const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
 export const usePlayersAliens = () => {
-  const { address } = usePersistentStore<AppState, any>(
-    useAppStore,
-    ({ address }) => {
-      address;
-    }
-  );
-  console.log('address', address);
+  const address = useAppStore().address;
+
   const [aliens, setAliens] = useState<PlayersAlienDetails[]>([]);
   const [zeroStrengthAliens, setZeroStrengthAliens] = useState<number[]>([]);
 

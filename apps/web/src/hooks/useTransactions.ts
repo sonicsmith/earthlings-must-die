@@ -1,17 +1,11 @@
 import { ADDRESSES } from 'chain';
 import { useCallback } from 'react';
-import { AppState, useAppStore } from '~/store/appStore';
-import { usePersistentStore } from './usePersistentStore';
+import { useAppStore } from '~/store/appStore';
 
 const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
 export const useTransactions = () => {
-  const { wallet } = usePersistentStore<AppState, any>(
-    useAppStore,
-    ({ wallet }) => {
-      wallet;
-    }
-  );
+  const wallet = useAppStore().wallet;
 
   const launchAlien = useCallback(
     async (tokenId: number) => {

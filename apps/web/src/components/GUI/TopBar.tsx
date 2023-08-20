@@ -3,15 +3,11 @@ import Button from '../../ui/Button';
 import HomeIcon from '../HomeButton';
 import { ProfileButton } from './ProfileButton';
 import { Menu } from './Menu';
-import { AppState, useAppStore } from '~/store/appStore';
+import { useAppStore } from '~/store/appStore';
 import { useState } from 'react';
-import { usePersistentStore } from '~/hooks/usePersistentStore';
 
 export default function TopBar() {
-  const { address, connect, showMenu } = usePersistentStore<AppState, any>(
-    useAppStore,
-    ({ address, connect, showMenu }) => ({ address, connect, showMenu })
-  );
+  const { address, connect, showMenu } = useAppStore();
   const [loading, setLoading] = useState(false);
 
   const login = async () => {

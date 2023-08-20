@@ -2,8 +2,7 @@ import { Html } from '@react-three/drei';
 import AlienCard from './AlienCard';
 import type { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
-import { type AppState, useAppStore } from '~/store/appStore';
-import { usePersistentStore } from '~/hooks/usePersistentStore';
+import { useAppStore } from '~/store/appStore';
 
 const GROUP_POSITIONS = [
   '',
@@ -41,12 +40,7 @@ export default function AlienCards({
   aliensOnPlanet: AlienOnPlanet[];
   isShowing: boolean;
 }) {
-  const { address } = usePersistentStore<AppState, any>(
-    useAppStore,
-    ({ address }) => {
-      address;
-    }
-  );
+  const address = useAppStore().address;
 
   const numberOwned = useMemo(() => {
     return aliensOnPlanet.reduce((acc, alien) => {
@@ -65,7 +59,7 @@ export default function AlienCards({
         className={`relative transition duration-700 ease-in-out ${
           isShowing ? 'scale-100' : 'scale-0'
         }`}
-        >
+      >
         <AlienStatus numberOwned={numberOwned} />
         <div className={`absolute bottom-40 ${xPos}`}>
           <div className="flex flex-row">

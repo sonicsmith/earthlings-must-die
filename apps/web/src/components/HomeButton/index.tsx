@@ -1,11 +1,13 @@
 import { GlobeAltIcon } from '@heroicons/react/24/solid';
-import Router from 'next/router';
+import { useAppStore } from '~/store/appStore';
 
 export default function HomeButton() {
+  const { setAppView } = useAppStore();
+
   return (
     <div
       onClick={() => {
-        Router.push('/');
+        setAppView('home');
       }}
       className="p-1 hover:cursor-pointer"
     >
