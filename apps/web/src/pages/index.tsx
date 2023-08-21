@@ -7,7 +7,7 @@ import { useAppStore } from '~/store/appStore';
 const Scene = dynamic(() => import('../components/Scene'), { ssr: false });
 
 const Home: NextPage = () => {
-  const appView = useAppStore().appView;
+  const { appView, address } = useAppStore();
 
   return (
     <>
@@ -18,7 +18,7 @@ const Home: NextPage = () => {
         <meta property="og:image" content="/images/aliens/001.jpg" />
       </Head>
       <main className="h-screen">
-        {appView === 'home' ? <Scene /> : <StorePage />}
+        {appView === 'store' && !!address ? <StorePage /> : <Scene />}
       </main>
     </>
   );
