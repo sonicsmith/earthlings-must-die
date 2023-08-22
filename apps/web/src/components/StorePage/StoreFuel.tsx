@@ -51,7 +51,7 @@ export const StoreFuel = ({
             <SelectContent className="bg-black text-white">
               <SelectGroup>
                 {[1, 2, 3, 4, 5].map((item) => (
-                  <SelectItem value={`${item}`}>
+                  <SelectItem value={`${item}`} key={item}>
                     {item} fuel cell{item > 1 && 's'}
                   </SelectItem>
                 ))}

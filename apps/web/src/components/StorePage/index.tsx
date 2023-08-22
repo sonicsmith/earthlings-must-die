@@ -6,7 +6,7 @@ import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
 import Loading from '~/components/Loading';
 import { formatWalletAddress } from '~/utils';
 import { useTransactions } from '~/hooks/useTransactions';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
   PurchaseAlienDialog,
   PurchaseFuelDialog,
@@ -15,6 +15,8 @@ import { MessageDialog } from '~/components/MessageDialog';
 import { StoreAliens } from './StoreAliens';
 import { StoreFuel } from './StoreFuel';
 import { StoreRewards } from './StoreRewards';
+import Button from '~/ui/Button';
+import { ExportKeyDialog } from '../ExportKeyDialog';
 
 const FX_URL = 'https://api.coinbase.com/v2/exchange-rates?currency=MATIC';
 
@@ -41,10 +43,11 @@ export const StorePage = () => {
   const [dialogMessage, setDialogMessage] = useState<string[]>([]);
   const [isPurchaseAlienOpen, setIsPurchaseAlienOpen] = useState(false);
   const [isPurchaseFuelOpen, setIsPurchaseFuelOpen] = useState(false);
+  const [isExportKeyOpen, setIsExportKeyOpen] = useState(false);
   const [fuelToBuy, setFuelToBuy] = useState('1');
   const [conversionRate, setConversionRate] = useState(0);
 
-  const sellHumans = async () => {
+  const sellHumans = useCallback(async () => {
     if (rewardBalance > 0) {
       const transactionHash = await sellRewardTokens(rewardBalance);
       console.log('transactionHash', transactionHash);
@@ -53,7 +56,7 @@ export const StorePage = () => {
         'They will be available in your account soon.',
       ]);
     }
-  };
+  }, [rewardBalance, setDialogMessage]);
 
   useEffect(() => {
     fetch(FX_URL)
@@ -86,13 +89,8 @@ export const StorePage = () => {
         </nav>
 
         <div className="p-4 pt-16 text-lg text-white">
-          <div className="flex flex-col items-center justify-center p-4">
-            <a href={`${blockExplorerUrl}/${address}`} className="underline">
-              Your address: {formatWalletAddress(address!)}
-            </a>
-          </div>
-
           <div className="m-auto w-96">
+            {/* ALIENS */}
             {isAliensLoading ? (
               <Loading />
             ) : (
@@ -103,6 +101,7 @@ export const StorePage = () => {
               />
             )}
 
+            {/* FUEL AND REWARDS */}
             {isEquipmentLoading ? (
               <>
                 <Loading />
@@ -123,6 +122,17 @@ export const StorePage = () => {
                 />
               </>
             )}
+          </div>
+
+          <div className="flex flex-col items-center justify-center p-4">
+            Wallet Address:
+            <a href={`${blockExplorerUrl}/${address}`}>
+              <div className="mb-4 text-xs underline">{address!}</div>
+            </a>
+            {/* EXPORT KEY */}
+            <Button onClick={() => setIsExportKeyOpen(true)}>
+              Export Wallet
+            </Button>
           </div>
         </div>
       </main>
@@ -156,6 +166,11 @@ export const StorePage = () => {
           ]);
           refetchEquipment();
         }}
+      />
+
+      <ExportKeyDialog
+        isOpen={isExportKeyOpen}
+        setIsOpen={setIsExportKeyOpen}
       />
     </>
   );
