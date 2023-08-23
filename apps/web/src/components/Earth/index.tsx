@@ -15,28 +15,41 @@ const getRadians = () => {
 export default function Earth({ onClick }: any) {
   const { nodes, materials } = useGLTF('/models/earth.glb') as any;
 
-  const rotation = useMemo(() => getRadians(), []);
+  const rotation = useMemo(getRadians, []);
 
   return (
-    <group onClick={onClick} dispose={null} rotation={[0, rotation, 0]}>
-      <group rotation={[-Math.PI / 2, 0, 0]}>
-        <group rotation={[Math.PI / 2, 0, 0]} scale={0.01}>
-          <group
-            position={[0, 0, 0]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={17}
-          >
-            <mesh
-              castShadow
-              receiveShadow
-              geometry={nodes.earth_Earth_0.geometry}
-              material={materials.Earth}
-            />
-          </group>
-        </group>
-      </group>
+    <group
+      onClick={onClick}
+      dispose={null}
+      rotation={[0, rotation, 0]}
+      scale={0.003}
+    >
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes['Sphere002_01_-_Default_0'].geometry}
+        material={materials['01_-_Default']}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={1.029}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes['Sphere003_02_-_Default_0'].geometry}
+        material={materials['02_-_Default']}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={1.048}
+      />
+      <mesh
+        castShadow
+        receiveShadow
+        geometry={nodes['Sphere004_03_-_Default_0'].geometry}
+        material={materials['03_-_Default']}
+        rotation={[-Math.PI / 2, 0, 0]}
+        scale={1.059}
+      />
     </group>
   );
 }
 
-useGLTF.preload('/models/earth.glb');
+useGLTF.preload('/models/planetEarth.glb');

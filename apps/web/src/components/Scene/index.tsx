@@ -113,7 +113,7 @@ export default function Scene() {
             landedCallback={() => {
               setSceneMessage([
                 'Your invasion has successfully landed on Earth.',
-                "Your alien's card is now viewable by clicking on Earth.",
+                "You can see the alien's status by clicking on the planet.",
               ]);
               setIsLaunching(false);
               refetchAliens();
