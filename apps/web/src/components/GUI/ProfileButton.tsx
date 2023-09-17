@@ -1,10 +1,11 @@
-import { useAppStore } from '~/store/appStore';
+import { EVMAddress, useAppStore } from '~/store/appStore';
+import { formatWalletAddress } from '~/utils';
 
 export const ProfileButton = () => {
-  const { setIsAlienSelectionView, showMenu, setShowMenu, email } =
+  const { setIsAlienSelectionView, showMenu, setShowMenu, address } =
     useAppStore();
 
-  const [display] = email?.split('@') || ['MENU'];
+  const display = formatWalletAddress(address);
 
   return (
     <div

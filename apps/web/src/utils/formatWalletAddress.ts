@@ -1,3 +1,5 @@
+import { EVMAddress } from '~/store/appStore';
+
 /**
  * This formats a public key into the following example:
  *
@@ -6,10 +8,13 @@
  * @param walletAddress
  * @returns
  */
-export const formatWalletAddress = (walletAddress: string) => {
+export const formatWalletAddress = (
+  walletAddress: string | EVMAddress | null
+) => {
+  const address = walletAddress as string;
   return (
-    walletAddress.substring(0, 4) +
-    "..." +
-    walletAddress.substring(walletAddress.length - 4, walletAddress.length)
+    address.substring(0, 4) +
+    '...' +
+    address.substring(address.length - 4, address.length)
   );
 };

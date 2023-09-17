@@ -1,5 +1,4 @@
 import Button from '../../ui/Button';
-
 import HomeIcon from '../HomeButton';
 import { ProfileButton } from './ProfileButton';
 import { Menu } from './Menu';

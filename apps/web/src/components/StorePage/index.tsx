@@ -4,7 +4,6 @@ import { useAppStore } from '~/store/appStore';
 import { usePlayersAliens } from '~/hooks/usePlayersAliens';
 import { usePlayersEquipment } from '~/hooks/usePlayersEquipment';
 import Loading from '~/components/Loading';
-import { formatWalletAddress } from '~/utils';
 import { useTransactions } from '~/hooks/useTransactions';
 import { useCallback, useEffect, useState } from 'react';
 import {
@@ -17,6 +16,7 @@ import { StoreFuel } from './StoreFuel';
 import { StoreRewards } from './StoreRewards';
 import Button from '~/ui/Button';
 import { ExportKeyDialog } from '../ExportKeyDialog';
+import Link from 'next/link';
 
 const FX_URL = 'https://api.coinbase.com/v2/exchange-rates?currency=MATIC';
 
@@ -124,14 +124,14 @@ export const StorePage = () => {
             )}
           </div>
 
+          {/* WALLET ACTIONS */}
           <div className="flex flex-col items-center justify-center p-4">
             Wallet Address:
             <a href={`${blockExplorerUrl}/${address}`}>
               <div className="mb-4 text-xs underline">{address!}</div>
             </a>
-            {/* EXPORT KEY */}
-            <Button onClick={() => setIsExportKeyOpen(true)}>
-              Export Wallet
+            <Button onClick={() => {}}>
+              <Link href="https://sequence.app/wallet">Open Wallet</Link>
             </Button>
           </div>
         </div>
