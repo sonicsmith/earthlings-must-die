@@ -16,7 +16,7 @@ export const Menu = () => {
         <li
           className={MENU_ITEM_CLASS}
           onClick={() => {
-            setAppView('store');
+            setAppView('dashboard');
           }}
         >
           Store

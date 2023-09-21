@@ -52,4 +52,4 @@ export default function Earth({ onClick }: any) {
   );
 }
 
-useGLTF.preload('/models/planetEarth.glb');
+useGLTF.preload('/models/earth.glb');

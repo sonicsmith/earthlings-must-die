@@ -20,8 +20,8 @@ export type EmbeddedWallet = {
 };
 
 export interface AppState {
-  appView: 'home' | 'store';
-  setAppView: (view: 'home' | 'store') => void;
+  appView: 'home' | 'dashboard';
+  setAppView: (view: 'home' | 'dashboard') => void;
   email: string | null;
   address: EVMAddress;
   paperSdk: PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED> | null;

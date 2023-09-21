@@ -13,6 +13,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '../../ui/Dialog';
+import { useAppStore } from '~/store/appStore';
 
 enum Display {
   Loading,
@@ -33,6 +34,7 @@ export default function AlienSelectorDialog({
   const [dialogContainer, setDialogContainer] = useState<HTMLDivElement | null>(
     null
   );
+  const setAppView = useAppStore().setAppView;
 
   const { aliens, isLoading: isAliensLoading } = usePlayersAliens();
 
@@ -72,9 +74,12 @@ export default function AlienSelectorDialog({
           {display === Display.NoAliens && (
             <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
               You have no aliens to send. Visit the{' '}
-              <Link href="/store" className="underline">
+              <div
+                onClick={() => setAppView('dashboard')}
+                className="underline"
+              >
                 store
-              </Link>{' '}
+              </div>{' '}
               to spawn a new species.
             </div>
           )}
@@ -82,9 +87,12 @@ export default function AlienSelectorDialog({
           {display === Display.NoFuel && (
             <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
               You have no fuel. Visit the{' '}
-              <Link href="/store" className="underline">
+              <div
+                onClick={() => setAppView('dashboard')}
+                className="underline"
+              >
                 store
-              </Link>{' '}
+              </div>{' '}
               to buy a fuel cell.
             </div>
           )}
