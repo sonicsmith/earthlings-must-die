@@ -37,7 +37,7 @@ export const AlienSelection = ({
           className="absolute bottom-1 left-1 h-10 w-10 rounded-full pt-1.5 text-center"
           style={{ backgroundColor: color }}
         >
-          {strength}
+          {strength || '-'}
         </div>
         <Image src={image} width={240} height={240} alt={name} />
       </div>

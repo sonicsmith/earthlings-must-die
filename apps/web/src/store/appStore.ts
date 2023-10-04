@@ -30,6 +30,7 @@ export interface AppState {
   isAlienSelectionView: boolean;
   initPaper: () => void;
   connect: () => Promise<void>;
+  logout: () => void;
   setShowMenu: (show: boolean) => void;
   setIsAlienSelectionView: (isShowing: boolean) => void;
 }
@@ -67,6 +68,17 @@ const store = create<AppState>()((set, get) => ({
       email: user?.authDetails.email,
       wallet: user?.wallet,
     });
+  },
+  logout: () => {
+    const paperSdk = get().paperSdk;
+    if (!!paperSdk) {
+      paperSdk?.auth.logout().then(console.log);
+      set({
+        address: null,
+        email: null,
+        wallet: undefined,
+      });
+    }
   },
   setShowMenu: (showMenu) => set({ showMenu }),
   setIsAlienSelectionView: (isAlienSelectionView) =>

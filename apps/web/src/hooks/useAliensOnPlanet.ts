@@ -55,7 +55,5 @@ export const useAliensOnPlanet = () => {
     }
   }, [data]);
 
-  console.log('Aliens on planet:', aliens);
-
   return { aliens, refetch };
 };

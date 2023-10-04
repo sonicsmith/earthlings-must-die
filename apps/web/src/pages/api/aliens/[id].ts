@@ -19,8 +19,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   res.status(200).json({
     name: alienNames[Number(id)],
-    external_url: 'https://earthlingsmustdie.io',
-    image: `https://earthlingsmustdie.io/images/aliens/${imageName}.jpg`,
+    external_url: 'https://humansmustdie.io',
+    image: `https://humansmustdie.io/images/aliens/${imageName}.jpg`,
     attributes: [
       {
         trait_type: 'Color',

@@ -89,7 +89,7 @@ contract Aliens is
   }
 
   /**
-   * @dev Allow withdraw of Link tokens from the contract
+   * @dev Allow withdraw from the contract
    */
   function claimFunds(address payable recipient) public onlyOwner {
     recipient.transfer(address(this).balance);

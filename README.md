@@ -1,4 +1,4 @@
-# Earthlings Must Die
+# Humans Must Die
 
 A web2.5 Pay-to-Earn game based on simple smart contract logic.
 
@@ -32,7 +32,7 @@ npm run test
 
 ## Deploy Contracts
 
-Change into `chain` directory:
+From the `packages/chain` directory:
 
 ```
 npm run deployAliens

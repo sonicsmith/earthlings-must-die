@@ -30,6 +30,7 @@ export const usePlayersAliens = () => {
     functionName: 'balanceOf',
     args: [address],
     enabled: !!address,
+    watch: true,
   });
 
   const tokenOfOwnerByIndexData = useMemo(() => {
@@ -96,8 +97,6 @@ export const usePlayersAliens = () => {
       fetchAndSetAliens();
     }
   }, [tokenIdResults, strengthData]);
-
-  console.log('Players aliens:', aliens);
 
   return {
     refetch,
