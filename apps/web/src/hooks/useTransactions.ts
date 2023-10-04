@@ -1,35 +1,50 @@
 import { ADDRESSES } from 'chain';
 import { useCallback } from 'react';
 import { useAppStore } from '~/store/appStore';
+import battlefieldArtifacts from 'chain/artifacts/contracts/BattlefieldEarth.sol/BattlefieldEarth.json';
+import { encodeFunctionData } from 'viem';
 
 const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
+const battleFieldContract = ADDRESSES[chain]!.BATTLEFIELD;
+
 export const useTransactions = () => {
-  const wallet = useAppStore().wallet;
+  const { ecdsaProvider } = useAppStore();
 
   const launchAlien = useCallback(
     async (tokenId: number) => {
-      const result = await wallet?.gasless.callContract({
-        contractAddress: ADDRESSES[chain]!.BATTLEFIELD,
-        methodInterface: 'function attack(uint256 _tokenId) public',
-        methodArgs: [tokenId],
-      });
-      return result?.transactionHash;
+      const userOp = {
+        target: battleFieldContract,
+        data: encodeFunctionData({
+          abi: battlefieldArtifacts.abi,
+          functionName: 'attack',
+          args: [BigInt(tokenId)],
+        }),
+      };
+      if (!ecdsaProvider) {
+        throw new Error('No ecdsaProvider');
+      }
+      return ecdsaProvider.sendUserOperation(userOp);
     },
-    [wallet, chain]
+    [ecdsaProvider]
   );
 
   const sellRewardTokens = useCallback(
     async (amount: number) => {
-      const result = await wallet?.gasless.callContract({
-        contractAddress: ADDRESSES[chain]!.BATTLEFIELD,
-        methodInterface:
-          'function sellRewardTokens(uint256 numberOfTokens) public',
-        methodArgs: [amount],
-      });
-      return result?.transactionHash;
+      const userOp = {
+        target: battleFieldContract,
+        data: encodeFunctionData({
+          abi: battlefieldArtifacts.abi,
+          functionName: 'sellRewardTokens',
+          args: [BigInt(amount)],
+        }),
+      };
+      if (!ecdsaProvider) {
+        throw new Error('No ecdsaProvider');
+      }
+      return ecdsaProvider.sendUserOperation(userOp);
     },
-    [wallet, chain]
+    [ecdsaProvider]
   );
 
   return { launchAlien, sellRewardTokens };

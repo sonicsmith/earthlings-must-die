@@ -34,7 +34,7 @@ const config = {
     // your project has ESLint errors.
     ignoreDuringBuilds: true,
   },
-  transpilePackages: ['chain'],
+  transpilePackages: ['chain', '@zerodev'],
 };
 
 export default config;

@@ -80,7 +80,7 @@ export const usePlayersAliens = () => {
     const fetchAndSetAliens = async () => {
       const zeroAliens: number[] = [];
       const alienDetails = tokenIdResults!.map((tokenId, index) => {
-        const strength = String(strengthData?.[index]?.result || 0);
+        const strength = String(strengthData?.[index]?.result || '');
         if (!strength) {
           zeroAliens.push(Number(tokenId?.result));
         }

@@ -1,23 +1,13 @@
 import { create, useStore } from 'zustand';
 import {
-  CallContractReturnType,
   PaperEmbeddedWalletSdk,
   RecoveryShareManagement,
   UserStatus,
 } from '@paperxyz/embedded-wallet-service-sdk';
 import { getChain } from '~/utils';
+import { ECDSAProvider } from '@zerodev/sdk';
 
 export type EVMAddress = `0x${string}` | null;
-
-export type EmbeddedWallet = {
-  gasless: {
-    callContract: (args: {
-      contractAddress: string;
-      methodInterface: `function ${string}(${string})${string}` | string;
-      methodArgs: Array<unknown>;
-    }) => Promise<CallContractReturnType>;
-  };
-};
 
 export interface AppState {
   appView: 'home' | 'dashboard';
@@ -25,7 +15,7 @@ export interface AppState {
   email: string | null;
   address: EVMAddress;
   paperSdk: PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED> | null;
-  wallet: EmbeddedWallet | undefined;
+  ecdsaProvider: ECDSAProvider | null;
   showMenu: boolean;
   isAlienSelectionView: boolean;
   initPaper: () => void;
@@ -44,7 +34,7 @@ const store = create<AppState>()((set, get) => ({
   email: null,
   address: null,
   paperSdk: null,
-  wallet: undefined,
+  ecdsaProvider: null,
   showMenu: false,
   isAlienSelectionView: false,
   initPaper: () => {
@@ -63,10 +53,19 @@ const store = create<AppState>()((set, get) => ({
       const res = await get().paperSdk?.auth.loginWithPaperModal();
       user = res?.user;
     }
+    const signer = await user?.wallet.getEthersJsSigner();
+    if (!signer) {
+      throw new Error('No signer');
+    }
+    const ecdsaProvider = await ECDSAProvider.init({
+      projectId: 'ce825d97-e037-498f-87ea-7ac1962a2471',
+      owner: signer as any, // TODO: Fix this
+    });
+    const address = await ecdsaProvider.getAddress();
     set({
-      address: user?.walletAddress as EVMAddress,
+      address,
+      ecdsaProvider,
       email: user?.authDetails.email,
-      wallet: user?.wallet,
     });
   },
   logout: () => {
@@ -76,7 +75,6 @@ const store = create<AppState>()((set, get) => ({
       set({
         address: null,
         email: null,
-        wallet: undefined,
       });
     }
   },
