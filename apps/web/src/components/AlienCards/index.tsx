@@ -26,8 +26,13 @@ const AlienStatus = ({ numberOwned }: { numberOwned: number }) => {
   return (
     <div className="absolute -left-32 bottom-52 w-64 text-xl text-white">
       <div className="text-center">Aliens on planet: 4</div>
+
       <div className="text-center text-gray-300">
-        (Owned by you: {numberOwned})
+        {numberOwned > 0 ? (
+          <>(Owned by you: {numberOwned})</>
+        ) : (
+          <>Buy aliens to gather resources</>
+        )}
       </div>
     </div>
   );
