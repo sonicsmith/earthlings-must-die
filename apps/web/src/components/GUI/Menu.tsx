@@ -16,10 +16,10 @@ export const Menu = () => {
         <li
           className={MENU_ITEM_CLASS}
           onClick={() => {
-            setAppView('dashboard');
+            setAppView('inventory');
           }}
         >
-          Store
+          Inventory
         </li>
         <li
           className={MENU_ITEM_CLASS}

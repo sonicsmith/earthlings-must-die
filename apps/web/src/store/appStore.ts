@@ -10,8 +10,8 @@ import { ECDSAProvider } from '@zerodev/sdk';
 export type EVMAddress = `0x${string}` | null;
 
 export interface AppState {
-  appView: 'home' | 'dashboard';
-  setAppView: (view: 'home' | 'dashboard') => void;
+  appView: 'home' | 'inventory';
+  setAppView: (view: 'home' | 'inventory') => void;
   email: string | null;
   address: EVMAddress;
   paperSdk: PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED> | null;

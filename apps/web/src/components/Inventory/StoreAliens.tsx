@@ -23,6 +23,7 @@ export const StoreAliens = ({
     <>
       {aliens.length > 0 ? (
         <div className="mx-4 overflow-scroll">
+          <div className="text-center">Aliens Available:</div>
           <div className={`flex flex-nowrap gap-3 ${offset}`}>
             {aliens.map((alienData, index) => {
               return (

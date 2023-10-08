@@ -13,7 +13,7 @@ export const StoreRewards = ({
   return (
     <>
       <div className="relative">
-        <div className={'absolute left-[245px] m-auto text-red-500'}>
+        <div className={'absolute left-[245px] m-auto text-xl text-red-500'}>
           x{rewardBalance}
         </div>
         <Image

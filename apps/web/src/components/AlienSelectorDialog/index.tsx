@@ -75,7 +75,7 @@ export default function AlienSelectorDialog({
             <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
               You have no aliens to send. Visit the{' '}
               <div
-                onClick={() => setAppView('dashboard')}
+                onClick={() => setAppView('inventory')}
                 className="underline"
               >
                 store
@@ -88,7 +88,7 @@ export default function AlienSelectorDialog({
             <div className="m-auto h-[240px] w-[240px] bg-slate-600 p-8">
               You have no fuel. Visit the{' '}
               <div
-                onClick={() => setAppView('dashboard')}
+                onClick={() => setAppView('inventory')}
                 className="underline"
               >
                 store

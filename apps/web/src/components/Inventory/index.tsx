@@ -22,7 +22,7 @@ const FX_URL = 'https://api.coinbase.com/v2/exchange-rates?currency=MATIC';
 
 const blockExplorerUrl = process.env.NEXT_PUBLIC_BLOCK_EXPLORER || '';
 
-export const Dashboard = () => {
+export const Inventory = () => {
   const { address, email, setAppView } = useAppStore();
 
   const {

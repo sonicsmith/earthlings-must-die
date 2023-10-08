@@ -13,7 +13,10 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   address payable private battlefieldAddress;
   mapping(uint256 => uint256) private totalSupply;
 
-  constructor() ERC1155('Equipment') {}
+  string public name = 'Equipment';
+  string public symbol = 'FUEL';
+
+  constructor() ERC1155('') {}
 
   function setBattlefieldAddress(
     address payable _battlefieldAddress
