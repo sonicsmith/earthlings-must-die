@@ -114,9 +114,9 @@ contract Aliens is
   }
 
   /**
-   * @dev See {IERC721-baseTokenURI}.
+   * @dev See {IERC721-_baseURI}.
    */
-  function baseTokenURI() public view returns (string memory) {
+  function _baseURI() internal view virtual override returns (string memory) {
     return baseUri;
   }
 

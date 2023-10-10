@@ -39,13 +39,15 @@ export const Menu = () => {
         >
           <div className="flex">How to Play</div>
         </li>
-        <li
-          className={`${MENU_ITEM_CLASS} text-gray-300`}
-          onClick={() => {
-            //
-          }}
-        >
-          <div className="flex">Lite paper</div>
+        <li className={`${MENU_ITEM_CLASS} text-gray-300`}>
+          <a
+            href="https://nics-organization-1.gitbook.io/humans-must-die-litepaper/"
+            className="flex"
+            target="_blank"
+            rel="noreferrer"
+          >
+            Lite paper
+          </a>
         </li>
         <li
           className={MENU_ITEM_CLASS}

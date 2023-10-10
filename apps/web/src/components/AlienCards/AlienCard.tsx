@@ -21,7 +21,7 @@ export default function AlienCard({
       {ownedByPlayer && (
         <div
           className={
-            'z-4 absolute left-1.5 top-1.5 h-4 w-4 animate-ping rounded-full bg-green-500'
+            'z-4 absolute left-2 top-2 h-3 w-3 animate-ping rounded-full bg-green-500'
           }
         />
       )}
