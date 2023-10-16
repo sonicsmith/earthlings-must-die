@@ -8,7 +8,8 @@ const MENU_ITEM_CLASS =
   'hover:bg-slate-500 p-2 hover:cursor-pointer px-6 rounded-lg';
 
 export const Menu = () => {
-  const { setIsAlienSelectionView, setAppView, logout } = useAppStore();
+  const { setIsAlienSelectionView, setAppView, setShowTutorial, logout } =
+    useAppStore();
 
   return (
     <div className="w-fit rounded-xl bg-slate-700 py-2 text-white">
@@ -34,7 +35,7 @@ export const Menu = () => {
         <li
           className={`${MENU_ITEM_CLASS} text-gray-300`}
           onClick={() => {
-            //
+            setShowTutorial(true);
           }}
         >
           <div className="flex">How to Play</div>

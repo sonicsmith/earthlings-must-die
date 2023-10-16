@@ -13,8 +13,9 @@ import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
 import { useTransactions } from '~/hooks/useTransactions';
 import Spaceship from '../Spaceship';
-import { AppState, useAppStore } from '~/store/appStore';
+import { useAppStore } from '~/store/appStore';
 import { MessageDialog } from '../MessageDialog';
+import { TutorialDialog } from '../TutorialDialog';
 
 const SUN_POSITION = new Vector3(10, 1, 0);
 
@@ -24,6 +25,8 @@ export default function Scene() {
     setShowMenu,
     setIsAlienSelectionView,
     isAlienSelectionView,
+    showTutorial,
+    setShowTutorial,
   } = useAppStore();
 
   const { width } = useWindowSize();
@@ -121,12 +124,17 @@ export default function Scene() {
           />
         )}
         <Html center>
-          {sceneMessage.length > 0 && (
+          {(sceneMessage.length > 0 || showTutorial) && (
             <div ref={setDialogContainer} className="h-96 w-96" />
           )}
           <MessageDialog
             setDialogMessage={setSceneMessage}
             message={sceneMessage}
+            dialogContainer={dialogContainer}
+          />
+          <TutorialDialog
+            setIsOpen={setShowTutorial}
+            isOpen={showTutorial}
             dialogContainer={dialogContainer}
           />
         </Html>

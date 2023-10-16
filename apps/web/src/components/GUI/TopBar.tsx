@@ -6,6 +6,14 @@ import { Menu } from './Menu';
 import { useAppStore } from '~/store/appStore';
 import { useState } from 'react';
 
+const Beta = () => {
+  return (
+    <div className="my-auto rounded-lg bg-red-400 px-6 py-1 text-black">
+      CLOSED BETA
+    </div>
+  );
+};
+
 export default function TopBar() {
   const { address, connect, showMenu } = useAppStore();
   const [loading, setLoading] = useState(false);
@@ -26,11 +34,13 @@ export default function TopBar() {
         {!!address ? (
           <>
             <HomeIcon />
+            <Beta />
             <ProfileButton />
           </>
         ) : (
           <>
             <HomeIcon />
+            <Beta />
             <Button onClick={login}>
               {loading ? 'Connecting..' : 'Login'}
             </Button>

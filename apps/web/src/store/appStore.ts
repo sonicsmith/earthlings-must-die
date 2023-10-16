@@ -18,11 +18,13 @@ export interface AppState {
   ecdsaProvider: ECDSAProvider | null;
   showMenu: boolean;
   isAlienSelectionView: boolean;
+  showTutorial: boolean;
   initPaper: () => void;
   connect: () => Promise<void>;
   logout: () => void;
   setShowMenu: (show: boolean) => void;
   setIsAlienSelectionView: (isShowing: boolean) => void;
+  setShowTutorial: (show: boolean) => void;
 }
 
 const paperClientId = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID || '';
@@ -37,6 +39,7 @@ const store = create<AppState>()((set, get) => ({
   ecdsaProvider: null,
   showMenu: false,
   isAlienSelectionView: false,
+  showTutorial: false,
   initPaper: () => {
     // Only create once
     if (get().paperSdk === null) {
@@ -81,6 +84,7 @@ const store = create<AppState>()((set, get) => ({
   setShowMenu: (showMenu) => set({ showMenu }),
   setIsAlienSelectionView: (isAlienSelectionView) =>
     set({ isAlienSelectionView }),
+  setShowTutorial: (showTutorial) => set({ showTutorial }),
 }));
 
 export const useAppStore = () => useStore(store);
