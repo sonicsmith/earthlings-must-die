@@ -9,14 +9,15 @@ type TutorialDialogProps = {
   dialogContainer?: HTMLDivElement | null;
 };
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 const STEP_TEXT = [
   'Navigate to your inventory.',
   'Buy alien eggs and fuel cells.',
   'Select Invade from the menu.',
-  'Select the alien to invade with.',
-  'Indicator shows which aliens are yours. Text shows how much yield has been claimed.',
+  'Select the alien to invade with and click "launch".',
+  'Your alien will begin its voyage to earth.',
+  'Once on the planet you can track your aliens progress.',
 ];
 
 export const TutorialDialog = ({
@@ -30,17 +31,23 @@ export const TutorialDialog = ({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className={'w-72'} container={dialogContainer}>
         <DialogHeader>
-          <DialogTitle className={'m-auto'}>How to Play</DialogTitle>
+          <DialogTitle className={'mx-auto'}>How to Play</DialogTitle>
         </DialogHeader>
-        <div className={'mx-auto w-60'}>
+        <div
+          className={
+            'mx-auto w-60 rounded-lg border-4 border-solid border-brand'
+          }
+        >
           <Image
             src={`/images/tutorial/step${step}.png`}
             width={240}
             height={240}
             alt={'instructions'}
-            className="mx-auto border border-solid"
+            className="mx-auto border border-solid border-brand"
           />
-          <div className="mx-auto mt-2 text-center">{STEP_TEXT[step - 1]}</div>
+          <div className="mx-auto mt-2 pb-2 text-center">
+            {STEP_TEXT[step - 1]}
+          </div>
         </div>
         <div className={'mt-4 flex justify-between'}>
           <Button

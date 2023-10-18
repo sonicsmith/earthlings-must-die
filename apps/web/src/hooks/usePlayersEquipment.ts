@@ -20,6 +20,7 @@ export const usePlayersEquipment = () => {
     functionName: 'balanceOf',
     args: [address, 1],
     enabled: !!address,
+    watch: true,
   });
 
   const { data: rewardBalance, isLoading: isRewardBalanceLoading } =
@@ -29,6 +30,7 @@ export const usePlayersEquipment = () => {
       functionName: 'balanceOf',
       args: [address, 100],
       enabled: !!address,
+      watch: true,
     });
 
   return {

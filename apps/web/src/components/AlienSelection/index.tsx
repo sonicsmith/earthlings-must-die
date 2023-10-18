@@ -16,7 +16,7 @@ export const AlienSelection = ({
 }) => {
   const { name, image, strength, color, tokenId } = alienData;
   const selectedStyle =
-    tokenId === selectedAlien ? 'border-teal-500' : 'border-white';
+    tokenId === selectedAlien ? 'border-brand' : 'border-white';
 
   const isSingle = numberOfAliens === 1;
   const isMobile = Number(width) < 640;

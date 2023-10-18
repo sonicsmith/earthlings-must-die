@@ -17,6 +17,7 @@ type PurchaseDialogProps = {
   walletAddress: EVMAddress;
   email: string | null;
   onSuccess: () => void;
+  amount?: number;
 };
 
 const alienContractId = process.env.NEXT_PUBLIC_ALIEN_CONTRACT_ID!;
@@ -69,6 +70,7 @@ export const PurchaseFuelDialog = ({
   walletAddress,
   email,
   onSuccess,
+  amount,
 }: PurchaseDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -86,7 +88,7 @@ export const PurchaseFuelDialog = ({
               args: {
                 recipient: '$WALLET',
                 id: 1,
-                amount: 1,
+                amount,
               },
               payment: {
                 value: '0.01 * $QUANTITY',

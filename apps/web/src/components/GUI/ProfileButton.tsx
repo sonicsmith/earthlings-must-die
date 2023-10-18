@@ -13,7 +13,7 @@ export const ProfileButton = () => {
         setShowMenu(!showMenu);
       }}
       className={
-        'mx-2 rounded bg-teal-500 px-3 py-1 text-black hover:cursor-pointer'
+        'mx-2 rounded bg-brand px-3 py-1 text-black hover:cursor-pointer'
       }
     >
       {display}

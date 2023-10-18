@@ -11,7 +11,7 @@ export default function HomeButton() {
       }}
       className="p-1 hover:cursor-pointer"
     >
-      <GlobeAltIcon className="h-6 w-6 text-teal-500" />
+      <GlobeAltIcon className="h-6 w-6 text-brand" />
     </div>
   );
 }

@@ -80,7 +80,7 @@ export const Inventory = () => {
           <HomeIcon />
           <div className="p-1">
             <ArrowUturnLeftIcon
-              className="m-auto h-6 w-6 text-teal-500 hover:cursor-pointer"
+              className="m-auto h-6 w-6 text-brand hover:cursor-pointer"
               onClick={() => {
                 setAppView('home');
               }}
@@ -156,6 +156,7 @@ export const Inventory = () => {
       />
 
       <PurchaseFuelDialog
+        amount={Number(fuelToBuy)}
         isOpen={isPurchaseFuelOpen}
         setIsOpen={setIsPurchaseFuelOpen}
         walletAddress={address}
