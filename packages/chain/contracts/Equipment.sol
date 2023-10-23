@@ -14,9 +14,9 @@ contract Equipment is ERC1155, Ownable, ERC1155Burnable {
   mapping(uint256 => uint256) private totalSupply;
 
   string public name = 'Equipment';
-  string public symbol = 'FUEL';
+  string public symbol = 'EQP';
 
-  constructor() ERC1155('') {}
+  constructor() ERC1155('https://www.humansmustdie.com/api/equipment/') {}
 
   function setBattlefieldAddress(
     address payable _battlefieldAddress

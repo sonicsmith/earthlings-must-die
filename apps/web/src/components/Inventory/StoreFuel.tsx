@@ -26,12 +26,13 @@ export const StoreFuel = ({
 }: StoreFuelProps) => {
   return (
     <>
+      <div className="text-center">Fuel Cells:</div>
       <div className="relative">
         <div className={'absolute left-[245px] m-auto text-xl text-red-500'}>
           x{fuelBalance}
         </div>
         <Image
-          src={'/images/fuel-cell.jpeg'}
+          src={'/images/equipment/fuelCells.jpg'}
           width={160}
           height={160}
           alt={'Fuel Cell'}
@@ -42,7 +43,7 @@ export const StoreFuel = ({
       <div className="m-2 flex flex-col justify-center p-2">
         <div className="m-auto w-fit">
           <Button onClick={openFuelPurchase}>
-            Buy Fuel Cells (${fuelPriceInUSD.toFixed(2)} USD)
+            Buy Cells (${fuelPriceInUSD.toFixed(2)} USD)
           </Button>
           <Select value={fuelToBuy} onValueChange={setFuelToBuy}>
             <SelectTrigger>

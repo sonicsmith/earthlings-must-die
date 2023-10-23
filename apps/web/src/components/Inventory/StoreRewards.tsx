@@ -12,12 +12,13 @@ export const StoreRewards = ({
 }: StoreRewardsProps) => {
   return (
     <>
+      <div className="text-center">Human Yield:</div>
       <div className="relative">
         <div className={'absolute left-[245px] m-auto text-xl text-red-500'}>
           x{rewardBalance}
         </div>
         <Image
-          src={'/images/human-meat.jpg'}
+          src={'/images/equipment/humanYield.jpg'}
           width={160}
           height={160}
           alt={'Human Meat'}
@@ -26,7 +27,7 @@ export const StoreRewards = ({
       </div>
       <div className="m-2 flex justify-center p-2">
         <Button disabled={rewardBalance === 0} onClick={sellHumans}>
-          Sell Humans
+          Sell Yield
         </Button>
       </div>
     </>

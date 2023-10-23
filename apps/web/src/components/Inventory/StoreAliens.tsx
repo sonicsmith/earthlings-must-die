@@ -44,7 +44,7 @@ export const StoreAliens = ({
       )}
       <div className="m-2 flex justify-center p-2">
         <Button onClick={openAlienPurchase}>
-          Buy Alien Egg (${alienPriceInUSD.toFixed(2)} USD)
+          Buy Egg (${alienPriceInUSD.toFixed(2)} USD)
         </Button>
       </div>
     </>

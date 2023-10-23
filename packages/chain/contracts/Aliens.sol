@@ -19,7 +19,7 @@ contract Aliens is
   Counters.Counter private idCounter;
 
   uint256 private mintCost = 1_000_000 gwei;
-  string private baseUri = '';
+  string private baseUri = 'https://www.humansmustdie.com/api/aliens/';
   address private battlefieldEarthAddress;
   address private linkAddress;
 
