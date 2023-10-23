@@ -8,7 +8,6 @@ import { getChain } from '~/utils';
 import { ECDSAProvider } from '@zerodev/sdk';
 
 export type EVMAddress = `0x${string}` | null;
-
 export interface AppState {
   appView: 'home' | 'inventory';
   setAppView: (view: 'home' | 'inventory') => void;
@@ -29,6 +28,7 @@ export interface AppState {
 
 const paperClientId = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID || '';
 const chain = getChain(process.env.NEXT_PUBLIC_CHAIN);
+const zeroDevProjectId = process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID || '';
 
 const store = create<AppState>()((set, get) => ({
   appView: 'home',
@@ -61,7 +61,7 @@ const store = create<AppState>()((set, get) => ({
       throw new Error('No signer');
     }
     const ecdsaProvider = await ECDSAProvider.init({
-      projectId: 'ce825d97-e037-498f-87ea-7ac1962a2471',
+      projectId: zeroDevProjectId,
       owner: signer as any, // TODO: Fix this
     });
     const address = await ecdsaProvider.getAddress();
