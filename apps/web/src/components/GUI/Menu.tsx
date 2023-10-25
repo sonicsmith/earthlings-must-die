@@ -42,7 +42,7 @@ export const Menu = () => {
         </li>
         <li className={`${MENU_ITEM_CLASS} text-gray-300`}>
           <a
-            href="https://nics-organization-1.gitbook.io/humans-must-die-litepaper/"
+            href="https://docs.humansmustdie.com/humans-must-die-litepaper/"
             className="flex"
             target="_blank"
             rel="noreferrer"
@@ -50,12 +50,7 @@ export const Menu = () => {
             Lite paper
           </a>
         </li>
-        <li
-          className={MENU_ITEM_CLASS}
-          onClick={() => {
-            logout();
-          }}
-        >
+        <li className={MENU_ITEM_CLASS} onClick={logout}>
           <div className="flex">
             Logout
             <ArrowRightOnRectangleIcon className="ml-2 h-5 w-5 text-white" />
