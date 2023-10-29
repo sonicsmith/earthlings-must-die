@@ -19,13 +19,15 @@ export default function TopBar() {
   const [loading, setLoading] = useState(false);
 
   const login = async () => {
-    setLoading(true);
-    try {
-      await connect();
-    } catch (e) {
-      console.log(e);
+    if (!loading) {
+      setLoading(true);
+      try {
+        await connect();
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
