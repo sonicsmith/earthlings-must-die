@@ -1,4 +1,4 @@
-import { ethers, run } from 'hardhat';
+import { ethers, network, run } from 'hardhat';
 import { ADDRESSES } from '..';
 
 const LINK_AMOUNT = ethers.utils.parseEther('5');
@@ -7,8 +7,7 @@ async function main() {
   // Deploy Aliens and Equipment contracts
   console.log('Deploying Aliens contract...');
   const Aliens = await ethers.getContractFactory('Aliens');
-  const network = process.env.HARDHAT_NETWORK || 'polygon';
-  const { LINK_ADDRESS, VRF_ADDRESS } = ADDRESSES[network];
+  const { LINK_ADDRESS, VRF_ADDRESS } = ADDRESSES[network.name];
   const aliens = await Aliens.deploy(LINK_ADDRESS, VRF_ADDRESS);
   await aliens.deployed();
   // Add Link Tokens

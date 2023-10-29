@@ -29,7 +29,7 @@ const config: HardhatUserConfig = {
       accounts: process.env.DEPLOYMENT_PRIVATE_KEY
         ? [process.env.DEPLOYMENT_PRIVATE_KEY]
         : [],
-      gasPrice: 150000000000,
+      gasPrice: 100_000_000_000,
     },
   },
   etherscan: {

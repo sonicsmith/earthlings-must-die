@@ -1,10 +1,13 @@
 import { task } from 'hardhat/config';
 import { ADDRESSES } from '..';
+import { network } from 'hardhat';
 
 //npx hardhat verify [address] --network mumbai
 task('verifyContracts', 'Verifies deployed contracts on etherscan')
-  .addPositionalParam('chain', 'The chain ID of the deployed contracts')
-  .setAction(async function ({ chain }, { run }) {
+  .setAction(async function ({ }, { run }) {
+
+    const chain = network.name;
+
     const { LINK_ADDRESS, VRF_ADDRESS } = ADDRESSES[chain];
     // Verify
     console.log('Verifying Alien contract...', chain);
