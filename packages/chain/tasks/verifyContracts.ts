@@ -1,11 +1,9 @@
 import { task } from 'hardhat/config';
 import { ADDRESSES } from '..';
-import { network } from 'hardhat';
 
 //npx hardhat verify [address] --network mumbai
-task('verifyContracts', 'Verifies deployed contracts on etherscan')
-  .setAction(async function ({ }, { run }) {
-
+task('verifyContracts', 'Verifies deployed contracts on etherscan').setAction(
+  async function ({}, { run, network }) {
     const chain = network.name;
 
     const { LINK_ADDRESS, VRF_ADDRESS } = ADDRESSES[chain];
@@ -25,4 +23,5 @@ task('verifyContracts', 'Verifies deployed contracts on etherscan')
       address: ADDRESSES[chain].BATTLEFIELD,
       constructorArguments: [],
     });
-  });
+  }
+);

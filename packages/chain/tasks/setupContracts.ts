@@ -1,10 +1,8 @@
 import { task } from 'hardhat/config';
 import { ADDRESSES } from '..';
-import { network } from 'hardhat';
 
-task('setupContracts', 'Verifies deployed contracts on etherscan')
-  .setAction(async function ({ }, { ethers }) {
-
+task('setupContracts', 'Verifies deployed contracts on etherscan').setAction(
+  async function ({}, { ethers, network }) {
     const chainId = network.name;
 
     const { ALIENS, EQUIPMENT, BATTLEFIELD } = ADDRESSES[chainId];
@@ -35,4 +33,5 @@ task('setupContracts', 'Verifies deployed contracts on etherscan')
 
     // Display
     console.log(`Setup Done`);
-  });
+  }
+);
