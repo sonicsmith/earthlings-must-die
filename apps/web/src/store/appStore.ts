@@ -7,7 +7,10 @@ import {
 import { getChain } from '~/utils';
 import { ECDSAProvider } from '@zerodev/sdk';
 import { SmartAccountSigner } from '@alchemy/aa-core';
-import { TypedDataDomain } from '@ethersproject/abstract-signer';
+import {
+  TypedDataDomain,
+  TypedDataField,
+} from '@ethersproject/abstract-signer';
 
 export type EVMAddress = `0x${string}` | null;
 export interface AppState {
@@ -17,13 +20,13 @@ export interface AppState {
   address: EVMAddress;
   paperSdk: PaperEmbeddedWalletSdk<RecoveryShareManagement.USER_MANAGED> | null;
   ecdsaProvider: ECDSAProvider | null;
-  showMenu: boolean;
+  isAlienDetailView: boolean;
   isAlienSelectionView: boolean;
   showTutorial: boolean;
   initPaper: () => void;
   connect: () => Promise<void>;
   logout: () => void;
-  setShowMenu: (show: boolean) => void;
+  setIsAlienDetailView: (show: boolean) => void;
   setIsAlienSelectionView: (isShowing: boolean) => void;
   setShowTutorial: (show: boolean) => void;
 }
@@ -39,7 +42,7 @@ const store = create<AppState>()((set, get) => ({
   address: null,
   paperSdk: null,
   ecdsaProvider: null,
-  showMenu: false,
+  isAlienDetailView: false,
   isAlienSelectionView: false,
   showTutorial: false,
   initPaper: () => {
@@ -63,15 +66,14 @@ const store = create<AppState>()((set, get) => ({
       throw new Error('No signer');
     }
 
-    // signMessage: (msg: Uint8Array | Hex | string) => Promise<Hash>;
-    // signTypedData: (params: SignTypedDataParams) => Promise<Hash>;
-    // getAddress: () => Promise<Address>;
-    // signer.signMessage
+    // Massage the signer into a SmartAccountSigner
     const smartAccountSigner: SmartAccountSigner = {
       signMessage: (msg) => signer.signMessage(msg) as Promise<`0x${string}`>,
       signTypedData: (params) => {
         const domain: TypedDataDomain = params.domain!;
-        const types = { ...params.types! } as any;
+        const types: Record<string, TypedDataField[]> = {
+          ...params.types,
+        } as any;
         const message = params.message;
         return signer._signTypedData(
           domain,
@@ -103,7 +105,7 @@ const store = create<AppState>()((set, get) => ({
       });
     }
   },
-  setShowMenu: (showMenu) => set({ showMenu }),
+  setIsAlienDetailView: (isAlienDetailView) => set({ isAlienDetailView }),
   setIsAlienSelectionView: (isAlienSelectionView) =>
     set({ isAlienSelectionView }),
   setShowTutorial: (showTutorial) => set({ showTutorial }),

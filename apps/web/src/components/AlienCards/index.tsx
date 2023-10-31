@@ -25,7 +25,7 @@ const CARD_POSITION = [
 
 const AlienStatus = ({ numberOwned }: { numberOwned: number }) => {
   return (
-    <div className="absolute -left-32 bottom-52 w-64 text-xl text-white">
+    <div className="absolute -left-32 -top-72 w-64 text-xl text-white">
       <div className="text-center">Aliens on planet: 4</div>
 
       <div className="text-center text-gray-300">
@@ -67,7 +67,7 @@ export default function AlienCards({
         }`}
       >
         <AlienStatus numberOwned={numberOwned} />
-        <div className={`absolute -top-44 ${xPos}`}>
+        <div className={`absolute -top-52 ${xPos}`}>
           <div className="flex flex-row">
             {aliensOnPlanet.map((alienDetails, index) => {
               const cardPosClass = CARD_POSITION[index] || '';
@@ -87,7 +87,7 @@ export default function AlienCards({
             })}
           </div>
         </div>
-        <div className={`absolute -left-14 top-12 w-96`}>
+        <div className={`absolute -left-14 top-6 w-96`}>
           <Menu />
         </div>
       </div>

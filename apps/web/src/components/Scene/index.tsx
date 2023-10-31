@@ -21,16 +21,17 @@ const SUN_POSITION = new Vector3(10, 1, 0);
 
 export default function Scene() {
   const {
-    showMenu,
-    setShowMenu,
+    isAlienDetailView: showMenu,
+    setIsAlienDetailView: setShowMenu,
     setIsAlienSelectionView,
     isAlienSelectionView,
     showTutorial,
     setShowTutorial,
+    isAlienDetailView,
+    setIsAlienDetailView,
   } = useAppStore();
 
   const { width } = useWindowSize();
-  const [isAlienDetailView, setIsAlienDetailView] = useState(false);
   const { aliens, refetch: refetchAliens } = useAliensOnPlanet();
   const { launchAlien } = useTransactions();
 
