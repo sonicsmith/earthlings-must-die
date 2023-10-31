@@ -4,6 +4,7 @@ import type { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
 import { useAppStore } from '~/store/appStore';
 import { Menu } from '../TopBar/Menu';
+import { useWindowSize } from '~/hooks/useWindowSize';
 
 const GROUP_POSITIONS = [
   '',
@@ -59,12 +60,32 @@ export default function AlienCards({
 
   const xPos = GROUP_POSITIONS[aliensOnPlanet.length] || '';
 
+  const { height } = useWindowSize();
+
+  const scale = useMemo(() => {
+    if (!isShowing) {
+      return 'scale-0';
+    }
+    const percent = ((height || 0) * 100) / 750;
+    if (percent <= 70) {
+      return 'scale-50';
+    }
+    if (percent <= 80) {
+      return 'scale-75';
+    }
+    if (percent <= 90) {
+      return 'scale-90';
+    }
+    if (percent <= 95) {
+      return 'scale-95';
+    }
+    return 'scale-100';
+  }, [height, isShowing]);
+
   return (
     <Html center>
       <div
-        className={`relative transition duration-700 ease-in-out ${
-          isShowing ? 'scale-100' : 'scale-0'
-        }`}
+        className={`relative transition duration-700 ease-in-out ${scale} scale`}
       >
         <AlienStatus numberOwned={numberOwned} />
         <div className={`absolute -top-52 ${xPos}`}>
