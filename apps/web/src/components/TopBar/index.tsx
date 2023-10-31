@@ -2,7 +2,6 @@ import Button from '../../ui/Button';
 import { Html } from '@react-three/drei';
 import HomeIcon from '../HomeButton';
 import { ProfileButton } from './ProfileButton';
-import { Menu } from './Menu';
 import { useAppStore } from '~/store/appStore';
 import { useState } from 'react';
 
@@ -15,7 +14,7 @@ const Beta = () => {
 };
 
 export default function TopBar() {
-  const { address, connect, showMenu } = useAppStore();
+  const { address, connect } = useAppStore();
   const [loading, setLoading] = useState(false);
 
   const login = async () => {
@@ -50,14 +49,6 @@ export default function TopBar() {
             </>
           )}
         </div>
-
-        {showMenu && (
-          <div className="flex justify-end">
-            <div className="m-2">
-              <Menu />
-            </div>
-          </div>
-        )}
       </div>
     </Html>
   );
