@@ -21,8 +21,6 @@ const SUN_POSITION = new Vector3(10, 1, 0);
 
 export default function Scene() {
   const {
-    isAlienDetailView: showMenu,
-    setIsAlienDetailView: setShowMenu,
     setIsAlienSelectionView,
     isAlienSelectionView,
     showTutorial,
@@ -93,9 +91,6 @@ export default function Scene() {
         />
         <SkyBox
           onClick={() => {
-            if (showMenu) {
-              setShowMenu(false);
-            }
             if (isAlienDetailView) {
               setIsAlienDetailView(false);
             }

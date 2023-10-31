@@ -2,5 +2,6 @@
   "prettier.configPath": ".prettierrc",
   "solidity.compileUsingRemoteVersion": "latest",
   "solidity.defaultCompiler": "remote",
-  "solidity.packageDefaultDependenciesDirectory": "node_modules"
+  "solidity.packageDefaultDependenciesDirectory": "node_modules",
+  "cSpell.words": ["typechain"]
 }

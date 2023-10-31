@@ -1,5 +1,4 @@
 import { HardhatUserConfig } from 'hardhat/config';
-import '@nomicfoundation/hardhat-toolbox';
 import * as dotenv from 'dotenv';
 
 import './tasks/verifyContracts';
@@ -31,13 +30,13 @@ const config: HardhatUserConfig = {
       gasPrice: 100_000_000_000,
     },
   },
-  etherscan: {
-    apiKey: process.env.POLYGONSCAN_API_KEY,
-  },
-  typechain: {
-    outDir: 'typechain',
-    target: 'ethers-v5',
-  },
+  // etherscan: {
+  //   apiKey: process.env.POLYGONSCAN_API_KEY,
+  // },
+  // typechain: {
+  //   outDir: 'typechain',
+  //   target: 'ethers-v5',
+  // },
 };
 
 export default config;
