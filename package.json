@@ -19,8 +19,5 @@
     "prettier": "^2.5.1",
     "turbo": "^1.10.16"
   },
-  "packageManager": "npm@9.5.0",
-  "dependencies": {
-    "@nomicfoundation/hardhat-toolbox": "^3.0.0"
-  }
+  "packageManager": "npm@9.5.0"
 }

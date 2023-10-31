@@ -3,7 +3,7 @@ import AlienCard from './AlienCard';
 import type { AlienOnPlanet } from '~/hooks/useAliensOnPlanet';
 import { useMemo } from 'react';
 import { useAppStore } from '~/store/appStore';
-import { Menu } from '../GUI/Menu';
+import { Menu } from '../TopBar/Menu';
 
 const GROUP_POSITIONS = [
   '',
@@ -67,7 +67,7 @@ export default function AlienCards({
         }`}
       >
         <AlienStatus numberOwned={numberOwned} />
-        <div className={`absolute bottom-44 ${xPos}`}>
+        <div className={`absolute -top-44 ${xPos}`}>
           <div className="flex flex-row">
             {aliensOnPlanet.map((alienDetails, index) => {
               const cardPosClass = CARD_POSITION[index] || '';
@@ -87,7 +87,7 @@ export default function AlienCards({
             })}
           </div>
         </div>
-        <div className={`absolute bottom-[-270px] -left-14 w-96`}>
+        <div className={`absolute -left-14 top-12 w-96`}>
           <Menu />
         </div>
       </div>

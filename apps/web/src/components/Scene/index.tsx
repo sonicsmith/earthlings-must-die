@@ -7,7 +7,7 @@ import { Suspense, useMemo, useState } from 'react';
 import { Vector3 } from 'three';
 import AlienCards from '../AlienCards';
 import AlienSatellites from '../AlienSatellites';
-import GUI from '../GUI';
+import TopBar from '../TopBar';
 import Loading from '../Loading';
 import { useAliensOnPlanet } from '~/hooks/useAliensOnPlanet';
 import AlienSelectorDialog from '../AlienSelectorDialog';
@@ -69,7 +69,7 @@ export default function Scene() {
       }
     >
       <Canvas camera={{ position: initialCameraPosition, fov: 50 }}>
-        <GUI />
+        <TopBar />
         <Earth
           onClick={() => {
             setIsAlienDetailView(!isAlienDetailView);

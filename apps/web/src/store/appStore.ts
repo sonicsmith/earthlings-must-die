@@ -6,6 +6,8 @@ import {
 } from '@paperxyz/embedded-wallet-service-sdk';
 import { getChain } from '~/utils';
 import { ECDSAProvider } from '@zerodev/sdk';
+import { SmartAccountSigner } from '@alchemy/aa-core';
+import { TypedDataDomain } from '@ethersproject/abstract-signer';
 
 export type EVMAddress = `0x${string}` | null;
 export interface AppState {
@@ -60,9 +62,29 @@ const store = create<AppState>()((set, get) => ({
     if (!signer) {
       throw new Error('No signer');
     }
+
+    // signMessage: (msg: Uint8Array | Hex | string) => Promise<Hash>;
+    // signTypedData: (params: SignTypedDataParams) => Promise<Hash>;
+    // getAddress: () => Promise<Address>;
+    // signer.signMessage
+    const smartAccountSigner: SmartAccountSigner = {
+      signMessage: (msg) => signer.signMessage(msg) as Promise<`0x${string}`>,
+      signTypedData: (params) => {
+        const domain: TypedDataDomain = params.domain!;
+        const types = { ...params.types! } as any;
+        const message = params.message;
+        return signer._signTypedData(
+          domain,
+          types,
+          message
+        ) as Promise<`0x${string}`>;
+      },
+      getAddress: () => signer.getAddress() as Promise<`0x${string}`>,
+    };
+
     const ecdsaProvider = await ECDSAProvider.init({
       projectId: zeroDevProjectId,
-      owner: signer as any, // TODO: Fix this
+      owner: smartAccountSigner,
     });
     const address = await ecdsaProvider.getAddress();
     set({
