@@ -24,7 +24,9 @@ const config: HardhatUserConfig = {
     mumbai: {
       url: 'https://rpc.ankr.com/polygon_mumbai',
       chainId: 80001,
-      accounts: [process.env.DEPLOYMENT_PRIVATE_KEY!],
+      accounts: process.env.DEPLOYMENT_PRIVATE_KEY
+        ? [process.env.DEPLOYMENT_PRIVATE_KEY]
+        : [],
       gasPrice: 100_000_000_000,
     },
   },
