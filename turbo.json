@@ -1,5 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
+  "globalDotEnv": [".env"],
   "pipeline": {
     "dev": {
       "persistent": true,
@@ -12,7 +13,8 @@
     "clean": { "cache": false },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "artifacts/**"]
+      "outputs": [".next/**", "artifacts/**"],
+      "dotEnv": [".env"]
     }
   }
 }
