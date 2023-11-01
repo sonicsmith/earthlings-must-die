@@ -30,6 +30,7 @@ export const PurchaseAlienDialog = ({
   email,
   onSuccess,
 }: PurchaseDialogProps) => {
+  console.log('info', { walletAddress, alienContractId });
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>
@@ -38,16 +39,17 @@ export const PurchaseAlienDialog = ({
         </DialogHeader>
         <CheckoutWithCard
           configs={{
+            quantity: 1,
             contractId: alienContractId,
             walletAddress: String(walletAddress),
-            email: email || undefined,
+            email: email ?? undefined,
             mintMethod: {
               name: 'mint',
               args: {
                 recipient: '$WALLET',
               },
               payment: {
-                value: '0.01 * $QUANTITY',
+                value: '0.01',
                 currency: 'MATIC',
               },
             },
@@ -82,7 +84,8 @@ export const PurchaseFuelDialog = ({
           configs={{
             contractId: equipmentContractId,
             walletAddress: String(walletAddress),
-            email: email || undefined,
+            email: email ?? undefined,
+            quantity: amount,
             mintMethod: {
               name: 'mint',
               args: {
