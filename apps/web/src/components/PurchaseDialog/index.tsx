@@ -30,7 +30,6 @@ export const PurchaseAlienDialog = ({
   email,
   onSuccess,
 }: PurchaseDialogProps) => {
-  console.log('info', { walletAddress, alienContractId });
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent>

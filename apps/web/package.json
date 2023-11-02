@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "dotenv -e .env -- next build",
-    "dev": "dotenv -e .env -- next dev",
+    "build": "next build",
+    "dev": "next dev",
     "lint": "next lint",
-    "start": "dotenv -e .env -- next start",
+    "start": "next start",
     "clean": "rm -rf .next .turbo node_modules"
   },
   "dependencies": {

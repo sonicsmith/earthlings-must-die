@@ -35,8 +35,6 @@ const paperClientId = process.env.NEXT_PUBLIC_PAPER_CLIENT_ID || '';
 const chain = getChain(process.env.NEXT_PUBLIC_CHAIN);
 const zeroDevProjectId = process.env.NEXT_PUBLIC_ZERODEV_PROJECT_ID || '';
 
-console.log('paperClientId', paperClientId);
-
 const store = create<AppState>()((set, get) => ({
   appView: 'home',
   setAppView: (appView) => set({ appView }),

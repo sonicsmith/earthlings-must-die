@@ -1,6 +1,5 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "globalDotEnv": [".env"],
   "pipeline": {
     "dev": {
       "persistent": true,
@@ -13,17 +12,7 @@
     "clean": { "cache": false },
     "build": {
       "dependsOn": ["^build"],
-      "outputs": [".next/**", "artifacts/**"],
-      "env": [
-        "NEXT_PUBLIC_ALCHEMY_API_KEY",
-        "NEXT_PUBLIC_PAPER_CLIENT_ID",
-        "NEXT_PUBLIC_CHAIN",
-        "NEXT_PUBLIC_BLOCK_EXPLORER",
-        "NEXT_PUBLIC_ALIEN_CONTRACT_ID",
-        "NEXT_PUBLIC_EQUIPMENT_CONTRACT_ID",
-        "NEXT_PUBLIC_ZERODEV_PROJECT_ID"
-      ],
-      "dotEnv": [".env"]
+      "outputs": [".next/**", "artifacts/**"]
     }
   }
 }
