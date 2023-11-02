@@ -22,6 +22,8 @@ type BattlefieldAliens = {
 
 const chain = process.env.NEXT_PUBLIC_CHAIN!;
 
+console.log('chain', chain);
+
 export const useAliensOnPlanet = () => {
   const [aliens, setAliens] = useState<AlienOnPlanet[]>([]);
 
