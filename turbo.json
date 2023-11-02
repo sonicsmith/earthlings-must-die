@@ -14,7 +14,7 @@
     "build": {
       "dependsOn": ["^build"],
       "outputs": [".next/**", "artifacts/**"],
-      "dotEnv": [".env"]
+      "env": ["NEXT_PUBLIC_*"]
     }
   }
 }
