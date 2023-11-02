@@ -22,7 +22,8 @@
         "NEXT_PUBLIC_ALIEN_CONTRACT_ID",
         "NEXT_PUBLIC_EQUIPMENT_CONTRACT_ID",
         "NEXT_PUBLIC_ZERODEV_PROJECT_ID"
-      ]
+      ],
+      "dotEnv": [".env"]
     }
   }
 }
